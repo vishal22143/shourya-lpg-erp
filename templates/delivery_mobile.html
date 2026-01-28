@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<style>
+body{font-family:Arial;background:#f2f2f2;margin:0;padding:10px}
+.card{
+  background:#fff;
+  border:2px solid #000;
+  padding:10px;
+  margin-bottom:10px;
+}
+.name{font-size:16px;font-weight:bold}
+.addr{font-size:13px;color:#555}
+.qty{font-size:14px;margin-top:4px}
+input{
+  width:100%;
+  padding:8px;
+  font-size:16px;
+  margin-top:6px;
+}
+button{
+  width:100%;
+  padding:10px;
+  font-size:16px;
+  background:#2e7d32;
+  color:#fff;
+  border:none;
+  margin-top:8px;
+}
+button:active{background:#1b5e20}
+</style>
+
+<script>
+function setGPS(form){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(pos){
+      form.lat.value = pos.coords.latitude;
+      form.lng.value = pos.coords.longitude;
+      form.submit();
+    }, function(){
+      form.submit();
+    });
+  } else {
+    form.submit();
+  }
+}
+</script>
+</head>
+
+<body>
+
+<h2>
+डिलिव्हरी यादी  
+<br>Delivery List
+</h2>
+
+{% if not rows %}
+<p>कोणतीही पेंडिंग डिलिव्हरी नाही  
+<br>No pending deliveries</p>
+{% endif %}
+
+{% for r in rows %}
+<div class='card'>
+<div class='name'>{{ r[1] }}</div>
+<div class='addr'>{{ r[2] }}</div>
+<div class='qty'>
+{{ r[4] }} KG × {{ r[5] }}
+</div>
+
+<form method='post' action='/delivery/deliver' onsubmit='event.preventDefault(); setGPS(this);'>
+<input type='hidden' name='cashmemo' value='{{ r[0] }}'>
+<input type='hidden' name='lat'>
+<input type='hidden' name='lng'>
+<input type='text' name='otp' placeholder='OTP / ओटीपी' required>
+<button type='submit'>Delivered / डिलिव्हर्ड</button>
+</form>
+</div>
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="/static/app.css"></head>
+<body>
+<h2>Godown Stock Ledger (Strict)</h2>
+<table border="1" width="100%">
+<tr>
+<th>Date</th><th>Opening</th><th>Inward</th><th>Outward</th><th>Closing</th>
+</tr>
+{% for r in ledger %}
+<tr>
+<td>{{r.date}}</td>
+<td>{{r.opening}}</td>
+<td>{{r.inward}}</td>
+<td>{{r.outward}}</td>
+<td>{{r.closing}}</td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>

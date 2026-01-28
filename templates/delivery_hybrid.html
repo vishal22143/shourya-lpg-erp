@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css'>
+<script src='https://unpkg.com/leaflet/dist/leaflet.js'></script>
+
+<style>
+body{margin:0;font-family:Arial}
+#map{height:45vh}
+.card{border-bottom:2px solid #ccc;padding:8px}
+.blue{background:#e3f2fd}
+.yellow{background:#fff9c4}
+.green{background:#e8f5e9}
+.orange{background:#ffe0b2}
+.red{background:#ffcdd2}
+button{padding:8px;width:100%;font-size:16px}
+</style>
+</head>
+
+<body>
+
+<div id='map'></div>
+<div id='list'></div>
+
+<script>
+let map = L.map('map').setView([16.85,74.63],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+const colors = {
+ 'Scheduled':'blue',
+ 'In Trip':'yellow',
+ 'Delivered (OTP)':'green',
+ 'Delivered (Emergency)':'orange',
+ 'Cancelled':'red'
+};
+
+fetch('/delivery/data').then(r=>r.json()).then(data=>{
+  data.forEach(d=>{
+    let c = colors[d.status] || 'blue';
+
+    if(d.lat && d.lng){
+      L.circleMarker([d.lat,d.lng],{
+        radius:7,color:c,fillOpacity:0.9
+      }).addTo(map);
+    }
+
+    let div=document.createElement('div');
+    div.className='card '+c;
+    div.innerHTML=
+      <b></b><br>
+      <br>
+       KG × <br>
+      <a href='tel:'>📞 Call</a><br><br>
+      <button onclick='deliver("")'>Delivered</button>
+    ;
+    document.getElementById('list').appendChild(div);
+  });
+});
+
+function deliver(cashmemo){
+  navigator.geolocation.getCurrentPosition(pos=>{
+    let f=new FormData();
+    f.append('cashmemo',cashmemo);
+    f.append('otp','');
+    f.append('lat',pos.coords.latitude);
+    f.append('lng',pos.coords.longitude);
+    fetch('/delivery/deliver',{method:'POST',body:f})
+      .then(()=>location.reload());
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/app.css">
+<style>
+body{background:#f5f7fb}
+.erp-page{max-width:900px;margin:auto;padding:10px}
+
+.erp-block{
+  background:#fff;
+  border-radius:10px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08)
+}
+
+/* OPTION B – Accent bar heading */
+.erp-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+  font-size:18px;
+  font-weight:600;
+  color:#003A8F
+}
+.erp-title::before{
+  content:'';
+  width:4px;
+  height:22px;
+  background:#003A8F;
+  border-radius:2px
+}
+
+.field-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.field-row.two{grid-template-columns:repeat(2,1fr)}
+input{padding:10px;font-size:16px}
+
+.total-view{
+  margin-top:8px;
+  padding:10px;
+  background:#eef2ff;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:600
+}
+
+.final-totals{
+  background:#003A8F;
+  color:#fff;
+  padding:14px;
+  border-radius:12px;
+  font-size:18px;
+  margin-top:16px
+}
+
+.note{font-size:13px;color:#555}
+</style>
+</head>
+<body>
+
+<div class="erp-page">
+
+<header style="text-align:center;font-size:22px;margin-bottom:12px">
+गोडाउन भौतिक स्टॉक नोंद  
+<br>Godown Physical Stock Entry
+</header>
+
+<form method="post" action="/godown/physical/save">
+
+<!-- FILLED -->
+<div class="erp-block">
+<div class="erp-title">भरलेले सिलेंडर / Filled Cylinders</div>
+<div class="field-row">
+<input type="number" name="filled_ubhi" placeholder="उभी ओळ / Vertical">
+<input type="number" name="filled_adavi" placeholder="आडवी ओळ / Horizontal">
+<input type="number" name="filled_adhik" placeholder="अधिकाची ओळ / Additional">
+</div>
+<div class="field-row two">
+<input type="number" name="defective" placeholder="डिफेक्टिव (पूर्ण साठा) / Defective">
+</div>
+<div class="total-view">एकूण भरलेले / Total Filled – Auto</div>
+</div>
+
+<!-- EMPTY FRONT -->
+<div class="erp-block">
+<div class="erp-title">
+रिकामे सिलेंडर – दरवाज्याकडून समोर  
+<span class="note">Empty – Front from Door</span>
+</div>
+<div class="field-row">
+<input type="number" name="ef_ubhi" placeholder="दुहेरी उभी ओळ / Double vertical">
+<input type="number" name="ef_adavi" placeholder="दुहेरी आडवी ओळ / Double horizontal">
+<input type="number" name="ef_akheri" placeholder="अखेरी ओळ / Loose">
+</div>
+<div class="field-row two">
+<input type="number" name="ef_adhik_single" placeholder="अधिक (एकेरी) / Single">
+<input type="number" name="ef_adhik_double" placeholder="अधिक (दुहेरी) / Double">
+</div>
+<div class="total-view">या बाजूचा रिकामा / Empty Total – Front</div>
+</div>
+
+<!-- EMPTY RIGHT -->
+<div class="erp-block">
+<div class="erp-title">
+रिकामे सिलेंडर – दरवाज्याकडून उजवी बाजू  
+<span class="note">Empty – Door Right Side</span>
+</div>
+<div class="field-row">
+<input type="number" name="er_ubhi" placeholder="दुहेरी उभी ओळ / Double vertical">
+<input type="number" name="er_adavi" placeholder="दुहेरी आडवी ओळ / Double horizontal">
+<input type="number" name="er_akheri" placeholder="अखेरी ओळ / Loose">
+</div>
+<div class="field-row two">
+<input type="number" name="er_adhik_single" placeholder="अधिक (एकेरी) / Single">
+<input type="number" name="er_adhik_double" placeholder="अधिक (दुहेरी) / Double">
+</div>
+<div class="total-view">या बाजूचा रिकामा / Empty Total – Right</div>
+</div>
+
+<!-- EMPTY LEFT -->
+<div class="erp-block">
+<div class="erp-title">
+रिकामे सिलेंडर – दरवाज्याकडून डावी बाजू  
+<span class="note">Empty – Door Left Side</span>
+</div>
+<div class="field-row">
+<input type="number" name="el_ubhi" placeholder="दुहेरी उभी ओळ / Double vertical">
+<input type="number" name="el_adavi" placeholder="दुहेरी आडवी ओळ / Double horizontal">
+<input type="number" name="el_akheri" placeholder="अखेरी ओळ / Loose">
+</div>
+<div class="field-row two">
+<input type="number" name="el_adhik_single" placeholder="अधिक (एकेरी) / Single">
+<input type="number" name="el_adhik_double" placeholder="अधिक (दुहेरी) / Double">
+</div>
+<div class="total-view">या बाजूचा रिकामा / Empty Total – Left</div>
+</div>
+
+<div class="final-totals">
+एकूण भरलेला साठा / Total Filled – Auto  
+<br><br>
+एकूण रिकामा साठा / Total Empty – Auto
+</div>
+
+<button class="btn" style="margin-top:16px;width:100%">
+भौतिक नोंद जतन करा  
+<br>Save Physical Stock
+</button>
+
+</form>
+</div>
+</body>
+</html>

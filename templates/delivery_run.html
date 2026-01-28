@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Delivery Run</title>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+<style>
+body{font-family:Arial;margin:0}
+.header{background:#0d47a1;color:white;padding:10px;text-align:center}
+.map{height:220px;background:#ddd;text-align:center;line-height:220px}
+.card{border-bottom:1px solid #ccc;padding:10px}
+.blue{background:#e3f2fd}
+.yellow{background:#fff9c4}
+.green{background:#e8f5e9}
+.orange{background:#ffe0b2}
+.red{background:#ffebee}
+button{width:100%;padding:6px;margin-top:4px;font-size:14px}
+</style>
+
+<script>
+function post(url){
+  fetch(url,{method:'POST'}).then(()=>location.reload())
+}
+</script>
+</head>
+
+<body>
+
+<div class="header">🚚 Delivery Run</div>
+
+<div class="map">🗺️ MAP (Next Step)</div>
+
+{% for d in deliveries %}
+<div class="card blue">
+<b>{{ d.consumer }}</b><br>
+{{ d.address }}<br>
+📞 <a href="tel:{{ d.mobile }}">{{ d.mobile }}</a><br>
+CashMemo: {{ d.cashmemo }}
+
+<button onclick="post('/delivery/start/{{ d.cashmemo }}')">▶ Start Trip</button>
+<button onclick="post('/delivery/deliver/otp/{{ d.cashmemo }}')">✅ Delivered (OTP)</button>
+<button onclick="post('/delivery/deliver/emergency/{{ d.cashmemo }}')">⚠ Emergency Delivered</button>
+<button onclick="post('/delivery/cancel/{{ d.cashmemo }}')">❌ Not Delivered</button>
+</div>
+{% endfor %}
+
+</body>
+</html>

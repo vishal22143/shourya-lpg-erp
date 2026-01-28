@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scheduled Delivery List (BPCL)</title>
+<style>
+body{font-family:Arial}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #444;padding:6px}
+th{background:#1976d2;color:white}
+tr.blue{background:#e3f2fd}
+</style>
+</head>
+
+<body>
+<h3>🔵 Scheduled Delivery List (BPCL – Area Description)</h3>
+
+<table>
+<tr>
+  <th>Area Description</th>
+  <th>Cash Memo</th>
+  <th>Consumer</th>
+  <th>Address</th>
+  <th>Mobile</th>
+  <th>Status</th>
+</tr>
+
+{% for d in deliveries %}
+<tr class="blue">
+  <td><b>{{ d.area }}</b></td>
+  <td>{{ d.cashmemo }}</td>
+  <td>{{ d.consumer }}</td>
+  <td>{{ d.address }}</td>
+  <td><a href="tel:{{ d.mobile }}">{{ d.mobile }}</a></td>
+  <td>{{ d.status }}</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
