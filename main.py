@@ -91,3 +91,9 @@ app.include_router(delivery_payroll_router)
 
 from app.routers.reports import router as reports_router
 app.include_router(reports_router)
+
+from fastapi.staticfiles import StaticFiles
+from app.routers.ui import router as ui_router
+
+app.mount('/static', StaticFiles(directory='app/static'), name='static')
+app.include_router(ui_router)

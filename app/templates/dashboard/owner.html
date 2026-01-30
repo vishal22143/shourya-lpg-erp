@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='grid'>
+  <div class='card'>
+    <h2>Delivery Salary Summary / वेतन सारांश</h2>
+    {% for r in salary %}
+      <div>
+        <b>ID:</b> {{ r.delivery_man_id }} |
+        {{ r.labels.gross_mr }}: ₹{{ r.gross }} |
+        {{ r.labels.net_mr }}: ₹{{ r.net_paid }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class='card'>
+    <h2>Day End / दिवस समाप्त</h2>
+    <div>Cash Status: <b>{{ day.cash.status }}</b></div>
+    <div>{{ day.cash.labels.opening_mr }}: ₹{{ day.cash.opening }}</div>
+    <div>{{ day.cash.labels.counted_mr }}: ₹{{ day.cash.counted }}</div>
+    <div>{{ day.stock.labels.filled_mr }}: {{ day.stock.filled }}</div>
+    <div>{{ day.stock.labels.empty_mr }}: {{ day.stock.empty }}</div>
+  </div>
+</div>
+{% endblock %}

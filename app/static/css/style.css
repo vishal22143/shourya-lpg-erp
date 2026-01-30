@@ -1,0 +1,6 @@
+body { font-family: Arial, sans-serif; margin: 16px; }
+h1,h2 { margin-bottom: 8px; }
+.card { border: 1px solid #ddd; padding: 12px; margin-bottom: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 12px; }
+.small { color: #666; font-size: 12px; }
+.ok { color: green; } .warn { color: #b58900; } .bad { color: #dc322f; }
