@@ -82,3 +82,6 @@ app.include_router(owner.router)
 # ---- DB INIT (SAFE) ----
 from app.core.init_db import init_db
 init_db()
+
+from app.routers.office_cash import router as office_cash_router
+app.include_router(office_cash_router)
