@@ -1,30 +1,66 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from datetime import date
+from sqlalchemy.orm import Session
 
-router = APIRouter(prefix="/bda", tags=["BDA"])
+from app.core.deps import get_db
+from app.core.tx import commit_or_rollback
+from app.services.stock_atomic import atomic_move, StockError
+from app.models.bda_sale import BDASale
+from app.models.cash import CashHandover
 
-@router.post("/stock/receive")
-def receive_stock(bda_id: int, filled_qty: int):
-    return {"status": "stock received", "bda_id": bda_id}
+router = APIRouter(prefix='/bda', tags=['BDA'])
 
-@router.post("/sale")
-def bda_sale(bda_id: int, payment_mode: str, amount: int):
-    return {"status": "sale recorded", "bda_id": bda_id}
+@router.post('/sale')
+def bda_sale(
+    bda_id: int,
+    from_location: int,
+    to_location: int,
+    payment_mode: str,
+    amount: int,
+    db: Session = Depends(get_db)
+):
+    try:
+        # 1 filled out, 1 empty in
+        atomic_move(
+            db=db,
+            from_location=from_location,
+            to_location=to_location,
+            filled_qty=1,
+            empty_qty=1,
+            reason='SALE',
+            ref_type='BDA',
+            ref_id=bda_id
+        )
+        sale = BDASale(
+            bda_id=bda_id,
+            date=date.today(),
+            payment_mode=payment_mode,
+            amount=amount
+        )
+        db.add(sale)
+        commit_or_rollback(db)
+        return {'status': 'bda sale recorded'}
+    except StockError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/cash/handover")
+@router.post('/cash/handover')
 def bda_cash_handover(
     bda_id: int,
     amount: int,
     payment_mode: str,
     receiver_type: str,
-    receiver_id: int | None = None
+    receiver_name: str,
+    db: Session = Depends(get_db)
 ):
-    return {
-        "status": "handover recorded",
-        "bda_id": bda_id,
-        "receiver": receiver_type
-    }
-
-@router.get("/day-summary")
-def bda_day_summary(bda_id: int, on_date: date):
-    return {"bda_id": bda_id, "date": str(on_date)}
+    ch = CashHandover(
+        source_type='BDA',
+        source_id=bda_id,
+        amount=amount,
+        payment_mode=payment_mode,
+        receiver_type=receiver_type,
+        receiver_name=receiver_name,
+        date=date.today()
+    )
+    db.add(ch)
+    commit_or_rollback(db)
+    return {'status': 'handover recorded'}
