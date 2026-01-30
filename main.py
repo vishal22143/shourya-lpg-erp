@@ -88,3 +88,6 @@ app.include_router(office_cash_router)
 
 from app.routers.delivery_payroll import router as delivery_payroll_router
 app.include_router(delivery_payroll_router)
+
+from app.routers.reports import router as reports_router
+app.include_router(reports_router)
