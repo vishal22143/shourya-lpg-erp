@@ -71,3 +71,10 @@ app.include_router(delivery_run_router)
 from routes.delivery_actions import router as delivery_actions_router
 app.include_router(delivery_actions_router)
 
+
+from app.routers import delivery, bda, stock, owner
+
+app.include_router(delivery.router)
+app.include_router(bda.router)
+app.include_router(stock.router)
+app.include_router(owner.router)
