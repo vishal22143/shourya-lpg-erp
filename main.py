@@ -85,3 +85,6 @@ init_db()
 
 from app.routers.office_cash import router as office_cash_router
 app.include_router(office_cash_router)
+
+from app.routers.delivery_payroll import router as delivery_payroll_router
+app.include_router(delivery_payroll_router)

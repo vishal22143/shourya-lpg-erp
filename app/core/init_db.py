@@ -1,22 +1,15 @@
 from app.core.database import engine
 from app.core.base import Base
 
-from app.models.user import User
-from app.models.delivery import DeliveryMan
-from app.models.bda import BDA
-
-from app.models.stock import StockLocation, StockOpening, StockMovement
-from app.models.stock_day_end import StockDayEnd
-
 from app.models.delivery_day_summary import DeliveryDaySummary
 from app.models.delivery_cylinder_detail import DeliveryCylinderDetail
+from app.models.delivery_payroll import DeliveryPayroll
 
 from app.models.office_cash import OfficeCashDay
 from app.models.office_expense import OfficeExpense
 from app.models.staff_advance import StaffAdvance
 from app.models.cash_denomination import CashDenomination
 
-# keep for office/driver only
 from app.models.salary_master import SalaryMaster
 from app.models.salary_payment import SalaryPayment
 
