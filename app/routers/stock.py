@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.deps import get_db
 from app.core.tx import commit_or_rollback
+from app.services.day_end import run_day_end, DayEndError
 from app.services.stock_atomic import atomic_move, StockError
 
 router = APIRouter(prefix='/stock', tags=['Stock'])
@@ -30,24 +31,11 @@ def stock_transfer(
     except StockError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post('/adjustment')
-def stock_adjustment(
-    location_id: int,
-    filled_delta: int,
-    empty_delta: int,
-    reason: str,
-    db: Session = Depends(get_db)
-):
+@router.post('/day-end/run')
+def day_end_run(on_date: date | None = None, db: Session = Depends(get_db)):
     try:
-        atomic_move(
-            db=db,
-            from_location=location_id if filled_delta < 0 or empty_delta < 0 else None,
-            to_location=location_id if filled_delta > 0 or empty_delta > 0 else None,
-            filled_qty=abs(filled_delta),
-            empty_qty=abs(empty_delta),
-            reason=f'ADJUST:{reason}'
-        )
+        result = run_day_end(db, on_date)
         commit_or_rollback(db)
-        return {'status': 'ok'}
-    except StockError as e:
+        return result
+    except DayEndError as e:
         raise HTTPException(status_code=400, detail=str(e))
