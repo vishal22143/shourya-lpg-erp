@@ -78,3 +78,7 @@ app.include_router(delivery.router)
 app.include_router(bda.router)
 app.include_router(stock.router)
 app.include_router(owner.router)
+
+# ---- DB INIT (SAFE) ----
+from app.core.init_db import init_db
+init_db()

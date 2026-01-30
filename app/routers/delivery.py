@@ -1,10 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from datetime import date
+from sqlalchemy.orm import Session
+
+from app.core.deps import get_db
+from app.core.tx import commit_or_rollback
+from app.models.trip import DeliveryTrip
 
 router = APIRouter(prefix="/delivery", tags=["Delivery"])
 
 @router.post("/trip/open")
-def open_trip(delivery_man_id: int):
+def open_trip(delivery_man_id: int, db: Session = Depends(get_db)):
+    trip = DeliveryTrip(
+        delivery_man_id=delivery_man_id,
+        date=date.today(),
+        trip_no=1,
+        status="OPEN"
+    )
+    db.add(trip)
+    commit_or_rollback(db)
     return {"status": "trip opened", "delivery_man_id": delivery_man_id}
 
 @router.post("/trip/sale")
