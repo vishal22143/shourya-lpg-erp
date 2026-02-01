@@ -9,6 +9,13 @@ from app.models.trip import DeliveryTrip, DeliverySale
 
 router = APIRouter(prefix='/delivery', tags=['Delivery'])
 
+@router.get('/upload')
+def upload_placeholder():
+    return {
+        'status': 'Delivery upload screen (placeholder)',
+        'message': 'CSV / UI upload will be added later'
+    }
+
 @router.post('/trip/open')
 def open_trip(delivery_man_id: int, db: Session = Depends(get_db)):
     trip = DeliveryTrip(
@@ -31,7 +38,6 @@ def record_sale(
     db: Session = Depends(get_db)
 ):
     try:
-        # 1 filled out, 1 empty in
         atomic_move(
             db=db,
             from_location=from_location,
