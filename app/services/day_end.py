@@ -2,8 +2,8 @@ from datetime import date
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from app.models.stock import StockLocation, StockOpening, StockMovement
-from app.models.stock_day_end import StockDayEnd
+from app.models import StockLocation, StockOpening, StockMovement
+from app.models import StockDayEnd
 
 class DayEndError(Exception):
     pass

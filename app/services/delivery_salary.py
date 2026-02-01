@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app.models.delivery_day_summary import DeliveryDaySummary
-from app.models.staff_advance import StaffAdvance
+from app.models import DeliveryDaySummary
+from app.models import StaffAdvance
 
 URBAN_RATE = 8   # SHAHARI
 RURAL_RATE = 7   # GAVAATIL

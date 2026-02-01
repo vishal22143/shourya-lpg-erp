@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.core.deps import get_db
 from app.core.tx import commit_or_rollback
 from app.services.stock_atomic import atomic_move, StockError
-from app.models.trip import DeliveryTrip, DeliverySale
+from app.models import DeliveryTrip, DeliverySale
 
 router = APIRouter(prefix='/delivery', tags=['Delivery'])
 

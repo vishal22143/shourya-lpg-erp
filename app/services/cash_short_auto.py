@@ -1,5 +1,5 @@
 from datetime import date
-from app.models.staff_advance import StaffAdvance
+from app.models import StaffAdvance
 
 def auto_cash_short_advance(db, delivery_man_id: int, amount: int, source_ref: int, approved_by: str):
     if amount <= 0:

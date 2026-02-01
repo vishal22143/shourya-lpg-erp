@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import date
-from app.models.stock import StockMovement, StockOpening
+from app.models import StockMovement, StockOpening
 
 class StockError(Exception):
     pass

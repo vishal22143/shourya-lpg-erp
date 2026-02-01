@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
-from app.models.delivery_day_summary import DeliveryDaySummary
-from app.models.delivery_cylinder_detail import DeliveryCylinderDetail
+from app.models import DeliveryDaySummary
+from app.models import DeliveryCylinderDetail
 
 def classify_day(db: Session, delivery_man_id: int, on_date):
     rows = db.query(DeliveryCylinderDetail).filter(

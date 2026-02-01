@@ -1,7 +1,7 @@
 from datetime import date
 from sqlalchemy.orm import Session
-from app.models.office_cash import OfficeCashDay
-from app.models.cash_denomination import CashDenomination
+from app.models import OfficeCashDay
+from app.models import CashDenomination
 
 def denom_total(d):
     return (

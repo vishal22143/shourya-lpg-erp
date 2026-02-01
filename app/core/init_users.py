@@ -1,7 +1,7 @@
 from app.core.database import engine
 from app.core.base import Base
 
-from app.models.app_user import AppUser
+from app.models import AppUser
 
 def init_db():
     Base.metadata.create_all(bind=engine)
