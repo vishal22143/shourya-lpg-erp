@@ -4,8 +4,8 @@ from sqlalchemy import func
 from app.models import DeliveryDaySummary
 from app.models import DeliveryPayroll
 from app.models import StaffAdvance
-from app.models import OfficeCashDay
-from app.models import StockDayEnd
+from app.models.cash import CashHandover as OfficeCashDay
+from app.models.stock import StockMovement as StockDayEnd
 
 # ---------- Delivery Salary (Month Summary) ----------
 def report_delivery_salary(db: Session, month: str):

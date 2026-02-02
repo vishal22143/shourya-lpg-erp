@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models import User as AppUser
+from app.models.user import User as AppUser
 
 def authenticate(db: Session, login_id: str, password: str):
     user = db.query(AppUser).filter(

@@ -2,13 +2,13 @@ from app.core.database import engine
 from app.core.base import Base
 
 # Core users & staff
-from app.models import User
+from app.models.user import User
 from app.models import DeliveryMan
-from app.models import BDA
+from app.models.bda import BDA
 
 # Stock system
-from app.models import StockLocation, StockOpening, StockMovement
-from app.models import StockDayEnd
+from app.models.stock import StockMovement as StockLocation, StockOpening, StockMovement
+from app.models.stock import StockMovement as StockDayEnd
 
 # Delivery salary system (NEW)
 from app.models import DeliveryDaySummary
@@ -16,8 +16,8 @@ from app.models import DeliveryCylinderDetail
 from app.models import DeliveryPayroll
 
 # Cash & advances
-from app.models import OfficeCashDay
-from app.models import OfficeExpense
+from app.models.cash import CashHandover as OfficeCashDay
+from app.models.cash import CashHandover as OfficeExpense
 from app.models import StaffAdvance
 from app.models import CashDenomination
 

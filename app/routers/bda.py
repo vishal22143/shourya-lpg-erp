@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from app.core.deps import get_db
 from app.core.tx import commit_or_rollback
 from app.services.stock_atomic import atomic_move, StockError
-from app.models import BDASale
-from app.models import CashHandover
+from app.models.bda import BDASale
+from app.models.cash import CashHandover
 
 router = APIRouter(prefix='/bda', tags=['BDA'])
 

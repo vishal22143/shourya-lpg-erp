@@ -4,7 +4,7 @@ from sqlalchemy import func
 
 from app.models import DeliveryPayroll
 from app.models import StaffAdvance
-from app.models import OfficeCashDay
+from app.models.cash import CashHandover as OfficeCashDay
 from app.services.delivery_salary import compute_delivery_salary
 
 class PayrollError(Exception):

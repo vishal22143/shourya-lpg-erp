@@ -1,6 +1,6 @@
 from datetime import date
 from sqlalchemy.orm import Session
-from app.models import OfficeCashDay
+from app.models.cash import CashHandover as OfficeCashDay
 from app.models import CashDenomination
 
 def denom_total(d):
