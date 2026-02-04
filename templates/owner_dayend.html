@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Owner Day-End Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background:#f4f6f8;
+  padding:12px;
+}
+h2 {
+  text-align:center;
+  margin-bottom:15px;
+}
+.card {
+  background:#ffffff;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:8px;
+  box-shadow:0 0 6px rgba(0,0,0,0.1);
+}
+.row {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.label {
+  font-weight:bold;
+}
+.value {
+  font-weight:bold;
+}
+.status-pending { color:orange; }
+.status-ok { color:green; }
+.status-diff { color:red; }
+</style>
+</head>
+
+<body>
+
+<h2>Owner Day-End Dashboard / मालक दिवसअखेर डॅशबोर्ड</h2>
+
+<div class="card">
+  <div class="row">
+    <span class="label">Date / दिनांक</span>
+    <span class="value">{{ day }}</span>
+  </div>
+  <div class="row">
+    <span class="label">Day Status / दिवस स्थिती</span>
+    <span class="value status-pending">{{ day_status }}</span>
+  </div>
+  <div class="row">
+    <span class="label">BPCL Status / BPCL स्थिती</span>
+    <span class="value status-pending">{{ bpcl_status }}</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row">
+    <span class="label">Total Deliveries / एकूण डिलिव्हरी</span>
+    <span class="value">{{ total_deliveries }}</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row">
+    <span class="label">Delivery Cash / डिलिव्हरी रोख</span>
+    <span class="value">₹ {{ delivery_cash }}</span>
+  </div>
+  <div class="row">
+    <span class="label">Office Cash / कार्यालय रोख</span>
+    <span class="value">₹ {{ office_cash }}</span>
+  </div>
+  <div class="row">
+    <span class="label">Expenses / खर्च</span>
+    <span class="value">₹ {{ expenses }}</span>
+  </div>
+  <hr>
+  <div class="row">
+    <span class="label">Net Cash / निव्वळ रोख</span>
+    <span class="value">₹ {{ total_cash }}</span>
+  </div>
+</div>
+
+<p style="text-align:center;font-size:14px;color:#555;">
+Read-only view · फक्त पाहण्यासाठी
+</p>
+
+</body>
+</html>
