@@ -1,8 +1,7 @@
 # =====================================================
 # SHOURYA LPG ERP
 # S5.1-C-2 — Owner Day-End Top Panel (READ ONLY)
-# Source of Truth: ERP_FREEZE.md
-# NO INSERT / UPDATE / DELETE
+# Namespaced to avoid legacy conflicts
 # =====================================================
 
 from fastapi import APIRouter, Request
@@ -11,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 from datetime import date
 from data.db import get_conn
 
-router = APIRouter(prefix="/owner")
+router = APIRouter(prefix="/owner/s5")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -26,12 +25,9 @@ def owner_day_end_by_date(request: Request, day: str):
     conn = get_conn()
     cur = conn.cursor()
 
-    # ---------------- DAY STATUS ----------------
-    # Default assumptions (safe)
     day_status = "PENDING"
     bpcl_status = "PENDING"
 
-    # ---------------- DELIVERY COUNTS ----------------
     cur.execute("""
         SELECT COUNT(DISTINCT cashmemo)
         FROM deliveries
@@ -39,13 +35,11 @@ def owner_day_end_by_date(request: Request, day: str):
     """, (day,))
     total_deliveries = cur.fetchone()[0] or 0
 
-    # ---------------- CASH (DELIVERY) ----------------
     cur.execute("""
-        SELECT
-            COALESCE(SUM(
-                d500*500 + d200*200 + d100*100 +
-                d50*50 + d20*20 + d10*10 + coins
-            ),0)
+        SELECT COALESCE(SUM(
+            d500*500 + d200*200 + d100*100 +
+            d50*50 + d20*20 + d10*10 + coins
+        ),0)
         FROM trip_cash_denomination
         JOIN delivery_trips
           ON delivery_trips.id = trip_cash_denomination.trip_id
@@ -53,7 +47,6 @@ def owner_day_end_by_date(request: Request, day: str):
     """, (day,))
     delivery_cash = cur.fetchone()[0] or 0
 
-    # ---------------- OFFICE CASH ----------------
     cur.execute("""
         SELECT COALESCE(SUM(amount),0)
         FROM office_additional_items
@@ -61,7 +54,6 @@ def owner_day_end_by_date(request: Request, day: str):
     """, (day,))
     office_cash = cur.fetchone()[0] or 0
 
-    # ---------------- EXPENSES ----------------
     cur.execute("""
         SELECT COALESCE(SUM(amount),0)
         FROM office_expenses
