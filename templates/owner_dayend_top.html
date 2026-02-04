@@ -12,7 +12,9 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:
 .k{font-size:13px;color:#555}
 .v{font-size:18px;font-weight:700}
 .section{margin-top:10px;display:none;border-top:1px solid #eee;padding-top:8px}
-.btn{color:#0066cc;text-decoration:underline;font-size:13px}
+.warn{color:#856404;background:#fff3cd;padding:6px;border-radius:4px;font-size:13px}
+.err{color:#721c24;background:#f8d7da;padding:6px;border-radius:4px;font-size:13px}
+.ok{color:#155724;background:#d4edda;padding:6px;border-radius:4px;font-size:13px}
 </style>
 
 <script>
@@ -31,15 +33,19 @@ function toggle(id){
 <div class="card">
   <div class="row" onclick="toggle('stock_detail')">
     <div class="k">🔢 Stock Summary / साठा</div>
-    <div class="v">{{ stock_total or "-" }}</div>
+    <div class="v">{{ stock_total if stock_total is not none else "-" }}</div>
   </div>
   <div id="stock_detail" class="section">
-    {% for k,v in stock_breakup.items() %}
-      <div class="row">
-        <span class="k">{{ k }}</span>
-        <span class="v">{{ v }}</span>
-      </div>
-    {% endfor %}
+    {% if not stock_breakup %}
+      <div class="warn">Stock breakup not available for this day.</div>
+    {% else %}
+      {% for k,v in stock_breakup.items() %}
+        <div class="row">
+          <span class="k">{{ k }}</span>
+          <span class="v">{{ v }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
   </div>
 </div>
 
@@ -47,15 +53,22 @@ function toggle(id){
 <div class="card">
   <div class="row" onclick="toggle('cash_detail')">
     <div class="k">💰 Cash Summary / रोख</div>
-    <div class="v">₹ {{ cash_total or 0 }}</div>
+    <div class="v">₹ {{ cash_total if cash_total is not none else 0 }}</div>
   </div>
   <div id="cash_detail" class="section">
-    {% for k,v in cash_breakup.items() %}
-      <div class="row">
-        <span class="k">{{ k }}</span>
-        <span class="v">₹ {{ v }}</span>
-      </div>
-    {% endfor %}
+    {% if cash_total == 0 %}
+      <div class="warn">No cash recorded for this day.</div>
+    {% endif %}
+    {% if not cash_breakup %}
+      <div class="warn">Cash breakup not available.</div>
+    {% else %}
+      {% for k,v in cash_breakup.items() %}
+        <div class="row">
+          <span class="k">{{ k }}</span>
+          <span class="v">₹ {{ v }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
   </div>
 </div>
 
@@ -63,32 +76,44 @@ function toggle(id){
 <div class="card">
   <div class="row" onclick="toggle('delivery_detail')">
     <div class="k">🚚 Delivery Summary / डिलिव्हरी</div>
-    <div class="v">{{ delivery_count or 0 }}</div>
+    <div class="v">{{ delivery_count if delivery_count is not none else 0 }}</div>
   </div>
   <div id="delivery_detail" class="section">
-    {% for d in delivery_list %}
-      <div class="row">
-        <span class="k">{{ d.name }}</span>
-        <span class="v">{{ d.count }}</span>
-      </div>
-    {% endfor %}
+    {% if delivery_count == 0 %}
+      <div class="warn">No deliveries recorded for this day.</div>
+    {% endif %}
+    {% if not delivery_list %}
+      <div class="warn">Delivery details not available.</div>
+    {% else %}
+      {% for d in delivery_list %}
+        <div class="row">
+          <span class="k">{{ d.name }}</span>
+          <span class="v">{{ d.count }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
   </div>
 </div>
 
-<!-- BPCL -->
+<!-- BPCL STATUS -->
 <div class="card">
   <div class="row" onclick="toggle('bpcl_detail')">
-    <div class="k">🧾 BPCL Comparison</div>
-    <div class="v">{{ bpcl_status }}</div>
+    <div class="k">🧾 BPCL Status</div>
+    <div class="v">{{ bpcl_status or "PENDING" }}</div>
   </div>
   <div id="bpcl_detail" class="section">
-    <div class="k">Difference</div>
-    <div class="v">{{ bpcl_difference or "OK" }}</div>
+    {% if bpcl_status == "PENDING" %}
+      <div class="warn">BPCL day-end not punched yet.</div>
+    {% elif bpcl_difference %}
+      <div class="err">Difference detected between ERP and BPCL.</div>
+    {% else %}
+      <div class="ok">BPCL data matches ERP.</div>
+    {% endif %}
   </div>
 </div>
 
 <p style="font-size:12px;color:#666;text-align:center">
-Read-only • Same payload • No recalculation
+Read-only • Same payload • Empty/Error states handled
 </p>
 
 </body>
