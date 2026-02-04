@@ -1,0 +1,27 @@
+SHOURYA LPG ERP — FINAL EXECUTION BRIDGE
+
+CONFIRMED STATE
+---------------
+✔ Alembic initialized, initial migration applied
+✔ Database schema frozen and stable
+✔ ERP_FREEZE.md is the ONLY source of truth
+✔ README_S5_BRIDGE.txt defines S5.1-C scope
+✔ All work from this point is additive & read-only
+
+S5.1-C DEFINITION
+-----------------
+Owner / Partner Day-End Control Panel
+- Hierarchical
+- Expand / Collapse
+- Drill-down only
+- No data mutation
+
+COMMAND MODE
+------------
+- PowerShell only
+- No manual file edits
+- No schema changes
+- Git commit at every milestone
+
+This file certifies alignment across chat rooms
+and authorizes continuation till ERP completion.
