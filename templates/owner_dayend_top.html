@@ -7,55 +7,88 @@
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:12px}
 .hdr{font-size:20px;font-weight:700;text-align:center;margin:8px 0 16px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.card{background:#fff;border-radius:8px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer}
-.k{font-size:12px;color:#666}
-.v{font-size:18px;font-weight:700;margin-top:6px}
-.tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:12px}
-.ok{background:#e6f7ea;color:#1e7e34}
-.warn{background:#fff3cd;color:#856404}
-.bad{background:#fdecea;color:#b21f2d}
-.nav{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-.btn{background:#fff;border:1px solid #ddd;border-radius:6px;padding:10px 12px;text-decoration:none;color:#333}
+.card{background:#fff;border-radius:8px;padding:14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.row{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.k{font-size:13px;color:#555}
+.v{font-size:18px;font-weight:700}
+.section{margin-top:10px;display:none;border-top:1px solid #eee;padding-top:8px}
+.btn{color:#0066cc;text-decoration:underline;font-size:13px}
 </style>
+
+<script>
+function toggle(id){
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === "none" ? "block" : "none";
+}
+</script>
 </head>
+
 <body>
 
 <div class="hdr">Owner Day-End / मालक दिवसअखेर</div>
 
-<div class="grid">
-  <div class="card">
-    <div class="k">Date / दिनांक</div>
-    <div class="v">{{ day or "-" }}</div>
-    <span class="tag {{ 'ok' if day_status=='CLOSED' else 'warn' }}">{{ day_status or 'PENDING' }}</span>
+<!-- STOCK SUMMARY -->
+<div class="card">
+  <div class="row" onclick="toggle('stock_detail')">
+    <div class="k">🔢 Stock Summary / साठा</div>
+    <div class="v">{{ stock_total or "-" }}</div>
   </div>
-
-  <div class="card">
-    <div class="k">BPCL Status / BPCL स्थिती</div>
-    <div class="v">{{ bpcl_status or '-' }}</div>
-    {% if bpcl_diff %}<span class="tag bad">DIFFERENCE</span>{% else %}<span class="tag ok">OK</span>{% endif %}
-  </div>
-
-  <div class="card">
-    <div class="k">Total Deliveries / एकूण डिलिव्हरी</div>
-    <div class="v">{{ total_deliveries or 0 }}</div>
-  </div>
-
-  <div class="card">
-    <div class="k">Net Cash / निव्वळ रोख</div>
-    <div class="v">₹ {{ net_cash or 0 }}</div>
+  <div id="stock_detail" class="section">
+    {% for k,v in stock_breakup.items() %}
+      <div class="row">
+        <span class="k">{{ k }}</span>
+        <span class="v">{{ v }}</span>
+      </div>
+    {% endfor %}
   </div>
 </div>
 
-<div class="nav">
-  <a class="btn" href="/owner/s5/stock">🔢 Stock</a>
-  <a class="btn" href="/owner/s5/cash">💰 Cash</a>
-  <a class="btn" href="/owner/s5/delivery">🚚 Delivery</a>
-  <a class="btn" href="/owner/s5/bpcl">🧾 BPCL</a>
+<!-- CASH SUMMARY -->
+<div class="card">
+  <div class="row" onclick="toggle('cash_detail')">
+    <div class="k">💰 Cash Summary / रोख</div>
+    <div class="v">₹ {{ cash_total or 0 }}</div>
+  </div>
+  <div id="cash_detail" class="section">
+    {% for k,v in cash_breakup.items() %}
+      <div class="row">
+        <span class="k">{{ k }}</span>
+        <span class="v">₹ {{ v }}</span>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 
-<p style="margin-top:14px;color:#666;font-size:12px">
-Read-only presentation. No calculations. Same payload as <code>/owner/day-end</code>.
+<!-- DELIVERY SUMMARY -->
+<div class="card">
+  <div class="row" onclick="toggle('delivery_detail')">
+    <div class="k">🚚 Delivery Summary / डिलिव्हरी</div>
+    <div class="v">{{ delivery_count or 0 }}</div>
+  </div>
+  <div id="delivery_detail" class="section">
+    {% for d in delivery_list %}
+      <div class="row">
+        <span class="k">{{ d.name }}</span>
+        <span class="v">{{ d.count }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- BPCL -->
+<div class="card">
+  <div class="row" onclick="toggle('bpcl_detail')">
+    <div class="k">🧾 BPCL Comparison</div>
+    <div class="v">{{ bpcl_status }}</div>
+  </div>
+  <div id="bpcl_detail" class="section">
+    <div class="k">Difference</div>
+    <div class="v">{{ bpcl_difference or "OK" }}</div>
+  </div>
+</div>
+
+<p style="font-size:12px;color:#666;text-align:center">
+Read-only • Same payload • No recalculation
 </p>
 
 </body>
