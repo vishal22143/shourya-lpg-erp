@@ -1,0 +1,37 @@
+S6 — ROLE ROUTING MAP (LOCKED)
+=============================
+
+OWNER
+-----
+/owner/day-end
+/owner/summary
+(read-only, drill-down)
+
+OFFICE
+------
+/office/dashboard
+/office/cash
+/office/csv
+/office/aux-stock
+(controlled writes)
+
+/office/aux-stock/opening  (save-once)
+/office/aux-stock/movement (append-only)
+/office/aux-stock/physical (save-once)
+
+ACCOUNTANT
+----------
+/accountant/dashboard
+/accountant/ledgers
+/accountant/reconciliation
+(read-only)
+
+RULES
+-----
+- Role decides route visibility
+- Backend enforces permissions
+- UI never bypasses service rules
+
+FREEZE
+------
+Routing is LOCKED.

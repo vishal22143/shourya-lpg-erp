@@ -173,3 +173,26 @@ If chat crashes or new chat is opened:
 ## 10. ABSOLUTE RULE
 If a feature is not listed here,
 IT DOES NOT EXIST.
+
+[S5.2-E FREEZE]
+- Office Auxiliary Stock scope frozen
+- Opening stock immutable after save
+- Month-based reconciliation enforced
+- Isolated from core LPG logic
+
+[S5.2-E-4 LOCK]
+- Auxiliary reconciliation logic frozen
+- No edits permitted without freeze update
+
+[S5.2-E-5 LOCK]
+- Variance reporting logic frozen
+- Accountability mapping fixed
+
+[S5.3 LOCK]
+- Auxiliary stock UI wiring frozen
+
+[S5.4 LOCK]
+- Accountant dashboard frozen (read-only)
+
+[S6 ROLE ROUTING LOCK]
+- Role → route mapping frozen
