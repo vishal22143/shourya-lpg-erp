@@ -1,0 +1,68 @@
+S5.2-A — OFFICE DASHBOARD SCOPE FREEZE
+=====================================
+
+ROLE
+----
+Office User (Operations)
+
+PRIMARY GOAL
+------------
+Run daily operations safely without altering historical data.
+
+ALLOWED CAPABILITIES
+--------------------
+1) Live Delivery Monitoring
+   - View active delivery men & trips
+   - Vehicle-wise status (en-route / completed)
+   - Area-wise customer lists (read-only)
+
+2) Cash Operations (CONTROLLED WRITE)
+   - Opening cash entry
+   - Cash in / cash out
+   - Denomination entry
+   - Closing cash
+   - NO back-dated edits
+
+3) CSV Operations
+   - Morning BPCL CSV upload (new day only)
+   - De-duplication as per S4 rules
+   - No overwrite of delivered customers
+
+4) Manual Corrections (LOGGED)
+   - Mark customer not available
+   - Reschedule delivery
+   - Emergency delivery tagging
+   - Every correction must create an audit log
+
+READ-ONLY SECTIONS
+------------------
+- Stock ledger (view only)
+- Wages (view only)
+- BPCL comparison (view only)
+- Owner summaries (view only)
+
+FORBIDDEN ACTIONS
+-----------------
+- No schema changes
+- No deletion of records
+- No modification of historical days
+- No wage recalculation
+- No stock back-adjustment
+
+UI PRINCIPLES
+-------------
+- Desktop-first
+- Fast keyboard-driven workflows
+- English + Marathi mandatory
+- Status colors as per S4
+
+ANCHORS (IMMUTABLE)
+-------------------
+- Uses existing S3/S4/S5 APIs
+- Does NOT duplicate logic
+- All writes must go through existing services
+
+FREEZE STATUS
+-------------
+This scope is LOCKED.
+Any change requires update to ERP_FREEZE.md.

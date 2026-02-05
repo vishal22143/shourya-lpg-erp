@@ -1,0 +1,45 @@
+S5.4-A — ACCOUNTANT DASHBOARD SCOPE FREEZE
+=========================================
+
+ROLE
+----
+Accountant (Audit & Compliance)
+
+PRIMARY GOAL
+------------
+Verify financial correctness, stock reconciliation,
+and regulatory alignment without operational control.
+
+READ-ONLY ACCESS
+----------------
+- Cash ledger (all sources, denominations)
+- Delivery summaries (no edits)
+- Wages & advances (view only)
+- BPCL comparison (ERP vs SAP)
+- Auxiliary stock variance reports
+- Owner day-end summary (read-only mirror)
+
+FORBIDDEN ACTIONS
+-----------------
+- No data entry
+- No edits or deletions
+- No recalculation
+- No back-dated changes
+- No schema or logic changes
+
+UI PRINCIPLES
+-------------
+- Desktop-first
+- Ledger-style tables
+- Expandable drill-down
+- English + Marathi mandatory
+
+ANCHORS (IMMUTABLE)
+-------------------
+- Uses existing S3/S4/S5 services only
+- No duplication of business logic
+
+FREEZE STATUS
+-------------
+This scope is LOCKED.
+Any change requires update to ERP_FREEZE.md.

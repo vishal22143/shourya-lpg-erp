@@ -1,0 +1,85 @@
+S5.2-E — OFFICE AUXILIARY STOCK (SCOPE FREEZE)
+=============================================
+
+MODULE PURPOSE
+--------------
+Track office-controlled auxiliary items and cylinder counts
+without affecting core LPG stock, delivery, wages, or BPCL logic.
+
+ITEMS COVERED
+-------------
+A) Cylinder Counts (COUNT ONLY)
+   - 14.2 KG Filled
+   - 14.2 KG Empty
+   - 5 KG Filled
+   - 5 KG Empty
+
+B) Accessories
+   - Blue Book
+   - Rubber Hose / Suraksha Pipe
+
+TIME BOUNDARY
+-------------
+- Month-based accounting only
+- Daily operations derive from monthly opening
+
+OPENING STOCK (CRITICAL RULE)
+-----------------------------
+- Opening stock is entered ONCE per month (morning of Day 1)
+- After save:
+    * NO edit
+    * NO delete
+    * NO overwrite
+- Any correction requires:
+    * Manager approval
+    * Separate adjustment record
+    * Audit log
+
+MOVEMENT & SALES LOGIC
+----------------------
+- No manual math
+- Sales auto-accumulate during the month
+- Movements only via defined actions:
+    * Sale
+    * Issue
+    * Return (if applicable)
+- All movements are append-only
+
+PHYSICAL STOCK (MONTH END)
+--------------------------
+- Physical stock captured once at month end
+- System computes:
+    Opening
+  + Receipts
+  - Sales
+  = Expected Stock
+
+VARIANCE & ACCOUNTABILITY
+-------------------------
+- Variance = Physical - Expected
+- Variance highlighted automatically
+- Variance value assigned to:
+    * Office staff
+    * Manager advance
+- No silent adjustment allowed
+
+UI & ACCESS RULES
+-----------------
+- Office dashboard ONLY
+- Owner / Accountant: read-only
+- Desktop-first
+- English + Marathi mandatory
+
+NON-IMPACT GUARANTEE
+--------------------
+- Does NOT affect:
+    * LPG stock ledger
+    * Delivery logic
+    * Wages
+    * BPCL reconciliation
+    * Owner day-end totals
+
+FREEZE STATUS
+-------------
+This scope is LOCKED.
+Implementation must follow this exactly.
