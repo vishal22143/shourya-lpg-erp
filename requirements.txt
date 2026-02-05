@@ -3,3 +3,5 @@ uvicorn
 jinja2
 python-multipart
 itsdangerous
+bcrypt==4.0.1
+passlib
