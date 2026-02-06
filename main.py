@@ -1,35 +1,21 @@
 from fastapi import FastAPI
 
-from app.routers.s3_delivery_router import router as delivery_router
-from app.routers.s3_cash_router import router as cash_router
-from app.routers.s3_wages_router import router as wages_router
-from app.routers.s4_csv_router import router as csv_router
-from app.routers.s4_map_router import router as map_router
-from app.routers.s5_owner.owner_day_end_router import router as owner_router
+app = FastAPI(title="Shourya LPG ERP")
 
-app = FastAPI(title="SHOURYA LPG ERP")
+def try_include(path, name):
+    try:
+        module = __import__(path, fromlist=["router"])
+        app.include_router(module.router)
+        print(f"✓ Loaded {name}")
+    except Exception as e:
+        print(f"⚠ Skipped {name}: {e}")
 
-app.include_router(delivery_router)
-app.include_router(cash_router)
-app.include_router(wages_router)
-app.include_router(csv_router)
-app.include_router(map_router)
-app.include_router(owner_router)
+# Core routers (only if present)
+try_include("app.auth.router", "Auth")
+try_include("app.ui.owner.router", "Owner UI")
+try_include("app.ui.accounts.router", "Accounts UI")
+try_include("app.ui.office.router", "Office UI")
 
 @app.get("/")
 def root():
-    return {
-        "status": "ERP RUNNING",
-        "modules": [
-            "S3.1 DELIVERY",
-            "S3.2 CASH & ADVANCE",
-            "S3.3 WAGES",
-            "S4.1 BPCL CSV",
-            "S4.2 MAP & AREA",
-            "S5.1 OWNER DAY-END"
-        ],
-        "state": "LOCKED"
-    }
-# ---- OWNER DAY-END ROUTER (S5.1-C-2) ----
-from routes.owner_dayend import router as owner_dayend_router
-app.include_router(owner_dayend_router)
+    return {"status": "ERP BOOT OK", "mode": "admin"}
