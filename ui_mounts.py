@@ -30,3 +30,7 @@ def mount_ui(app: FastAPI):
     delivery_router = _import_router("app.routers.delivery")
     if delivery_router:
         app.include_router(delivery_router, prefix="/delivery")
+
+    # LANDING ROUTES
+    from app.routers.landing import router as landing_router
+    app.include_router(landing_router)
