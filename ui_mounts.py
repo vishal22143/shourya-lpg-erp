@@ -34,3 +34,6 @@ def mount_ui(app: FastAPI):
     # LANDING ROUTES
     from app.routers.landing import router as landing_router
     app.include_router(landing_router)
+
+    from app.routers.role_home import router as role_home_router
+    app.include_router(role_home_router)
