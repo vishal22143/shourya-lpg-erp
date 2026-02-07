@@ -1,21 +1,57 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi.templating import Jinja2Templates
 
+# ===============================
+# APP INIT
+# ===============================
 app = FastAPI(title="Shourya LPG ERP")
 
-def try_include(path, name):
-    try:
-        module = __import__(path, fromlist=["router"])
-        app.include_router(module.router)
-        print(f"✓ Loaded {name}")
-    except Exception as e:
-        print(f"⚠ Skipped {name}: {e}")
+# ===============================
+# MIDDLEWARE
+# ===============================
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="shourya-erp-secret"
+)
 
-# Core routers (only if present)
-try_include("app.auth.router", "Auth")
-try_include("app.ui.owner.router", "Owner UI")
-try_include("app.ui.accounts.router", "Accounts UI")
-try_include("app.ui.office.router", "Office UI")
+# ===============================
+# STATIC & TEMPLATES
+# ===============================
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
-@app.get("/")
+# ===============================
+# IMPORT ROUTERS (CORRECT PATHS)
+# ===============================
+from app.routers.auth import router as auth_router
+from app.routers.owner import router as owner_router
+from app.routers.office import router as office_router
+from app.routers.delivery import router as delivery_router
+from app.routers.ui import router as ui_router
+
+# ===============================
+# REGISTER ROUTERS
+# ===============================
+app.include_router(auth_router)
+app.include_router(ui_router)
+
+app.include_router(owner_router, prefix="/owner")
+app.include_router(office_router, prefix="/office")
+app.include_router(delivery_router, prefix="/delivery")
+
+# ===============================
+# ROOT → LOGIN
+# ===============================
+@app.get("/", include_in_schema=False)
 def root():
-    return {"status": "ERP BOOT OK", "mode": "admin"}
+    return RedirectResponse(url="/login")
+
+# ===============================
+# HEALTH CHECK
+# ===============================
+@app.get("/health", include_in_schema=False)
+def health():
+    return {"status": "ERP BOOT OK"}
