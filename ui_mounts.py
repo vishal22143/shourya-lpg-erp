@@ -10,9 +10,16 @@ def require_login(role: str = None):
     return guard
 
 def mount_ui(app: FastAPI):
-    from app.routers.owner import router as owner_router
-    from app.routers.office import router as office_router
+    # OWNER (S5)
+    from app.ui.s5_owner.router import router as owner_router
+
+    # OFFICE (S2)
+    from app.ui.s5_office.router import router as office_router
+
+    # GODOWN (S3)
     from app.routers.phase6_layerB_full import router as godown_router
+
+    # DELIVERY (S4)
     from app.routers.delivery import router as delivery_router
 
     app.include_router(owner_router, prefix="/owner", dependencies=[require_login("OWNER")])
