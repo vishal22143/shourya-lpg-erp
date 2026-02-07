@@ -2,8 +2,8 @@ from datetime import date
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from app.models import DeliveryPayroll
-from app.models import StaffAdvance
+from app.models.delivery_payroll import DeliveryPayroll
+from app.models.staff_advance import StaffAdvance
 from app.models.cash import CashHandover as OfficeCashDay
 from app.services.delivery_salary import compute_delivery_salary
 

@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "sqlite:///./shourya_erp.db"
+DATABASE_URL = "sqlite:///C:/Projects/SHOURYA_ERP/data/erp.db"
 
 engine = create_engine(
     DATABASE_URL,

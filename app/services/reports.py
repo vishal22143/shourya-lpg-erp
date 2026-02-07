@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from app.models import DeliveryDaySummary
-from app.models import DeliveryPayroll
-from app.models import StaffAdvance
+from app.models.delivery_day_summary import DeliveryDaySummary
+from app.models.delivery_payroll import DeliveryPayroll
+from app.models.staff_advance import StaffAdvance
 from app.models.cash import CashHandover as OfficeCashDay
 from app.models.stock import StockMovement as StockDayEnd
 

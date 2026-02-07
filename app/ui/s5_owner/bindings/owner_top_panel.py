@@ -11,7 +11,7 @@ Rules:
 - No mutation
 """
 
-def bind_owner_top_panel(day_end_payload: dict) -> dict:
+def get_owner_top_panel(day_end_payload: dict) -> dict:
     if not day_end_payload:
         return {
             "date": None,

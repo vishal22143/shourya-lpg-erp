@@ -15,7 +15,7 @@ class StockOpening(Base):
     empty_qty = Column(Integer, default=0)
 
 class StockMovement(Base):
-    __tablename__ = 'stock_movements'
+    __tablename__ = 'godown_events'
     id = Column(Integer, primary_key=True)
     date = Column(Date)
     from_location = Column(Integer)

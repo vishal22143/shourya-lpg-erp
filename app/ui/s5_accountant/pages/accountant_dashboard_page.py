@@ -1,12 +1,6 @@
-"""
-Accountant Dashboard Page Wiring
-"""
+from app.ui.s5_accountant.contracts.accountant_data_contract import get_accountant_sections
 
-from app.ui.s5_accountant.contracts.accountant_data_contract import (
-    get_accountant_sections
-)
-
-def get_accountant_dashboard_page() -> dict:
+def get_accountant_dashboard() -> dict:
     return {
         "page_id": "accountant_dashboard",
         "title_en": "Accountant Dashboard",

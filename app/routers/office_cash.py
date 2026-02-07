@@ -6,8 +6,8 @@ from app.core.deps import get_db
 from app.core.tx import commit_or_rollback
 from app.models.cash import CashHandover as OfficeCashDay
 from app.models.cash import CashHandover as OfficeExpense
-from app.models import StaffAdvance
-from app.models import CashDenomination
+from app.models.staff_advance import StaffAdvance
+from app.models.cash_denomination import CashDenomination
 from app.services.cash_register import close_cash_day
 
 router = APIRouter(prefix='/office-cash', tags=['Office Cash'])
