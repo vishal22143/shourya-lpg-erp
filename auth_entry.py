@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="templates")
 router = APIRouter()
 
-ROLE_HOME = {
+ROLE_PREFIX = {
     "OWNER": "/owner",
     "ADMIN": "/owner",
     "OFFICE": "/office",
@@ -17,6 +17,13 @@ ROLE_HOME = {
 def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+def _find_valid_route(app, prefix):
+    for r in app.routes:
+        if hasattr(r, "path") and r.path.startswith(prefix):
+            if r.path != prefix:
+                return r.path
+    return prefix  # fallback
+
 @router.post("/login")
 def login_action(
     request: Request,
@@ -25,10 +32,12 @@ def login_action(
 ):
     request.session["user"] = username
     request.session["role"] = role.upper()
-    return RedirectResponse(
-        ROLE_HOME.get(role.upper(), "/login"),
-        status_code=302
-    )
+
+    app = request.app
+    prefix = ROLE_PREFIX.get(role.upper(), "/login")
+    target = _find_valid_route(app, prefix)
+
+    return RedirectResponse(target, status_code=302)
 
 @router.get("/logout")
 def logout(request: Request):
