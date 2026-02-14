@@ -37,7 +37,7 @@ def login_action(
     prefix = ROLE_PREFIX.get(role.upper(), "/login")
     target = _find_valid_route(app, prefix)
 
-    return RedirectResponse(target, status_code=302)
+    return RedirectResponse(\1, status_code=303)
 
 @router.get("/logout")
 def logout(request: Request):
