@@ -1,0 +1,113 @@
+
+FullName
+--------                                                                                                                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\1 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\1.txt                                           
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\10 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\11 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\12 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\127.0.0.1_8000_docs.png                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\13 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\14 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\15.png                                          
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\16 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\17 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\18 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\19 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\2 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\20 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\21 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\22 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\23 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\24 doc.png                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\3 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\4 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\5 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\6 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\7 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\8 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\9 doc.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Again (AutoRecovered).docx                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Again.docx                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\As financial constrain we do not have godown st…
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\BPCL CSV REFRESH & DE-DUPLICATION (FINAL).docx  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\bpcl missing.pdf                                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\CashMemoGeneratedList (1).csv                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\CashMemoGeneratedList.csv                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\chatgpt.com_codex_tasks_task_e_6990445d57c08331…
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\codex 1.txt                                     
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\color codes.docx                                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\COMPLETE ERP SNAPSHOT.txt                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\delivery cycle map.docx                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\delivery in v3.pdf                              
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Display_SOA.xls                                 
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\doc delivery.png                                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\doc stock.png                                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\doc upload.png                                  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\dry run.xlsx                                    
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\econnect.bpcl.in_LpgNextEBooking_EDayEndStateme…
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\econnect.bpcl.in_LpgNextEBooking_EDayEndStateme…
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\econnect.bpcl.in_LpgNextEBooking_EDayEndStateme…
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\ERP system Development.docx                     
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Frozen ERP Screen List RAW.pdf                  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\frozen S5.docx                                  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\full git.png                                    
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\godowen missing.pdf                             
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\godowen stock correct way.pdf                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\godowen stock correct way.png                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\GODOWN & BPCL CYLINDER MOVEMENT.docx            
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index (1).php                                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index (2).php                                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index (3).php                                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_COMPLETE_FINAL (1).php                    
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_COMPLETE_FINAL_WORKING (1).php            
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_COMPLETE_FINAL_WORKING.php                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_COMPLETE_FINAL.php                        
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_COMPLETE.php                              
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_FIXED_v3.php                              
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_v4_REAL.php                               
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index_V5_COMPLETE.php                           
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\index.php                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\ip details.txt                                  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\ListOfBlockedConsumers.csv                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\new chat room path.docx                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\new display.pdf                                 
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\new v5.pdf                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\ni.csv                                          
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\no login.png                                    
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\office missing.pdf                              
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\old caht rrom.docx                              
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\pay roll.pdf                                    
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Screenshot 2026-02-18 003816.png                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\search.htm                                      
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya ERP - Frozen ERP Screen List.pdf        
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya LPG ERP - Swagger UI.pdf                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_bharatgas_erp_v3.html                   
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_blueprint_v3.html                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_erp_database.sql                        
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_ERP_MASTER_REFERENCE_v1.pdf             
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_ERP_MASTER_REFERENCE.docx               
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_erp_v2.html                             
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_erp_v3 (1).html                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_erp_v3.html                             
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_erp.html                                
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya_lpg_erp (1).html                        
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_LPG_ERP_v3 (1).html                     
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_LPG_ERP_v3.html                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_LPG_ERP_v4.html                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_LPG_ERP_v5.html                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_LPG_ERP_v6.html                         
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\Shourya_LPG_ERP.html                            
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya-erp-v1.zip                              
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\shourya-erp.zip                                 
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\sql import error.pdf                            
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\sqlmimport.pdf                                  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\stock.png                                       
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\test_password.pdf                               
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\test_password.php                               
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\tracking.pdf                                    
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\trip in v3.pdf                                  
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\unknown.pdf                                     
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\windows.htm                                     
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\xampp.txt                                       
+

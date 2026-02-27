@@ -1,0 +1,12 @@
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\CashMemoGeneratedList (1).csv
+ExecutionTime,RSPandMIDetailReport
+
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\CashMemoGeneratedList.csv
+ExecutionTime,RSPandMIDetailReport
+
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\ListOfBlockedConsumers.csv
+DistCode
+
+C:\Users\257027\Downloads\shourya-erp-v1_1\inputs\erp-inputs\erp-inputs\ni.csv
+DistCode,Textbox31
+
