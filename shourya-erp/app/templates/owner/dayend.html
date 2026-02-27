@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Day End Report{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/owner/dashboard">← Owner</a>
+  <a href="/owner/dayend" class="active">📊 Day End</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">📊 Day End Report</div>
+<div class="page-sub">{{ today.strftime('%d %B %Y') }}
+  {% if erp_day %} · <span class="badge {% if erp_day.status.value == 'LOCKED' %}badge-red{% else %}badge-green{% endif %}">{{ erp_day.status.value }}</span>{% endif %}
+</div>
+
+{% if not snapshot %}
+<div class="alert alert-info">
+  📊 No day end report generated yet.
+  <form method="post" action="/owner/generate-dayend" style="display:inline;margin-left:10px;">
+    <button type="submit" class="btn btn-sm btn-primary">Generate Now</button>
+  </form>
+</div>
+{% else %}
+
+{% set s = snapshot.snapshot_json %}
+
+<!-- DELIVERY SUMMARY -->
+<div class="card">
+  <div class="card-title">🚚 Delivery Summary / डिलिव्हरी सारांश</div>
+  <div class="stat-grid" style="margin-bottom:0;">
+    <div class="stat-box green">
+      <div class="val">{{ s.delivery_summary.delivered }}</div>
+      <div class="lbl">Delivered / झाले</div>
+    </div>
+    <div class="stat-box amber">
+      <div class="val">{{ s.delivery_summary.pending }}</div>
+      <div class="lbl">Pending / बाकी</div>
+    </div>
+    <div class="stat-box red">
+      <div class="val">{{ s.delivery_summary.cancelled }}</div>
+      <div class="lbl">Cancelled / रद्द</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">{{ s.delivery_summary.scheduled }}</div>
+      <div class="lbl">Total Scheduled</div>
+    </div>
+  </div>
+</div>
+
+<!-- CASH SUMMARY -->
+<div class="card">
+  <div class="card-title">💵 Cash Summary / रोख सारांश</div>
+  <div class="stat-grid" style="margin-bottom:0;">
+    <div class="stat-box green">
+      <div class="val">₹{{ s.cash_summary.total_in|int }}</div>
+      <div class="lbl">Cash IN / आले</div>
+    </div>
+    <div class="stat-box red">
+      <div class="val">₹{{ (s.cash_summary.total_out|abs)|int }}</div>
+      <div class="lbl">Cash OUT / गेले</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">₹{{ s.cash_summary.net|int }}</div>
+      <div class="lbl">Net / निव्वळ</div>
+    </div>
+  </div>
+</div>
+
+<!-- STOCK SUMMARY -->
+<div class="card">
+  <div class="card-title">📦 Stock Summary / साठा सारांश</div>
+  {% if s.stock_summary.godown_ledger %}
+  <div class="table-wrap">
+    <table>
+      <tr><th>Product</th><th>Filled / भरलेले</th><th>Empty / रिकामे</th></tr>
+      {% for code, vals in s.stock_summary.godown_ledger.items() %}
+      <tr>
+        <td><strong>{{ code }}</strong></td>
+        <td style="color:#057a55;">{{ vals.filled }}</td>
+        <td style="color:#c27803;">{{ vals.empty }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+  {% if s.stock_summary.physical_count %}
+  <div class="alert alert-info" style="margin-top:10px;">
+    Physical Count: 14.2kg Filled = <strong>{{ s.stock_summary.physical_count.filled_14_2 }}</strong>,
+    Empty = <strong>{{ s.stock_summary.physical_count.empty_14_2 }}</strong>
+    {% set ledger_filled = s.stock_summary.godown_ledger.get('5350', {}).get('filled', 0) %}
+    {% if s.stock_summary.physical_count.filled_14_2 != ledger_filled %}
+    <br><span style="color:#e02424;">⚠️ Difference: {{ s.stock_summary.physical_count.filled_14_2 - ledger_filled }}</span>
+    {% else %}
+    <span style="color:#057a55;"> ✅ Match!</span>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<!-- TRIP-WISE -->
+<div class="card">
+  <div class="card-title">🚚 Trip-wise Breakup / ट्रिप तपशील</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Trip</th><th>Delivery Man</th><th>Vehicle</th><th>Sold</th><th>Cash ₹</th><th>Online ₹</th><th>BDA ₹</th></tr>
+      {% for t in s.trip_summaries %}
+      <tr>
+        <td>#{{ t.trip_id }}</td>
+        <td>{{ t.delivery_man }}</td>
+        <td>{{ t.vehicle }}</td>
+        <td><strong>{{ t.total_sales }}</strong></td>
+        <td>₹{{ t.cash_collected|int }}</td>
+        <td>₹{{ t.online_collected|int }}</td>
+        <td>₹{{ t.bda_cash|int }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<!-- BDA -->
+<div class="card">
+  <div class="card-title">🏘️ BDA Summary</div>
+  <div class="stat-grid" style="margin-bottom:0;">
+    <div class="stat-box">
+      <div class="val">{{ s.bda_summary.filled_issued }}</div>
+      <div class="lbl">Filled Issued / दिले</div>
+    </div>
+    <div class="stat-box green">
+      <div class="val">₹{{ s.bda_summary.cash_collected|int }}</div>
+      <div class="lbl">BDA Cash</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">₹{{ s.bda_summary.online_collected|int }}</div>
+      <div class="lbl">BDA Online</div>
+    </div>
+  </div>
+</div>
+
+<!-- WAGES -->
+<div class="card">
+  <div class="card-title">💰 Total Wages / एकूण वेतन</div>
+  <div style="font-size:1.5rem;font-weight:800;color:#1a56db;">₹{{ s.wages_total|round(2) }}</div>
+</div>
+
+<!-- LOCK ACTION -->
+{% if erp_day and erp_day.status.value == 'OPEN' %}
+<div class="card" style="border:2px solid #e02424;">
+  <div class="card-title" style="color:#e02424;">🔒 Lock Day / दिवस लॉक करा</div>
+  <p style="font-size:0.85rem;color:#6b7280;margin-bottom:14px;">
+    Once locked, no changes can be made to today's data. / एकदा लॉक केल्यावर बदल होणार नाही.
+  </p>
+  <form method="post" action="/owner/lock-day" onsubmit="return confirm('Confirm lock day? This cannot be undone.')">
+    <button type="submit" class="btn btn-danger">🔒 Lock Day Permanently</button>
+  </form>
+</div>
+{% endif %}
+
+{% endif %}
+
+<div style="margin-top:20px;text-align:right;">
+  <button onclick="window.print()" class="btn btn-outline">🖨️ Print</button>
+</div>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Vehicles{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/owner/dashboard">← Owner</a>
+  <a href="/owner/users">👥 Users</a>
+  <a href="/owner/vehicles" class="active">🚗 Vehicles</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🚗 Vehicles / वाहने</div>
+
+<div class="card">
+  <div class="card-title">➕ नवीन वाहन / Add Vehicle</div>
+  <form method="post" action="/owner/vehicles/add">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>Vehicle Name</label>
+        <input type="text" name="name" required placeholder="e.g. Tata 407">
+      </div>
+      <div class="form-group">
+        <label>Reg Number</label>
+        <input type="text" name="reg_number" placeholder="MH-09-AB-1234">
+      </div>
+      <div class="form-group">
+        <label>Capacity (cylinders)</label>
+        <input type="number" name="capacity" value="55">
+      </div>
+      <div class="form-group">
+        <label>Extra Capacity</label>
+        <input type="number" name="extra_cap" value="10">
+      </div>
+      <div class="form-group" style="grid-column:span 2;">
+        <label>Default Driver</label>
+        <select name="default_driver_id">
+          <option value="">— Select —</option>
+          {% for d in drivers %}
+          <option value="{{ d.id }}">{{ d.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">➕ Add Vehicle</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-title">📋 All Vehicles</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Name</th><th>Reg</th><th>Capacity</th><th>Extra</th><th>Default Driver</th><th>Status</th></tr>
+      {% for v in vehicles %}
+      <tr>
+        <td><strong>{{ v.name }}</strong></td>
+        <td>{{ v.reg_number or '—' }}</td>
+        <td>{{ v.capacity }}</td>
+        <td>{{ v.extra_cap }}</td>
+        <td>{{ v.default_driver.name if v.default_driver else '—' }}</td>
+        <td><span class="badge {% if v.is_active %}badge-green{% else %}badge-red{% endif %}">
+          {{ 'Active' if v.is_active else 'Inactive' }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}

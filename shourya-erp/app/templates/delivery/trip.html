@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Trip #{{ trip.id }}{% endblock %}
+{% block body_class %}has-action-bar{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/delivery/dashboard">← Back</a>
+  <a href="/delivery/trip/{{ trip.id }}" class="active">🚚 Trip #{{ trip.id }}</a>
+  <a href="/bda/dashboard">🏘️ BDA</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🚚 Trip #{{ trip.id }} — {{ trip.vehicle.name }}</div>
+<div class="page-sub">{{ trip.delivery_man.name }} · {{ today.strftime('%d %B %Y') }}</div>
+
+<!-- TRIP STATS -->
+<div class="stat-grid">
+  <div class="stat-box green">
+    <div class="val">{{ trip.total_sales }}</div>
+    <div class="lbl">Delivered / केले</div>
+  </div>
+  <div class="stat-box">
+    <div class="val">{{ trip.filled_issued - trip.total_sales }}</div>
+    <div class="lbl">Remaining / बाकी</div>
+  </div>
+  <div class="stat-box green">
+    <div class="val">₹{{ trip.cash_collected|int }}</div>
+    <div class="lbl">Cash / रोख</div>
+  </div>
+  <div class="stat-box blue">
+    <div class="val">₹{{ trip.online_collected|int }}</div>
+    <div class="lbl">Online / ऑनलाईन</div>
+  </div>
+</div>
+
+<!-- AREA FILTER -->
+{% if areas %}
+<div style="overflow-x:auto;white-space:nowrap;margin-bottom:12px;padding:4px 0;">
+  <a href="/delivery/trip/{{ trip.id }}" class="btn btn-sm {% if not selected_area %}btn-primary{% else %}btn-outline{% endif %}">All / सर्व</a>
+  {% for a in areas %}
+  <a href="/delivery/trip/{{ trip.id }}?area={{ a }}" class="btn btn-sm {% if selected_area == a %}btn-primary{% else %}btn-outline{% endif %}" style="margin-left:6px;">{{ a }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- DELIVERY LIST (MOBILE CARDS) -->
+{% if deliveries %}
+  {% for d in deliveries %}
+  <div class="delivery-card scheduled" id="d_{{ d.id }}">
+    <div class="name">{{ d.consumer_name }}</div>
+    <div class="addr">📍 {{ d.address }}</div>
+    {% if d.mobile %}
+    <a href="tel:{{ d.mobile }}" class="mobile-link">📞 {{ d.mobile }}</a>
+    {% endif %}
+    <div style="font-size:0.75rem;color:#6b7280;margin:4px 0;">Consumer: {{ d.consumer_no }} · {{ d.booking_type }}</div>
+
+    <!-- DELIVER FORM -->
+    <details style="margin-top:10px;">
+      <summary class="btn btn-sm btn-success" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+        ✅ Deliver / डिलिव्हर
+      </summary>
+      <form method="post" action="/delivery/deliver/{{ d.id }}" style="margin-top:10px;padding:12px;background:#f9fafb;border-radius:8px;">
+        <input type="hidden" name="trip_id" value="{{ trip.id }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group">
+            <label>OTP (if available)</label>
+            <input type="text" name="otp" placeholder="e.g. 123456" inputmode="numeric" maxlength="6">
+          </div>
+          <div class="form-group">
+            <label>Payment / पेमेंट</label>
+            <select name="payment_mode">
+              <option value="CASH">💵 Cash / रोख</option>
+              <option value="QR_CODE">📱 QR Code Scan</option>
+              <option value="GPAY">📱 GPay</option>
+              <option value="PAYTM">📱 Paytm</option>
+              <option value="PREPAID">✅ Prepaid (BPCL Advance)</option>
+              <option value="MIXED">💱 Cash + Online (Mixed)</option>
+              <option value="ONLINE">🌐 Other Online</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Amount / रक्कम ₹</label>
+            <input type="number" name="amount" value="856" min="0" step="1" inputmode="numeric">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" name="emergency" value="true" style="width:auto;"> No OTP / Emergency
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">✅ Mark Delivered / डिलिव्हर केले</button>
+      </form>
+    </details>
+
+    <!-- NOT DELIVERED -->
+    <form method="post" action="/delivery/deliver/{{ d.id }}" style="display:inline;margin-left:8px;">
+      <input type="hidden" name="trip_id" value="{{ trip.id }}">
+      <input type="hidden" name="amount" value="0">
+      <input type="hidden" name="payment_mode" value="CASH">
+    </form>
+  </div>
+  {% endfor %}
+{% else %}
+<div class="card" style="text-align:center;color:#6b7280;padding:30px;">
+  <div style="font-size:2.5rem;">🎉</div>
+  <p style="margin-top:8px;">
+    {% if selected_area %}या एरियात कोणताही पेंडिंग नाही / No pending in this area.{% else %}सर्व डिलिव्हरी झाल्या / All delivered!{% endif %}
+  </p>
+</div>
+{% endif %}
+
+{% endblock %}
+
+<!-- CLOSE TRIP ACTION BAR -->
+{% if trip.status.value == 'OPEN' %}
+{% block scripts %}
+<div class="action-bar">
+  <button onclick="document.getElementById('closeTripModal').style.display='flex'" class="btn btn-danger">
+    🏁 ट्रिप बंद / Close Trip
+  </button>
+  <a href="/bda/dashboard" class="btn btn-outline">🏘️ BDA</a>
+</div>
+
+<!-- CLOSE TRIP MODAL -->
+<div id="closeTripModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;">
+  <div style="background:white;border-radius:16px 16px 0 0;padding:24px;width:100%;max-height:90vh;overflow-y:auto;">
+    <h3 style="margin-bottom:16px;">🏁 ट्रिप बंद करा / Close Trip #{{ trip.id }}</h3>
+    <form method="post" action="/delivery/close-trip/{{ trip.id }}">
+      <div class="form-group">
+        <label>रिकामे सिलेंडर परत / Empty Returned to Godown<span class="mr">किती रिकामे गोडाऊनमध्ये परत केले</span></label>
+        <input type="number" name="empty_returned" min="0" value="{{ trip.total_sales }}" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>एकूण रोख / Total Cash Collected ₹</label>
+        <input type="number" name="cash_collected" value="{{ trip.cash_collected|int }}" min="0" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>एकूण ऑनलाईन / Total Online Collected ₹</label>
+        <input type="number" name="online_collected" value="{{ trip.online_collected|int }}" min="0" inputmode="numeric">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button type="button" onclick="document.getElementById('closeTripModal').style.display='none'" class="btn btn-outline" style="flex:1;">Cancel</button>
+        <button type="submit" class="btn btn-danger" style="flex:2;">🏁 Confirm Close / बंद करा</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% endif %}

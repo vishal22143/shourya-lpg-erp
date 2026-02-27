@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Additional Sales / अतिरिक्त विक्री{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/office/dashboard">← Office</a>
+  <a href="/office/additional-sales" class="active">🛒 Additional Sales</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🛒 Additional Sales / अतिरिक्त विक्री</div>
+<div class="page-sub">{{ today.strftime('%d %B %Y') }}</div>
+
+{% if message %}
+<div class="alert alert-success">✅ {{ message }}</div>
+{% endif %}
+
+<!-- SV NEW CONNECTION -->
+<div class="card">
+  <div class="card-title">📝 Subscription Voucher (SV) / नवीन कनेक्शन</div>
+  <p style="font-size:0.8rem;color:#6b7280;margin-bottom:10px;">नवीन connection = ₹4000. BPCL SOA मध्ये debit होते / Charged ₹4000, debited from BPCL SOA</p>
+  <form method="post" action="/office/sv-connection">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Customer Name *</label><input type="text" name="consumer_name" required></div>
+      <div class="form-group"><label>Consumer No</label><input type="text" name="consumer_no"></div>
+      <div class="form-group"><label>Amount ₹</label><input type="number" name="amount" value="4000" min="0"></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option><option value="GPAY">GPay</option><option value="QR_CODE">QR Code</option></select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">💾 Save SV Connection</button>
+  </form>
+</div>
+
+<!-- BLUE BOOK -->
+<div class="card">
+  <div class="card-title">📗 Blue Book — ₹60 each</div>
+  <form method="post" action="/office/additional-sale">
+    <input type="hidden" name="sale_type" value="BLUEBOOK_SALE">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Qty / संख्या</label><input type="number" name="qty" value="1" min="1" required></div>
+      <div class="form-group"><label>Rate ₹</label><input type="number" name="unit_price" value="60" min="0"></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option><option value="GPAY">GPay</option></select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">💾 Record Blue Book Sale</button>
+  </form>
+</div>
+
+<!-- SURAKSHA PIPE -->
+<div class="card">
+  <div class="card-title">🔧 Suraksha Pipe — ₹190 each</div>
+  <form method="post" action="/office/additional-sale">
+    <input type="hidden" name="sale_type" value="PIPE_SALE">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Qty / संख्या</label><input type="number" name="qty" value="1" min="1" required></div>
+      <div class="form-group"><label>Rate ₹</label><input type="number" name="unit_price" value="190" min="0"></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option><option value="GPAY">GPay</option></select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">💾 Record Pipe Sale</button>
+  </form>
+</div>
+
+<!-- DPR -->
+<div class="card">
+  <div class="card-title">⚙️ DPR (De-Pressure Regulator)</div>
+  <form method="post" action="/office/additional-sale">
+    <input type="hidden" name="sale_type" value="DPR_SALE">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Type</label>
+        <select name="dpr_type"><option value="14.2kg">14.2kg DPR</option><option value="5kg">5kg DPR</option></select>
+      </div>
+      <div class="form-group"><label>Free / Paid?</label>
+        <select name="dpr_paid" onchange="toggleDPRPrice(this)">
+          <option value="free">Free (0)</option>
+          <option value="paid">Paid</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Amount ₹</label><input type="number" name="unit_price" value="0" min="0" id="dprPrice"></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option><option value="GPAY">GPay</option></select>
+      </div>
+    </div>
+    <input type="hidden" name="qty" value="1">
+    <button type="submit" class="btn btn-primary">💾 Record DPR</button>
+  </form>
+</div>
+
+<!-- 5KG CYLINDER (OFFICE STOCK) -->
+<div class="card">
+  <div class="card-title">🔵 5kg Cylinder Office Sale</div>
+  <form method="post" action="/office/additional-sale">
+    <input type="hidden" name="sale_type" value="CYLINDER_5KG">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Qty</label><input type="number" name="qty" value="1" min="1"></div>
+      <div class="form-group"><label>Amount ₹</label><input type="number" name="unit_price" value="0" min="0"></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option><option value="GPAY">GPay</option></select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">💾 Record 5kg Sale</button>
+  </form>
+</div>
+
+<!-- NAME CHANGE (customer pays us) -->
+<div class="card">
+  <div class="card-title">📛 Name Change / नाव बदल</div>
+  <p style="font-size:0.8rem;color:#6b7280;margin-bottom:10px;">Customer pays us — add to cash register / रोख रजिस्टरमध्ये जमा</p>
+  <form method="post" action="/office/additional-sale">
+    <input type="hidden" name="sale_type" value="NAME_CHANGE">
+    <input type="hidden" name="qty" value="1">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Customer Name</label><input type="text" name="customer_name" placeholder="Name change for..."></div>
+      <div class="form-group"><label>Amount ₹</label><input type="number" name="unit_price" value="0" min="0"></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option><option value="GPAY">GPay</option></select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">💾 Record (Cash IN)</button>
+  </form>
+</div>
+
+<!-- TERMINATION VOUCHER (debit — we pay customer) -->
+<div class="card">
+  <div class="card-title">❌ Termination Voucher / कनेक्शन बंद</div>
+  <p style="font-size:0.8rem;color:#6b7280;margin-bottom:10px;">We pay customer deposit back — deducted from cash / रोखीतून वजा</p>
+  <form method="post" action="/office/add-expense">
+    <input type="hidden" name="head" value="TERMINATION_VOUCHER">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="form-group"><label>Customer Name</label><input type="text" name="paid_to" placeholder="Paid to..."></div>
+      <div class="form-group"><label>Amount ₹</label><input type="number" name="amount" min="0" required></div>
+      <div class="form-group"><label>Mode</label>
+        <select name="mode"><option value="CASH">Cash</option></select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-danger">💾 Record (Cash OUT)</button>
+  </form>
+</div>
+
+<!-- TODAY'S ADDITIONAL SALES SUMMARY -->
+{% if sales_today %}
+<div class="card">
+  <div class="card-title">📋 Today's Additional Sales</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Qty</th><th>Amount ₹</th><th>Mode</th><th>Time</th></tr>
+      {% for s in sales_today %}
+      <tr>
+        <td>{{ s.reason.value }}</td>
+        <td>1</td>
+        <td style="color:{% if s.amount > 0 %}#057a55{% else %}#e02424{% endif %};">
+          {% if s.amount > 0 %}+{% endif %}₹{{ s.amount|int }}
+        </td>
+        <td>{{ s.mode.value }}</td>
+        <td style="font-size:0.75rem;">{{ s.created_at.strftime('%H:%M') if s.created_at else '—' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleDPRPrice(sel) {
+  document.getElementById('dprPrice').value = sel.value === 'paid' ? '150' : '0';
+}
+</script>
+{% endblock %}

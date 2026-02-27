@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Owner Dashboard{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/owner/dashboard" class="active">👑 Owner</a>
+  <a href="/office/dashboard">🏢 Office</a>
+  <a href="/delivery/dashboard">🚚 Delivery</a>
+  <a href="/owner/dayend">📊 Day End</a>
+  <a href="/owner/users">👥 Users</a>
+  <a href="/owner/vehicles">🚗 Vehicles</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">👑 Owner Dashboard</div>
+<div class="page-sub">{{ today.strftime('%d %B %Y') }} · Shourya Bharatgas Services</div>
+
+{% if erp_day %}
+<div class="alert {% if erp_day.status.value == 'OPEN' %}alert-success{% else %}alert-error{% endif %}">
+  Day Status: <strong>{{ erp_day.status.value }}</strong>
+  {% if erp_day.status.value == 'OPEN' %}
+  · Opened at {{ erp_day.opened_at.strftime('%I:%M %p') if erp_day.opened_at }}
+  {% endif %}
+</div>
+{% else %}
+<div class="alert alert-info">⚠️ ERP day not yet opened. First login will open it.</div>
+{% endif %}
+
+<!-- MASTER STATS -->
+<div class="stat-grid">
+  <div class="stat-box green">
+    <div class="val">{{ total_delivered }}</div>
+    <div class="lbl">Total Delivered / एकूण केले</div>
+  </div>
+  <div class="stat-box green">
+    <div class="val">₹{{ total_cash|int }}</div>
+    <div class="lbl">Total Cash / एकूण रोख</div>
+  </div>
+  <div class="stat-box blue" style="--primary:#1a56db;">
+    <div class="val">₹{{ total_online|int }}</div>
+    <div class="lbl">Online / ऑनलाईन</div>
+  </div>
+  <div class="stat-box">
+    <div class="val">{{ trips|length }}</div>
+    <div class="lbl">Trips Today</div>
+  </div>
+</div>
+
+<!-- TRIP SUMMARY TABLE -->
+{% if trips %}
+<div class="card">
+  <div class="card-title">🚚 Trip-wise Summary / ट्रिप सारांश</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Trip</th>
+          <th>Staff</th>
+          <th>Vehicle</th>
+          <th>Issued</th>
+          <th>Sold</th>
+          <th>Cash ₹</th>
+          <th>Online ₹</th>
+          <th>BDA Cash ₹</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in trips %}
+        <tr>
+          <td><strong>#{{ t.id }}</strong></td>
+          <td>{{ t.delivery_man.name }}</td>
+          <td>{{ t.vehicle.name }}</td>
+          <td>{{ t.filled_issued }}</td>
+          <td><strong>{{ t.total_sales }}</strong></td>
+          <td style="color:#057a55;">₹{{ t.cash_collected|int }}</td>
+          <td style="color:#1a56db;">₹{{ t.online_collected|int }}</td>
+          <td style="color:#c27803;">₹{{ t.bda_cash|int }}</td>
+          <td>
+            {% if t.status.value == 'OPEN' %}
+            <span class="badge badge-green">OPEN</span>
+            {% else %}
+            <span class="badge badge-gray">CLOSED</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- WAGES TODAY -->
+{% if wages %}
+<div class="card">
+  <div class="card-title">💰 Wages Today / आजचे वेतन</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Staff</th><th>Urban Cyl</th><th>Rural Cyl</th><th>Gross ₹</th><th>Recovery ₹</th><th>Net ₹</th></tr>
+      {% for w in wages %}
+      <tr>
+        <td>{{ w.staff.name }}</td>
+        <td>{{ w.cylinders_urban }}</td>
+        <td>{{ w.cylinders_rural }}</td>
+        <td>₹{{ w.gross_wage|round(2) }}</td>
+        <td style="color:#e02424;">₹{{ w.advance_recovery|round(2) }}</td>
+        <td style="color:#057a55;font-weight:700;">₹{{ w.net_wage|round(2) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- DAY END ACTION -->
+<div class="card">
+  <div class="card-title">📊 Day End / दिवस संपवा</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <form method="post" action="/owner/generate-dayend">
+      <button type="submit" class="btn btn-primary">📊 Generate Day End Report</button>
+    </form>
+    {% if erp_day and erp_day.status.value == 'OPEN' %}
+    <form method="post" action="/owner/lock-day" onsubmit="return confirm('Lock today? This cannot be undone.')">
+      <button type="submit" class="btn btn-danger">🔒 Lock Day / दिवस लॉक करा</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

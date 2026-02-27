@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}User Management{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/owner/dashboard">← Owner</a>
+  <a href="/owner/users" class="active">👥 Users</a>
+  <a href="/owner/vehicles">🚗 Vehicles</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">👥 User Management / वापरकर्ते</div>
+
+<!-- ADD USER FORM -->
+<div class="card">
+  <div class="card-title">➕ नवीन User जोडा / Add User</div>
+  <form method="post" action="/owner/users/add">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>Name / नाव</label>
+        <input type="text" name="name" required placeholder="e.g. Bhore">
+      </div>
+      <div class="form-group">
+        <label>Mobile / मोबाईल</label>
+        <input type="tel" name="mobile" required placeholder="9876543210" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select name="role">
+          <option value="DELIVERY">DELIVERY (Delivery Man)</option>
+          <option value="OFFICE">OFFICE (Office Staff)</option>
+          <option value="LOADER">LOADER (Loading Staff)</option>
+          <option value="PARTNER">PARTNER</option>
+          <option value="OWNER">OWNER</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>PIN (4-6 digits)</label>
+        <input type="password" name="pin" required minlength="4" maxlength="6" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Urban Rate ₹/cyl</label>
+        <input type="number" name="rate_urban" value="5" step="0.5">
+      </div>
+      <div class="form-group">
+        <label>Rural Rate ₹/cyl</label>
+        <input type="number" name="rate_rural" value="7" step="0.5">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">➕ Add User</button>
+  </form>
+</div>
+
+<!-- USER LIST -->
+<div class="card">
+  <div class="card-title">📋 All Users</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Name</th><th>Mobile</th><th>Role</th><th>Urban ₹</th><th>Rural ₹</th><th>Status</th><th></th></tr>
+      {% for u in users %}
+      <tr>
+        <td><strong>{{ u.name }}</strong></td>
+        <td>{{ u.mobile }}</td>
+        <td><span class="badge badge-blue">{{ u.role.value }}</span></td>
+        <td>₹{{ u.rate_urban }}</td>
+        <td>₹{{ u.rate_rural }}</td>
+        <td>
+          {% if u.is_active %}
+          <span class="badge badge-green">Active</span>
+          {% else %}
+          <span class="badge badge-red">Inactive</span>
+          {% endif %}
+        </td>
+        <td><a href="/office/staff-ledger/{{ u.id }}" class="btn btn-sm btn-outline">Ledger</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}

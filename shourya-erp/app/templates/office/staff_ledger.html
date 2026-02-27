@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Staff Ledger — {{ staff.name }}{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/office/dashboard">← Office</a>
+  <a href="#" class="active">💳 {{ staff.name }} Ledger</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">💳 {{ staff.name }}</div>
+<div class="page-sub">{{ staff.role.value }} · Advance Ledger</div>
+
+<div class="stat-grid">
+  <div class="stat-box {% if balance > 0 %}red{% else %}green{% endif %}">
+    <div class="val">₹{{ balance|int }}</div>
+    <div class="lbl">Current Balance / शिल्लक</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">📋 Advance History</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Date</th><th>Amount</th><th>Source</th><th>Notes</th></tr>
+      {% for a in advances %}
+      <tr>
+        <td>{{ a.erp_date }}</td>
+        <td style="color:{% if a.amount > 0 %}#e02424{% else %}#057a55{% endif %};">
+          {% if a.amount > 0 %}+{% endif %}₹{{ a.amount|int }}
+        </td>
+        <td><span class="badge badge-yellow">{{ a.source }}</span></td>
+        <td>{{ a.notes or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}Office Dashboard{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/office/dashboard" class="active">🏢 Office</a>
+  <a href="/delivery/dashboard">🚚 Delivery</a>
+  <a href="/delivery/upload-csv">📂 CSV</a>
+  <a href="/bda/dashboard">🏘️ BDA</a>
+  {% if request.session.user.role in ['OWNER','PARTNER'] %}<a href="/owner/dashboard">👑 Owner</a>{% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🏢 Office Dashboard</div>
+<div class="page-sub">{{ today.strftime('%d %B %Y') }}</div>
+
+<!-- STATS -->
+<div class="stat-grid">
+  <div class="stat-box green">
+    <div class="val">{{ total_deliveries }}</div>
+    <div class="lbl">Delivered / झाले</div>
+  </div>
+  <div class="stat-box green">
+    <div class="val">₹{{ total_cash_in|int }}</div>
+    <div class="lbl">Cash In / रोख आले</div>
+  </div>
+  <div class="stat-box red">
+    <div class="val">₹{{ total_expenses|int }}</div>
+    <div class="lbl">Expenses / खर्च</div>
+  </div>
+  <div class="stat-box">
+    <div class="val">{{ trips|length }}</div>
+    <div class="lbl">Trips / ट्रिप्स</div>
+  </div>
+</div>
+
+<!-- OPENING CASH -->
+<div class="card">
+  <div class="card-title">💵 Opening Cash / सुरुवातीची रोख रक्कम</div>
+  <form method="post" action="/office/opening-cash">
+    <div style="display:flex;gap:10px;align-items:flex-end;">
+      <div class="form-group" style="flex:1;margin-bottom:0;">
+        <label>Amount ₹ / रक्कम</label>
+        <input type="number" name="amount" placeholder="e.g. 5000" min="0" required inputmode="numeric">
+      </div>
+      <button type="submit" class="btn btn-success">💾 Save</button>
+    </div>
+  </form>
+</div>
+
+<!-- ADD EXPENSE -->
+<div class="card">
+  <div class="card-title">📤 Expense / खर्च जोडा</div>
+  <form method="post" action="/office/add-expense">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>Head / प्रकार</label>
+        <select name="head">
+          <option value="DIESEL">⛽ Diesel / डिझेल</option>
+          <option value="STATIONARY">📋 Stationary</option>
+          <option value="VEHICLE_REPAIR">🔧 Vehicle Repair</option>
+          <option value="ELECTRICITY">💡 Electricity</option>
+          <option value="MISC">Other / इतर</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount ₹</label>
+        <input type="number" name="amount" min="0" required inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Mode / पद्धत</label>
+        <select name="mode">
+          <option value="CASH">Cash</option>
+          <option value="ONLINE">Online (GPay)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Paid To / कोणाला</label>
+        <input type="text" name="paid_to" placeholder="e.g. Mangave Pump">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-danger">➖ Add Expense</button>
+  </form>
+</div>
+
+<!-- STAFF ADVANCE -->
+<div class="card">
+  <div class="card-title">💳 Staff Advance / कर्मचारी अग्रिम</div>
+  <form method="post" action="/office/add-advance">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>Staff / कर्मचारी</label>
+        <select name="staff_id" required>
+          {% for s in staff %}
+          <option value="{{ s.id }}">{{ s.name }} ({{ s.role.value }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount ₹</label>
+        <input type="number" name="amount" min="0" required inputmode="numeric">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <input type="text" name="notes" placeholder="Reason for advance">
+    </div>
+    <button type="submit" class="btn btn-warning">💳 Give Advance</button>
+  </form>
+</div>
+
+<!-- SV NEW CONNECTION -->
+<div class="card">
+  <div class="card-title">🆕 New Connection (SV) / नवीन कनेक्शन</div>
+  <form method="post" action="/office/sv-connection">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>Customer Name / नाव</label>
+        <input type="text" name="consumer_name" required>
+      </div>
+      <div class="form-group">
+        <label>Consumer No (if known)</label>
+        <input type="text" name="consumer_no">
+      </div>
+      <div class="form-group">
+        <label>Amount ₹ (default 4000)</label>
+        <input type="number" name="amount" value="4000" min="0" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Mode</label>
+        <select name="mode">
+          <option value="CASH">Cash</option>
+          <option value="ONLINE">Online</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">🆕 Record SV Connection</button>
+  </form>
+</div>
+
+<!-- TODAY'S EXPENSES TABLE -->
+{% if expenses %}
+<div class="card">
+  <div class="card-title">📋 आजचे खर्च / Today's Expenses</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Head</th><th>Amount</th><th>Mode</th><th>Paid To</th></tr>
+      {% for e in expenses %}
+      <tr>
+        <td>{{ e.head }}</td>
+        <td style="color:#e02424;">₹{{ e.amount|int }}</td>
+        <td>{{ e.mode.value }}</td>
+        <td>{{ e.paid_to or '—' }}</td>
+      </tr>
+      {% endfor %}
+      <tr style="background:#fef3c7;font-weight:700;">
+        <td>TOTAL</td>
+        <td style="color:#e02424;">₹{{ total_expenses|int }}</td>
+        <td colspan="2"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- STAFF ADVANCES TABLE -->
+{% if advances %}
+<div class="card">
+  <div class="card-title">💳 आजचे अग्रिम / Today's Advances</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Staff</th><th>Amount</th><th>Source</th></tr>
+      {% for a in advances %}
+      <tr>
+        <td>{{ a.staff.name }}</td>
+        <td style="color:#c27803;">₹{{ a.amount|int }}</td>
+        <td><span class="badge badge-yellow">{{ a.source }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

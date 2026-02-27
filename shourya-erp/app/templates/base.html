@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a56db">
+<title>{% block title %}Shourya Bharatgas ERP{% endblock %}</title>
+<style>
+:root {
+  --primary: #1a56db;
+  --primary-dark: #1e429f;
+  --success: #057a55;
+  --danger: #e02424;
+  --warning: #c27803;
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* NAV */
+.topnav {
+  background: var(--primary);
+  color: white;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.topnav .brand { font-size: 1rem; font-weight: 700; }
+.topnav .brand span { font-size: 0.7rem; font-weight: 400; display: block; opacity: 0.8; }
+.topnav .nav-user { font-size: 0.8rem; text-align: right; }
+.topnav .nav-user a { color: #bfdbfe; font-size: 0.75rem; }
+
+/* TABS / NAV LINKS */
+.tab-bar {
+  background: var(--primary-dark);
+  display: flex;
+  overflow-x: auto;
+  gap: 2px;
+  padding: 0 8px;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-bar a {
+  color: #bfdbfe;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+.tab-bar a.active, .tab-bar a:hover {
+  color: white;
+  border-bottom-color: #60a5fa;
+  text-decoration: none;
+}
+
+/* CONTENT */
+.container { max-width: 900px; margin: 0 auto; padding: 16px; }
+.page-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
+.page-sub   { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
+
+/* CARDS */
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px; }
+.card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+/* STAT BOXES */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat-box { background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); text-align: center; border-left: 4px solid var(--primary); }
+.stat-box .val { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+.stat-box .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.stat-box.green { border-color: var(--success); } .stat-box.green .val { color: var(--success); }
+.stat-box.red   { border-color: var(--danger); }  .stat-box.red .val   { color: var(--danger); }
+.stat-box.amber { border-color: var(--warning); } .stat-box.amber .val { color: var(--warning); }
+
+/* FORMS */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; color: var(--muted); }
+.form-group label .mr { display: block; font-size: 0.75rem; color: #9ca3af; }
+input, select, textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: 6px; font-size: 0.9rem; background: white;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,0.15); }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.15s; }
+.btn:hover { opacity: 0.9; text-decoration: none; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-success { background: var(--success); color: white; }
+.btn-danger  { background: var(--danger); color: white; }
+.btn-warning { background: var(--warning); color: white; }
+.btn-outline { background: white; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { background: #f9fafb; font-weight: 600; text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
+td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: #f9fafb; }
+
+/* BADGES */
+.badge { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; }
+.badge-green  { background: #d1fae5; color: #065f46; }
+.badge-blue   { background: #dbeafe; color: #1e40af; }
+.badge-yellow { background: #fef3c7; color: #92400e; }
+.badge-red    { background: #fee2e2; color: #991b1b; }
+.badge-gray   { background: #f3f4f6; color: #374151; }
+
+/* ALERTS */
+.alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 14px; font-size: 0.88rem; }
+.alert-error { background: #fee2e2; color: #991b1b; border-left: 4px solid var(--danger); }
+.alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid var(--success); }
+.alert-info   { background: #dbeafe; color: #1e40af; border-left: 4px solid var(--primary); }
+
+/* MOBILE ACTION BAR */
+.action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 10px 16px; display: flex; gap: 10px; z-index: 50; }
+.action-bar .btn { flex: 1; }
+.has-action-bar { padding-bottom: 80px; }
+
+/* DELIVERY CARD (mobile) */
+.delivery-card { background: white; border-radius: 10px; padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow); border-left: 5px solid var(--border); }
+.delivery-card.scheduled { border-color: #60a5fa; }
+.delivery-card.delivered { border-color: var(--success); }
+.delivery-card.not-delivered { border-color: var(--danger); }
+.delivery-card .name { font-weight: 700; font-size: 1rem; }
+.delivery-card .addr { font-size: 0.82rem; color: var(--muted); margin: 2px 0; }
+.delivery-card .mobile-link { color: var(--primary); font-size: 0.85rem; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .container { padding: 10px; }
+  .stat-box .val { font-size: 1.4rem; }
+  .hide-mobile { display: none; }
+}
+
+/* PRINT */
+@media print {
+  .topnav, .tab-bar, .action-bar, .btn, .no-print { display: none !important; }
+  body { background: white; }
+}
+</style>
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<div class="topnav">
+  <div class="brand">
+    🔥 Shourya Bharatgas
+    <span>BPCL LPG Distributor · Jaysingpur</span>
+  </div>
+  {% if request.session.get('user') %}
+  <div class="nav-user">
+    <strong>{{ request.session.user.name }}</strong>
+    <span class="badge badge-blue">{{ request.session.user.role }}</span><br>
+    <a href="/logout">Logout / बाहेर पडा</a>
+  </div>
+  {% endif %}
+</div>
+
+{% block nav_tabs %}{% endblock %}
+
+<div class="container {% block body_class %}{% endblock %}">
+  {% block content %}{% endblock %}
+</div>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

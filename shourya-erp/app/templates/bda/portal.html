@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}BDA Portal — {{ bda_record.name if bda_record else 'BDA' }}{% endblock %}
+{% block body_class %}has-action-bar{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/bda/portal" class="active">🏘️ BDA Portal</a>
+  {% if request.session.user.role in ['OWNER','PARTNER','OFFICE','DELIVERY'] %}
+  <a href="/bda/dashboard">📋 Manage BDA</a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🏘️ BDA Portal</div>
+<div class="page-sub">
+  {% if bda_record %}
+  {{ bda_record.name }} — {{ bda_record.village }} · {{ today.strftime('%d %B %Y') }}
+  {% else %}
+  {{ today.strftime('%d %B %Y') }}
+  {% endif %}
+</div>
+
+<!-- BDA STOCK STATUS -->
+{% if bda_stock %}
+<div class="stat-grid">
+  <div class="stat-box green">
+    <div class="val">{{ bda_stock.get('5350', {}).get('filled', 0) }}</div>
+    <div class="lbl">14.2kg भरलेले / Filled</div>
+  </div>
+  <div class="stat-box amber">
+    <div class="val">{{ bda_stock.get('5350', {}).get('empty', 0) }}</div>
+    <div class="lbl">14.2kg रिकामे / Empty</div>
+  </div>
+  {% if txns %}
+  <div class="stat-box">
+    <div class="val">{{ txns|length }}</div>
+    <div class="lbl">Today's Transactions</div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- PENDING DELIVERIES FOR THIS BDA AREA -->
+<div class="card">
+  <div class="card-title">📋 आजचे पेंडिंग / Pending Deliveries in Your Area</div>
+  {% if pending %}
+  <p style="font-size:0.8rem;color:#6b7280;margin-bottom:10px;">
+    Customer ने cylinder घेतल्यावर OTP capture करा / Capture OTP when customer collects cylinder
+  </p>
+  {% for d in pending %}
+  <div class="delivery-card scheduled" style="margin-bottom:12px;">
+    <div class="name">{{ d.consumer_name }}</div>
+    <div class="addr">Consumer: {{ d.consumer_no }}</div>
+    {% if d.mobile %}
+    <a href="tel:{{ d.mobile }}" class="mobile-link">📞 {{ d.mobile }}</a>
+    {% endif %}
+    <div style="font-size:0.75rem;color:#6b7280;margin:4px 0;">{{ d.booking_type }} · {{ d.area }}</div>
+
+    <!-- OTP CAPTURE FORM -->
+    <details style="margin-top:8px;">
+      <summary class="btn btn-sm btn-success" style="cursor:pointer;display:inline-flex;">
+        ✅ OTP Capture / डिलिव्हर केले
+      </summary>
+      <form method="post" action="/bda/capture-otp/{{ d.id }}" style="margin-top:8px;padding:10px;background:#f0fdf4;border-radius:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="form-group">
+            <label>OTP (6 digits)</label>
+            <input type="text" name="otp" required maxlength="6" inputmode="numeric" placeholder="123456">
+          </div>
+          <div class="form-group">
+            <label>Payment / पेमेंट</label>
+            <select name="payment_mode">
+              <option value="CASH">💵 Cash / रोख</option>
+              <option value="QR_CODE">📱 QR Code</option>
+              <option value="GPAY">📱 GPay</option>
+              <option value="PAYTM">📱 Paytm</option>
+              <option value="PREPAID">✅ Prepaid</option>
+              <option value="MIXED">💱 Mixed</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:span 2;">
+            <label>Amount ₹ (14.2kg = ₹856)</label>
+            <input type="number" name="amount" value="856" min="0" inputmode="numeric">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">✅ OTP Submit करा</button>
+      </form>
+    </details>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div style="text-align:center;color:#6b7280;padding:20px;">
+    <div style="font-size:2rem;">✅</div>
+    <p style="margin-top:6px;">या एरियात पेंडिंग नाही / No pending deliveries in your area.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- SPOT / URGENT DELIVERY -->
+<div class="card">
+  <div class="card-title">⚡ Spot Delivery / तातडीची डिलिव्हरी</div>
+  <p style="font-size:0.8rem;color:#6b7280;margin-bottom:12px;">
+    Customer ने BPCL booking केली नाही पण cylinder हवे आहे / Unbooked urgent cylinder sale
+  </p>
+  <form method="post" action="/bda/spot-delivery">
+    {% if bda_record %}
+    <input type="hidden" name="bda_id" value="{{ bda_record.id }}">
+    {% else %}
+    <div class="form-group">
+      <label>BDA निवडा</label>
+      <select name="bda_id">
+        {% for b in all_bdas %}
+        <option value="{{ b.id }}">{{ b.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group">
+        <label>Customer Name / नाव *</label>
+        <input type="text" name="consumer_name" required placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label>Consumer No (if known)</label>
+        <input type="text" name="consumer_no" placeholder="Optional">
+      </div>
+      <div class="form-group">
+        <label>Mobile / मोबाईल</label>
+        <input type="tel" name="mobile" placeholder="Optional" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Payment / पेमेंट</label>
+        <select name="payment_mode">
+          <option value="CASH">💵 Cash</option>
+          <option value="QR_CODE">📱 QR Code</option>
+          <option value="GPAY">📱 GPay</option>
+          <option value="PAYTM">📱 Paytm</option>
+          <option value="MIXED">💱 Mixed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Cash ₹</label>
+        <input type="number" name="cash_amount" value="0" min="0" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Online ₹ (GPay/QR)</label>
+        <input type="number" name="online_amount" value="0" min="0" inputmode="numeric">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes / टीप</label>
+      <input type="text" name="notes" placeholder="Any special note">
+    </div>
+    <button type="submit" class="btn btn-warning btn-block">⚡ Spot Delivery Record करा</button>
+  </form>
+</div>
+
+<!-- TODAY'S COMPLETED AT THIS BDA -->
+{% if txns %}
+<div class="card">
+  <div class="card-title">✅ आजचे पूर्ण व्यवहार / Today's Completed</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Filled</th><th>Empty</th><th>Cash ₹</th><th>Online ₹</th><th>Notes</th></tr>
+      {% for t in txns %}
+      <tr>
+        <td style="color:#057a55;">{{ t.filled_issued }}</td>
+        <td style="color:#c27803;">{{ t.empty_received }}</td>
+        <td>₹{{ t.cash_paid|int }}</td>
+        <td>₹{{ t.online_paid|int }}</td>
+        <td style="font-size:0.78rem;">{{ t.notes or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

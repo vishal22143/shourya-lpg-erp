@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}CSV Upload{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/delivery/dashboard">← Delivery</a>
+  <a href="/delivery/upload-csv" class="active">📂 CSV Upload</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">📂 BPCL CSV अपलोड / Upload</div>
+<div class="page-sub">BPCL SAP delivery list · कितीही वेळा upload करता येतो</div>
+
+{% if result %}
+<div class="alert alert-success">
+  ✅ Upload successful / यशस्वी!<br>
+  New: <strong>{{ result.imported }}</strong> · 
+  Updated: <strong>{{ result.updated }}</strong> · 
+  Skipped (delivered): <strong>{{ result.skipped_delivered }}</strong> · 
+  Total today: <strong>{{ result.total_today }}</strong>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-title">📤 CSV File Upload</div>
+  <p style="font-size:0.82rem;color:#6b7280;margin-bottom:14px;">
+    BPCL SAP मधून download केलेली CSV file निवडा.<br>
+    आधी deliver झालेले customers पुन्हा येणार नाहीत.
+  </p>
+  <form method="post" action="/delivery/upload-csv" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>CSV File Select करा</label>
+      <input type="file" name="csv_file" accept=".csv" required>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">📤 Upload करा</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-title">ℹ️ CSV Format Info</div>
+  <p style="font-size:0.82rem;color:#374151;">Expected columns (any order):</p>
+  <code style="font-size:0.78rem;background:#f3f4f6;padding:8px;display:block;border-radius:6px;margin-top:8px;">
+    Consumer No, Consumer Name, Address, Mobile, Area, Booking Type, Product Code
+  </code>
+  <p style="font-size:0.78rem;color:#6b7280;margin-top:8px;">BPCL CSV headers are auto-detected.</p>
+</div>
+{% endblock %}

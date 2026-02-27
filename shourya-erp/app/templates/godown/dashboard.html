@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}गोडाऊन / Godown{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/godown/dashboard" class="active">🏭 गोडाऊन / Godown</a>
+  <a href="/delivery/dashboard">🚚 Delivery</a>
+  {% if request.session.user.role in ['OWNER','PARTNER'] %}<a href="/owner/dashboard">👑 Owner</a>{% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🏭 गोडाऊन स्टॉक / Godown Stock</div>
+<div class="page-sub">{{ today.strftime('%d %B %Y') }} · {{ request.session.user.name }}</div>
+
+<!-- STAT BOXES -->
+<div class="stat-grid">
+  <div class="stat-box green">
+    <div class="val">{{ ledger_stock.get('5350',{}).get('filled',0) }}</div>
+    <div class="lbl">14.2kg भरलेले / Filled</div>
+  </div>
+  <div class="stat-box amber">
+    <div class="val">{{ ledger_stock.get('5350',{}).get('empty',0) }}</div>
+    <div class="lbl">14.2kg रिकामे / Empty</div>
+  </div>
+  <div class="stat-box">
+    <div class="val">{{ ledger_stock.get('5400',{}).get('filled',0) }}</div>
+    <div class="lbl">19kg भरलेले</div>
+  </div>
+  <div class="stat-box">
+    <div class="val">{{ ledger_stock.get('5240',{}).get('filled',0) }}</div>
+    <div class="lbl">5kg भरलेले</div>
+  </div>
+</div>
+
+{% if physical %}
+<div class="alert alert-success">
+  ✅ आजची प्रत्यक्ष मोजणी / Today's Physical Count: 
+  14.2kg भरलेले = <strong>{{ physical.filled_14_2 }}</strong>, 
+  रिकामे = <strong>{{ physical.empty_14_2 }}</strong>
+  {% if physical.filled_14_2 != ledger_stock.get('5350',{}).get('filled',0) %}
+  <span style="color:#e02424;"> ⚠️ Difference: {{ physical.filled_14_2 - ledger_stock.get('5350',{}).get('filled',0) }}</span>
+  {% endif %}
+</div>
+{% else %}
+<div class="alert alert-info">⚠️ आजची मोजणी अद्याप नाही / Physical count not entered yet today.</div>
+{% endif %}
+
+<!-- PHYSICAL STOCK ENTRY -->
+<div class="card">
+  <div class="card-title">📋 प्रत्यक्ष स्टॉक नोंद / Physical Stock Entry</div>
+  <p style="font-size:0.8rem;color:#6b7280;margin-bottom:12px;">प्रत्येक वेळी गोडाऊन उघडल्यावर भरा / Fill every time godown is opened</p>
+  <form method="post" action="/godown/physical-stock">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>14.2kg भरलेले / Filled<span class="mr">(godown मधील)</span></label>
+        <input type="number" name="filled_14_2" min="0" value="0" required>
+      </div>
+      <div class="form-group">
+        <label>14.2kg रिकामे / Empty<span class="mr">(godown मधील)</span></label>
+        <input type="number" name="empty_14_2" min="0" value="0" required>
+      </div>
+      <div class="form-group">
+        <label>19kg भरलेले</label>
+        <input type="number" name="filled_19" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>19kg रिकामे</label>
+        <input type="number" name="empty_19" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>5kg भरलेले</label>
+        <input type="number" name="filled_5" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>5kg रिकामे</label>
+        <input type="number" name="empty_5" min="0" value="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes / टीप</label>
+      <input type="text" name="notes" placeholder="Optional">
+    </div>
+    <button type="submit" class="btn btn-success btn-block">✅ स्टॉक सेव्ह करा / Save Stock</button>
+  </form>
+</div>
+
+<!-- BPCL MOVEMENT (Loader/Owner only) -->
+{% if request.session.user.role in ['OWNER','PARTNER','OFFICE','LOADER'] %}
+<div class="card">
+  <div class="card-title">🚛 BPCL साठा हालचाल / BPCL Cylinder Movement</div>
+  <form method="post" action="/godown/bpcl-movement">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>Product Code</label>
+        <select name="product_code">
+          <option value="5350">5350 – 14.2kg</option>
+          <option value="5400">5400 – 19kg</option>
+          <option value="5240">5240 – 5kg Com</option>
+          <option value="5250">5250 – 5kg Dom</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>BPCL कडून मिळाले / Received</label>
+        <input type="number" name="filled_received" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>BPCL ला परत / Returned Empty</label>
+        <input type="number" name="empty_returned" min="0" value="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <input type="text" name="notes" placeholder="Optional">
+    </div>
+    <button type="submit" class="btn btn-primary">💾 नोंद करा / Record Movement</button>
+  </form>
+
+  {% if bpcl_movements %}
+  <div style="margin-top:14px;">
+    <p style="font-size:0.8rem;font-weight:600;margin-bottom:8px;">आजच्या नोंदी / Today's Movements:</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Product</th><th>Received ↓</th><th>Returned ↑</th></tr>
+        {% for m in bpcl_movements %}
+        <tr><td>{{ m.product_code }}</td><td style="color:#057a55;">+{{ m.filled_received }}</td><td style="color:#e02424;">-{{ m.empty_returned }}</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

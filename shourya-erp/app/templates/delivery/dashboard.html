@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}डिलिव्हरी / Delivery{% endblock %}
+
+{% block nav_tabs %}
+<div class="tab-bar">
+  <a href="/godown/dashboard">🏭 गोडाऊन</a>
+  <a href="/delivery/dashboard" class="active">🚚 डिलिव्हरी / Delivery</a>
+  <a href="/delivery/upload-csv">📂 CSV Upload</a>
+  {% if request.session.user.role in ['OWNER','PARTNER'] %}<a href="/owner/dashboard">👑 Owner</a>{% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">🚚 डिलिव्हरी डॅशबोर्ड / Delivery Dashboard</div>
+<div class="page-sub">{{ today.strftime('%d %B %Y') }} · {{ user.name }}</div>
+
+{% if open_trip %}
+<div class="alert alert-success">
+  ✅ सक्रिय ट्रिप / Active Trip #{{ open_trip.id }} — {{ open_trip.vehicle.name }} · {{ open_trip.total_sales }} delivered
+  <a href="/delivery/trip/{{ open_trip.id }}" class="btn btn-sm btn-success" style="float:right;margin-top:-2px;">▶ Continue</a>
+</div>
+{% endif %}
+
+<!-- OPEN NEW TRIP -->
+{% if not open_trip %}
+<div class="card">
+  <div class="card-title">🚦 नवीन ट्रिप सुरू करा / Start New Trip</div>
+  <form method="post" action="/delivery/open-trip">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label>वाहन / Vehicle<span class="mr">आजचे वाहन निवडा</span></label>
+        <select name="vehicle_id" required>
+          {% for v in vehicles %}
+          <option value="{{ v.id }}">{{ v.name }} ({{ v.capacity }} cyl)</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>भरलेले सिलेंडर / Filled Cylinders<span class="mr">गोडाऊनमधून किती घेतले</span></label>
+        <input type="number" name="filled_issued" min="1" max="65" required placeholder="e.g. 55">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">🚀 ट्रिप सुरू / Start Trip</button>
+  </form>
+</div>
+{% endif %}
+
+<!-- TODAY'S TRIPS -->
+{% if trips %}
+<div class="card">
+  <div class="card-title">📋 आजच्या ट्रिप्स / Today's Trips</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Trip</th>
+          <th>Delivery Man</th>
+          <th>Vehicle</th>
+          <th>Issued</th>
+          <th>Sold</th>
+          <th>Cash ₹</th>
+          <th>Online ₹</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in trips %}
+        <tr>
+          <td>#{{ t.id }}</td>
+          <td>{{ t.delivery_man.name }}</td>
+          <td>{{ t.vehicle.name }}</td>
+          <td>{{ t.filled_issued }}</td>
+          <td><strong>{{ t.total_sales }}</strong></td>
+          <td style="color:#057a55;">₹{{ t.cash_collected|int }}</td>
+          <td style="color:#1a56db;">₹{{ t.online_collected|int }}</td>
+          <td>
+            {% if t.status.value == 'OPEN' %}
+            <span class="badge badge-green">OPEN</span>
+            {% else %}
+            <span class="badge badge-gray">CLOSED</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if t.status.value == 'OPEN' %}
+            <a href="/delivery/trip/{{ t.id }}" class="btn btn-sm btn-primary">▶</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center;color:#6b7280;padding:30px;">
+  <div style="font-size:2.5rem;">🚚</div>
+  <p style="margin-top:8px;">आज कोणतीही ट्रिप नाही / No trips today yet.</p>
+</div>
+{% endif %}
+
+{% endblock %}

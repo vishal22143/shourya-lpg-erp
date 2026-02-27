@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login · Shourya ERP</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: linear-gradient(135deg, #1e429f 0%, #1a56db 60%, #3f83f8 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; }
+.card { background: white; border-radius: 16px; padding: 36px 32px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.logo { text-align: center; margin-bottom: 28px; }
+.logo h1 { font-size: 1.5rem; font-weight: 800; color: #1a56db; }
+.logo p { font-size: 0.82rem; color: #6b7280; margin-top: 4px; }
+.logo .sub-mr { font-size: 0.78rem; color: #9ca3af; }
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #374151; margin-bottom: 6px; }
+.form-group label .mr { display: block; font-size: 0.72rem; color: #9ca3af; font-weight: 400; }
+input {
+  width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px;
+  font-size: 1rem; background: #f9fafb;
+}
+input:focus { outline: none; border-color: #1a56db; background: white; box-shadow: 0 0 0 3px rgba(26,86,219,0.12); }
+input[type="password"] { letter-spacing: 4px; font-size: 1.2rem; }
+.btn-login {
+  width: 100%; padding: 14px; background: #1a56db; color: white; border: none;
+  border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px;
+}
+.btn-login:hover { background: #1e429f; }
+.error { background: #fee2e2; color: #991b1b; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 16px; border-left: 4px solid #e02424; }
+.footer-note { text-align: center; font-size: 0.72rem; color: #9ca3af; margin-top: 24px; }
+.hint-pins { background: #eff6ff; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: #1e40af; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div style="font-size:2.5rem;margin-bottom:8px;">🔥</div>
+    <h1>Shourya Bharatgas</h1>
+    <p>BPCL LPG Distributor · Jaysingpur</p>
+    <p class="sub-mr">शौर्य भारतगॅस सेवा · जयसिंगपूर</p>
+  </div>
+
+  {% if error %}
+  <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/login">
+    <div class="form-group">
+      <label>
+        Mobile Number
+        <span class="mr">मोबाईल नंबर</span>
+      </label>
+      <input type="tel" name="mobile" placeholder="9876543210" required autofocus inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label>
+        PIN (4-6 digits)
+        <span class="mr">PIN (४-६ अंक)</span>
+      </label>
+      <input type="password" name="pin" placeholder="••••" required inputmode="numeric" maxlength="6">
+    </div>
+    <button type="submit" class="btn-login">🔐 Login / लॉगिन</button>
+  </form>
+
+  <div class="footer-note">
+    Shourya ERP v1.0 · © 2025 Shourya Bharatgas Services<br>
+    Developed for internal use only
+  </div>
+</div>
+</body>
+</html>
