@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>शौर्य भारत गॅस ERP v6 | Dist 187618</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+--bg:#0d0f14;--bgp:#151820;--bgc:#1c1f2b;--bgh:#232635;
+--t:#e8eaf0;--td:#6b7280;--bdr:rgba(255,255,255,.07);--bdra:rgba(255,255,255,.15);
+--accent:#00c4ff;--yellow:#ffd700;--green:#00e676;--red:#ff1744;--orange:#ff6b00;
+--blue:#0090ff;--purple:#9c27b0;
+--fmn:'JetBrains Mono',monospace;--fmr:'Noto Sans Devanagari',sans-serif;
+--r:10px;--sh:0 4px 24px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--t);font-size:14px;overflow:hidden;height:100vh;}
+input,select,textarea{background:var(--bgc);color:var(--t);border:1px solid var(--bdr);border-radius:7px;padding:8px 11px;font-family:inherit;font-size:13px;width:100%;outline:none;transition:border .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+textarea{resize:vertical;min-height:70px;}
+button{cursor:pointer;border:none;outline:none;font-family:inherit;transition:all .15s;}
+a{color:inherit;text-decoration:none;}
+/* LAYOUT */
+#LS{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 50%,#1a1f35 0%,#0d0f14 70%);display:flex;align-items:center;justify-content:center;z-index:9999;}
+#APP{display:none;height:100vh;overflow:hidden;flex-direction:row;}
+#SB{width:240px;flex-shrink:0;background:var(--bgp);border-right:1px solid var(--bdr);display:flex;flex-direction:column;height:100vh;overflow:hidden;transition:width .2s;}
+#SB.mini{width:60px;}
+#MN{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+/* SIDEBAR */
+.sh{padding:14px 12px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.slogo{font-size:26px;}
+.stitle{font-size:15px;font-weight:700;white-space:nowrap;}
+.ssub{font-size:10px;color:var(--accent);white-space:nowrap;}
+.snav{flex:1;overflow-y:auto;padding:8px 0;}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 13px;cursor:pointer;border-radius:0;transition:background .12s;border-left:3px solid transparent;}
+.ni:hover{background:var(--bgc);}
+.ni.act{background:rgba(0,196,255,.07);border-left-color:var(--accent);}
+.ni .ic{font-size:18px;flex-shrink:0;width:26px;text-align:center;}
+.snl{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.snl2{font-size:9px;color:var(--td);white-space:nowrap;font-family:var(--fmr);}
+.nsec{font-size:9px;color:var(--td);padding:12px 15px 4px;letter-spacing:1px;font-weight:700;text-transform:uppercase;}
+.sf{padding:12px;border-top:1px solid var(--bdr);flex-shrink:0;}
+.su{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sav{width:34px;height:34px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.slu{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.slr{font-size:10px;color:var(--td);}
+/* TOPBAR */
+#TB{height:52px;background:var(--bgp);border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:8px;padding:0 14px;flex-shrink:0;}
+.tmb{background:transparent;color:var(--t);font-size:20px;padding:5px 8px;border-radius:7px;}
+.tmb:hover{background:var(--bgc);}
+.ttl{font-size:16px;font-weight:700;}
+.tclk{font-family:var(--fmn);font-size:11px;color:var(--accent);background:var(--bgc);padding:4px 10px;border-radius:6px;}
+.tbtn{background:var(--bgc);color:var(--t);padding:5px 11px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid var(--bdr);}
+.tbtn:hover{border-color:var(--accent);color:var(--accent);}
+.tusr{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.tudot{width:8px;height:8px;background:var(--green);border-radius:50%;}
+.tuname{font-size:12px;font-weight:700;}
+/* CONTENT */
+#CT{flex:1;overflow-y:auto;background:var(--bg);}
+.pw{padding:16px;}
+/* CARDS */
+.card{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:0;}
+.csm{padding:11px;}
+.chd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.ctitle{font-size:15px;font-weight:700;}
+.csub{font-size:11px;color:var(--td);}
+.sep{border-top:1px solid var(--bdr);margin:14px 0;}
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;}
+/* STAT CARDS */
+.stat{border-radius:var(--r);padding:14px;border:1px solid var(--bdr);}
+.stat.sgr{background:rgba(0,230,118,.06);border-color:rgba(0,230,118,.2);}
+.stat.srd{background:rgba(255,23,68,.06);border-color:rgba(255,23,68,.2);}
+.stat.sgy{background:rgba(255,215,0,.06);border-color:rgba(255,215,0,.2);}
+.stat.sbl{background:rgba(0,144,255,.06);border-color:rgba(0,144,255,.2);}
+.stat.sor{background:rgba(255,107,0,.06);border-color:rgba(255,107,0,.2);}
+.slb{font-size:10px;color:var(--td);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.sv{font-size:24px;font-weight:700;font-family:var(--fmn);}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.bg{background:rgba(0,230,118,.12);color:var(--green);}
+.by{background:rgba(255,215,0,.12);color:var(--yellow);}
+.br{background:rgba(255,23,68,.12);color:var(--red);}
+.bb{background:rgba(0,144,255,.12);color:var(--accent);}
+.bo{background:rgba(255,107,0,.12);color:var(--orange);}
+.bp{background:rgba(156,39,176,.15);color:var(--purple);}
+.bdm{background:rgba(255,255,255,.06);color:var(--td);}
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:7px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;}
+.bpri{background:var(--accent);color:#000;}
+.bpri:hover{filter:brightness(1.1);}
+.bgr{background:var(--green);color:#000;}
+.brd{background:rgba(255,23,68,.15);color:var(--red);border:1px solid rgba(255,23,68,.3);}
+.brd:hover{background:rgba(255,23,68,.25);}
+.byl{background:rgba(255,215,0,.15);color:var(--yellow);border:1px solid rgba(255,215,0,.3);}
+.byl:hover{background:rgba(255,215,0,.25);}
+.bor{background:rgba(255,107,0,.15);color:var(--orange);border:1px solid rgba(255,107,0,.3);}
+.bg2{background:var(--bgp);color:var(--t);border:1px solid var(--bdr);}
+.bg2:hover{border-color:var(--bdra);}
+.blg{padding:11px 22px;font-size:15px;}
+.bsm{padding:5px 11px;font-size:12px;}
+.cbtn{background:var(--bgp);color:var(--accent);padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;border:1px solid var(--bdr);display:inline-block;}
+.cbtn:hover{border-color:var(--accent);}
+/* FORMS */
+.fg{display:flex;flex-direction:column;gap:3px;flex:1;}
+.fr{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.fl{font-size:11px;color:var(--td);font-weight:700;letter-spacing:.3px;}
+.mb6{margin-bottom:6px;}.mb8{margin-bottom:8px;}.mb10{margin-bottom:10px;}.mb12{margin-bottom:12px;}.mb14{margin-bottom:14px;}
+/* TABLES */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--bgp);padding:9px 12px;text-align:left;font-size:10px;letter-spacing:.5px;color:var(--td);font-weight:700;text-transform:uppercase;white-space:nowrap;}
+td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;}
+tr:hover td{background:rgba(255,255,255,.015);}
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:2px solid var(--bdr);margin-bottom:14px;overflow-x:auto;}
+.tab{padding:8px 16px;cursor:pointer;font-size:12px;font-weight:700;color:var(--td);border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;}
+.tab:hover{color:var(--t);}
+.tab.act{color:var(--accent);border-bottom-color:var(--accent);}
+/* ALERTS */
+.al{padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6;}
+.ali{background:rgba(0,196,255,.06);border:1px solid rgba(0,196,255,.2);color:var(--accent);}
+.alw{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);color:var(--yellow);}
+.als{background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);color:var(--green);}
+/* DELIVERY CARDS */
+.dc{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 14px;margin-bottom:7px;transition:all .15s;cursor:pointer;}
+.dc:hover{border-color:var(--bdra);transform:translateY(-1px);}
+.dgl{border-left:3px solid var(--green);}
+.dbl{border-left:3px solid var(--blue);}
+.drl{border-left:3px solid var(--red);}
+.dol{border-left:3px solid var(--orange);}
+.dpl{border-left:3px solid var(--purple);}
+.dcname{font-size:15px;font-weight:700;margin:4px 0;}
+.dcaddr{font-size:11px;color:var(--td);margin-bottom:5px;}
+.dcmeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+.dcacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+/* BDA CARD */
+.bdac{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;}
+/* MAP */
+#dmap{width:100%;height:340px;background:var(--bgp);}
+/* CHAT */
+#CP{position:fixed;right:-380px;top:0;width:380px;height:100vh;background:var(--bgp);border-left:1px solid var(--bdr);display:flex;flex-direction:column;transition:right .25s;z-index:500;box-shadow:var(--sh);}
+#CP.open{right:0;}
+.chathd{padding:14px 16px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.chatbody{display:flex;flex:1;overflow:hidden;}
+.chatcl{width:120px;border-right:1px solid var(--bdr);overflow-y:auto;flex-shrink:0;}
+.chatc{padding:10px 12px;cursor:pointer;font-size:12px;font-weight:700;border-bottom:1px solid var(--bdr);transition:background .12s;}
+.chatc:hover,.chatc.act{background:var(--bgh,var(--bgc));color:var(--accent);}
+.chatmw{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.chatms{flex:1;overflow-y:auto;padding:12px;}
+.chatmsg{display:flex;flex-direction:column;margin-bottom:10px;}
+.chatmsg.mine{align-items:flex-end;}
+.chatbub{background:var(--bgc);padding:8px 12px;border-radius:10px;max-width:85%;font-size:12px;line-height:1.5;}
+.chatmsg.mine .chatbub{background:rgba(0,196,255,.15);color:var(--accent);}
+.chatmeta{font-size:9px;color:var(--td);margin-top:3px;}
+.chatir{padding:10px;border-top:1px solid var(--bdr);display:flex;gap:7px;flex-shrink:0;}
+.cx{background:transparent;color:var(--td);font-size:18px;padding:4px 8px;border-radius:6px;}
+.cx:hover{background:var(--bgc);color:var(--t);}
+/* MODALS */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px;opacity:0;transition:opacity .2s;}
+.mov.show{opacity:1;}
+.mod{background:var(--bgp);border:1px solid var(--bdr);border-radius:14px;padding:22px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--sh);}
+.mhd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.mtitle{font-size:17px;font-weight:700;display:flex;flex-direction:column;gap:2px;}
+.mtitle span{font-size:11px;color:var(--td);font-weight:400;}
+/* DENOMINATION */
+.denr{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.dennote{width:60px;font-family:var(--fmn);font-size:13px;font-weight:700;color:var(--yellow);}
+.deneq{font-family:var(--fmn);font-size:12px;color:var(--green);min-width:90px;}
+.dentot{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:16px;font-weight:700;}
+/* PAYMENT MODES */
+.paymgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
+.paymode{padding:10px 7px;border-radius:8px;border:2px solid var(--bdr);background:var(--bgc);cursor:pointer;text-align:center;transition:all .15s;user-select:none;}
+.paymode:hover,.paymode.sel{border-color:var(--yellow);background:rgba(255,215,0,.07);}
+.paymode .pic{font-size:18px;margin-bottom:2px;}
+.paymode .plb{font-size:10px;font-weight:700;}
+/* EXPANDABLE */
+.exs{border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:8px;}
+.exshd{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:var(--bgp);cursor:pointer;transition:background .15s;user-select:none;}
+.exshd:hover,.exshd.open{background:var(--bgc);}
+.exstitle{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.exsarr{font-size:10px;color:var(--td);transition:transform .2s;}
+.exshd.open .exsarr{transform:rotate(180deg);}
+.exsbody{padding:14px;display:none;border-top:1px solid var(--bdr);}
+.exsbody.open{display:block;}
+/* DAY STATUS BAR */
+.daybar{background:var(--bgp);border:1px solid var(--bdra);border-radius:var(--r);padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.dbval{font-size:20px;font-weight:700;font-family:var(--fmn);}
+.dblb{font-size:9px;color:var(--td);letter-spacing:.5px;text-transform:uppercase;}
+/* AREA BUTTONS */
+.areasel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.areabt{padding:5px 13px;border-radius:20px;border:1px solid var(--bdr);background:var(--bgc);cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;}
+.areabt.act{background:var(--accent);border-color:var(--accent);color:#000;}
+/* OTP */
+.otpval{font-size:26px;font-weight:700;letter-spacing:6px;color:var(--green);font-family:var(--fmn);}
+/* VBLOCK */
+.vblock{background:var(--bgp);border:1px solid var(--bdr);border-left:4px solid var(--green);border-radius:var(--r);padding:13px;margin-bottom:9px;}
+/* MISMATCH */
+.mismatch{background:rgba(255,23,68,.08);border:1px solid rgba(255,23,68,.3);color:var(--red);padding:7px 11px;border-radius:7px;font-size:12px;font-weight:700;}
+.match{background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:7px 11px;border-radius:7px;font-size:12px;font-weight:700;}
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:10px;font-weight:700;font-size:13px;z-index:9999;transform:translateX(120%);transition:transform .3s;max-width:320px;}
+.toast.show{transform:translateX(0);}
+.ttoast{background:var(--bgp);}
+.ts{background:rgba(0,230,118,.15);border:1px solid var(--green);color:var(--green);}
+.tw2,.tw{background:rgba(255,215,0,.12);border:1px solid var(--yellow);color:var(--yellow);}
+.te{background:rgba(255,23,68,.15);border:1px solid var(--red);color:var(--red);}
+/* LOCK */
+.lockbadge{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:var(--yellow);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+/* DOT */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+/* LOGIN */
+.lb{background:var(--bgp);border:1px solid var(--bdr);border-radius:16px;padding:28px;width:100%;max-width:500px;box-shadow:var(--sh);}
+.lic{font-size:48px;text-align:center;margin-bottom:10px;}
+.ltitle{font-size:24px;font-weight:700;text-align:center;margin-bottom:3px;}
+.lsub{font-size:12px;color:var(--td);text-align:center;margin-bottom:16px;}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.rb{background:var(--bgc);border:2px solid var(--bdr);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;}
+.rb:hover,.rb.sel{border-color:var(--accent);background:rgba(0,196,255,.06);}
+.ric{font-size:22px;margin-bottom:3px;}
+.rn{font-size:11px;font-weight:700;}
+.rm{font-size:9px;color:var(--td);font-family:var(--fmr);}
+/* SALETBL */
+.salerowtbl{width:100%;border-collapse:collapse;}
+.salerowtbl td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+/* BPCL compare */
+.brow{display:flex;align-items:center;gap:8px;padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.03);}
+.brow .bc{width:90px;font-family:var(--fmn);font-size:10px;color:var(--accent);font-weight:700;}
+.brow .bn{flex:1;font-size:12px;}
+.brow .bv{width:70px;text-align:right;font-family:var(--fmn);font-weight:700;}
+/* RESPONSIVE */
+@media(max-width:768px){#SB{width:0;position:fixed;z-index:200;}#SB.mini{width:240px;}.g2,.g3,.g4{grid-template-columns:1fr}.pw{padding:10px}#TB{padding:0 8px}}
+</style>
+
+</head>
+<body>
+<div id="LS">
+  <div class="lb">
+    <div class="lic">🔥</div>
+    <div class="ltitle">शौर्य भारत गॅस</div>
+    <div class="lsub">Dist. 187618 | Jaysingpur, Kolhapur | ERP v6</div>
+    <div class="lsub" id="L_TODAY" style="color:var(--accent);font-weight:700"></div>
+    <div class="fl" style="margin:12px 0 7px;text-align:center">भूमिका निवडा / SELECT ROLE</div>
+    <div class="rgrid" id="RG">
+      <div class="rb sel" onclick="selR(this,'owner')"><div class="ric">👑</div><div class="rn">Owner</div><div class="rm">मालक</div></div>
+      <div class="rb" onclick="selR(this,'office')"><div class="ric">🏢</div><div class="rn">Office</div><div class="rm">व्यवस्थापक</div></div>
+      <div class="rb" onclick="selR(this,'delivery')"><div class="ric">🚚</div><div class="rn">Delivery</div><div class="rm">डिलिव्हरी</div></div>
+      <div class="rb" onclick="selR(this,'loader')"><div class="ric">⚓</div><div class="rn">Loading</div><div class="rm">लोडिंग</div></div>
+      <div class="rb" onclick="selR(this,'bda')"><div class="ric">🤝</div><div class="rn">BDA</div><div class="rm">बीडीए</div></div>
+      <div class="rb" onclick="selR(this,'accountant')"><div class="ric">📊</div><div class="rn">Accounts</div><div class="rm">लेखापाल</div></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Username</div><input id="lu" value="vishal" placeholder="username"></div>
+      <div class="fg"><div class="fl">Password</div><input id="lp" type="password" value="1234" placeholder="password"></div>
+    </div>
+    <button class="btn byl blg" style="width:100%" onclick="doLogin()">🔐 ENTER / प्रवेश</button>
+    <div style="font-size:10px;color:var(--td);text-align:center;margin-top:10px">
+      vishal/1234 · office/1234 · bhore/1234 · sandeep/1234 · bda1/1234 · ajinath/1234
+    </div>
+  </div>
+</div>
+
+<div id="APP">
+  <div id="SB">
+    <div class="sh">
+      <div class="slogo">🔥</div>
+      <div><div class="stitle">शौर्य भारत गॅस</div><div class="ssub" id="S_ROLE">ERP v6</div></div>
+    </div>
+    <div class="snav" id="NAV"></div>
+    <div class="sf">
+      <div class="su"><div class="sav" id="S_AV">V</div><div><div class="slu" id="S_NM">User</div><div class="slr" id="S_RO">—</div></div></div>
+      <div style="font-size:9px;color:var(--td);margin-bottom:7px" id="S_DAY">—</div>
+      <button class="btn bg2 bsm" style="width:100%" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+  <div id="MN">
+    <div id="TB">
+      <button class="tmb" onclick="toggleSB()">☰</button>
+      <div class="ttl" id="TB_T">Dashboard</div>
+      <div style="flex:1"></div>
+      <div class="tclk" id="CLK"></div>
+      <button class="tbtn" onclick="openM('M_NOTICE')">📢</button>
+      <button class="tbtn" onclick="openM('M_CSV')">📤 CSV</button>
+      <button class="tbtn" onclick="toggleChat()">💬</button>
+      <div class="tusr"><div class="tudot"></div><div class="tuname" id="TB_U">—</div></div>
+    </div>
+    <div id="CT"><div class="pw" id="PC"><div class="al ali">Loading…</div></div></div>
+  </div>
+</div>
+
+<div id="CP">
+  <div class="chathd"><span style="font-size:15px;font-weight:700">💬 Team Chat</span><button class="cx" onclick="toggleChat()">✕</button></div>
+  <div class="chatbody">
+    <div class="chatcl" id="CHAT_CL"></div>
+    <div class="chatmw">
+      <div id="CHAT_WHO" style="padding:7px 12px;border-bottom:1px solid var(--bdr);font-size:11px;font-weight:700;color:var(--accent)"></div>
+      <div class="chatms" id="CHAT_MS"></div>
+      <div class="chatir"><input id="CHAT_INP" placeholder="Message…" onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn bpri bsm" onclick="sendMsg()">➤</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<!-- NOTICE -->
+<div class="mov" id="M_NOTICE"><div class="mod" style="max-width:520px">
+  <div class="mhd"><div class="mtitle">📢 Notice Board<span>सूचना फलक</span></div><button class="cx" onclick="closeM('M_NOTICE')">✕</button></div>
+  <div class="fg mb8"><div class="fl">English</div><textarea id="N_EN" rows="2" placeholder="Notice…"></textarea></div>
+  <div class="fg mb10"><div class="fl">मराठी</div><textarea id="N_MR" rows="2" placeholder="मराठी…" style="font-family:var(--fmr)"></textarea></div>
+  <button class="btn byl" onclick="postNotice()">📢 Post Notice</button>
+  <div id="NB_LIST" style="margin-top:10px"></div>
+</div></div>
+
+<!-- CSV UPLOAD -->
+<div class="mov" id="M_CSV"><div class="mod">
+  <div class="mhd"><div class="mtitle">📤 BPCL CSV Upload<span>Already-delivered customers auto-skipped</span></div><button class="cx" onclick="closeM('M_CSV')">✕</button></div>
+  <div class="al alw mb10" style="font-size:11px">Upload multiple times safely. De-dup: Consumer No → Mobile → Name+Area. Delivered ≠ re-appear.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Type</div><select id="CSV_T"><option value="cashmemo">Cash Memo</option><option value="ni">NI List</option><option value="blocked">Blocked</option></select></div>
+    <div class="fg"><div class="fl">Assign To</div><select id="CSV_DM"></select></div>
+    <div class="fg" style="max-width:140px"><div class="fl">Date</div><input type="date" id="CSV_DT"></div>
+  </div>
+  <div class="fg mb10"><div class="fl">CSV File</div><input type="file" id="CSV_F" accept=".csv,.CSV"></div>
+  <button class="btn bpri" onclick="processCSV()">⬆ Process</button>
+  <div id="CSV_RES" style="margin-top:10px"></div>
+</div></div>
+
+<!-- DELIVERY ACTION -->
+<div class="mov" id="M_DA"><div class="mod">
+  <div class="mhd"><div class="mtitle" id="DA_TL">Delivery<span id="DA_SB"></span></div><button class="cx" onclick="closeM('M_DA')">✕</button></div>
+  <div id="DA_INFO" class="al ali mb10" style="font-size:11px"></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Status</div>
+      <select id="DA_ST" onchange="updDA()">
+        <option value="del_otp">✅ Delivered — OTP</option>
+        <option value="del_doorstep">🏠 1st Doorstep (GPS pin save)</option>
+        <option value="del_vehicle">🚐 Collected from Vehicle</option>
+        <option value="del_nootp">⚡ Emergency — No OTP</option>
+        <option value="not_home">🔴 Not Home</option>
+        <option value="rescheduled">📅 Rescheduled</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:110px"><div class="fl">Cylinder</div>
+      <select id="DA_CYL" onchange="updDAamt()">
+        <option value="14.2">14.2 Kg</option><option value="5">5 Kg</option><option value="19">19 Kg</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:80px"><div class="fl">Qty</div><input type="number" id="DA_QTY" value="1" oninput="updDAamt()" min="1"></div>
+  </div>
+  <div class="fl mb6">Payment Mode / पेमेंट पद्धत</div>
+  <div class="paymgrid" id="DA_PM">
+    <div class="paymode sel" data-p="cash" onclick="selPay(this,'DA_PM')"><div class="pic">💵</div><div class="plb">Cash</div></div>
+    <div class="paymode" data-p="gpay" onclick="selPay(this,'DA_PM')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+    <div class="paymode" data-p="qr" onclick="selPay(this,'DA_PM')"><div class="pic">📷</div><div class="plb">QR Scan</div></div>
+    <div class="paymode" data-p="paytm" onclick="selPay(this,'DA_PM')"><div class="pic">📱</div><div class="plb">Paytm</div></div>
+    <div class="paymode" data-p="phonepe" onclick="selPay(this,'DA_PM')"><div class="pic">📱</div><div class="plb">PhonePe</div></div>
+    <div class="paymode" data-p="bpcl_adv" onclick="selPay(this,'DA_PM')"><div class="pic">🔖</div><div class="plb">BPCL Adv</div></div>
+    <div class="paymode" data-p="partial" onclick="selPay(this,'DA_PM')"><div class="pic">💰</div><div class="plb">Cash+Online</div></div>
+  </div>
+  <div id="DA_PARTIAL" style="display:none" class="fr">
+    <div class="fg"><div class="fl">Cash Part ₹</div><input type="number" id="DA_CP" placeholder="e.g. 500"></div>
+    <div class="fg"><div class="fl">Online Part ₹</div><input type="number" id="DA_OP" placeholder="e.g. 356"></div>
+    <div class="fg" style="max-width:110px"><div class="fl">Online Via</div><select id="DA_OV"><option>GPay</option><option>Paytm</option><option>PhonePe</option><option>QR</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Amount ₹</div><input type="number" id="DA_AMT"></div>
+    <div style="align-self:flex-end;padding-bottom:4px;font-size:11px;color:var(--td)" id="DA_AX"></div>
+  </div>
+  <div id="DA_OTPR" style="display:none" class="fr">
+    <div class="fg"><div class="fl">OTP (6-digit)</div><input type="text" id="DA_OTP" maxlength="6" placeholder="______" style="letter-spacing:8px;font-size:22px;text-align:center;font-family:var(--fmn)"></div>
+    <div class="fg" style="max-width:120px"><div class="fl">OTP Source</div><select id="DA_OB"><option>Delivery Man</option><option>BDA</option><option>Customer</option></select></div>
+  </div>
+  <div class="fg mb10"><div class="fl">Note (e.g. partial cash detail)</div><input id="DA_NOTE" placeholder="Optional…"></div>
+  <div style="display:flex;gap:8px">
+    <button class="btn bgr blg" onclick="confirmDA()">✅ Confirm Delivery</button>
+    <button class="btn bg2" onclick="closeM('M_DA')">Cancel</button>
+  </div>
+</div></div>
+
+<!-- SPOT/EMERGENCY -->
+<div class="mov" id="M_SPOT"><div class="mod" style="max-width:480px">
+  <div class="mhd"><div class="mtitle">⚡ Spot / Emergency Delivery<span>Consumer No. mandatory — GPS not saved (not at door)</span></div><button class="cx" onclick="closeM('M_SPOT')">✕</button></div>
+  <div class="al alw mb10" style="font-size:11px">Spot customers not in CSV. Number + name required. No GPS pin — they are not at home address.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Consumer No. *</div><input type="number" id="SP_C" placeholder="Required"></div>
+    <div class="fg"><div class="fl">Customer Name</div><input id="SP_N" placeholder="Name"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Mobile</div><input type="tel" id="SP_M"></div>
+    <div class="fg"><div class="fl">Location Note</div><input id="SP_A" placeholder="Area / landmark"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Cylinder</div><select id="SP_CYL" onchange="updSpot()"><option value="14.2">14.2 Kg (₹856)</option><option value="5">5 Kg (₹352.50)</option><option value="19">19 Kg (₹2132)</option></select></div>
+    <div class="fg" style="max-width:80px"><div class="fl">Qty</div><input type="number" id="SP_QTY" value="1" oninput="updSpot()"></div>
+    <div class="fg" style="max-width:110px"><div class="fl">Amount ₹</div><input type="number" id="SP_AMT" value="856"></div>
+  </div>
+  <div class="paymgrid" id="SP_PM">
+    <div class="paymode sel" data-p="cash" onclick="selPay(this,'SP_PM')"><div class="pic">💵</div><div class="plb">Cash</div></div>
+    <div class="paymode" data-p="gpay" onclick="selPay(this,'SP_PM')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+    <div class="paymode" data-p="qr" onclick="selPay(this,'SP_PM')"><div class="pic">📷</div><div class="plb">QR</div></div>
+    <div class="paymode" data-p="paytm" onclick="selPay(this,'SP_PM')"><div class="pic">📱</div><div class="plb">Paytm</div></div>
+    <div class="paymode" data-p="partial" onclick="selPay(this,'SP_PM')"><div class="pic">💰</div><div class="plb">Cash+Online</div></div>
+    <div class="paymode" data-p="bpcl_adv" onclick="selPay(this,'SP_PM')"><div class="pic">🔖</div><div class="plb">BPCL Adv</div></div>
+  </div>
+  <div id="SP_PARTIAL" style="display:none" class="fr">
+    <div class="fg"><div class="fl">Cash ₹</div><input type="number" id="SP_CP" placeholder="500"></div>
+    <div class="fg"><div class="fl">GPay/Online ₹</div><input type="number" id="SP_OP" placeholder="356"></div>
+  </div>
+  <button class="btn bor blg" style="width:100%" onclick="confirmSpot()">⚡ Confirm Spot</button>
+</div></div>
+
+<!-- BPCL RECEIPT (loader/driver) -->
+<div class="mov" id="M_BPCLR"><div class="mod">
+  <div class="mhd"><div class="mtitle">📦 BPCL Truck Receipt<span>Loader / Driver — Godown auto-updates. Sandeep+Sager ₹400 each.</span></div><button class="cx" onclick="closeM('M_BPCLR')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Invoice / DO No.</div><input id="BR_INV" placeholder="Invoice number"></div>
+    <div class="fg" style="max-width:140px"><div class="fl">Date</div><input type="date" id="BR_DT"></div>
+    <div class="fg" style="max-width:140px"><div class="fl">Status</div><select id="BR_ST"><option value="complete">Complete</option><option value="partial">Partial Unloading</option><option value="delay">Truck Delay (next day)</option></select></div>
+  </div>
+  <div style="background:var(--bgp);border-radius:8px;padding:12px;margin-bottom:12px">
+    <div class="fl mb8">CYLINDERS RECEIVED (भरलेले मिळाले)</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">14.2 Kg Full</div><input type="number" id="BR_F14" placeholder="342" oninput="calcBR()"></div>
+      <div class="fg"><div class="fl">5 Kg Full</div><input type="number" id="BR_F5" placeholder="0" oninput="calcBR()"></div>
+      <div class="fg"><div class="fl">19 Kg Full</div><input type="number" id="BR_F19" placeholder="0" oninput="calcBR()"></div>
+    </div>
+    <div class="fl mb8" style="margin-top:10px">EMPTIES RETURNED (रिकामे परत)</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">14.2 Kg Empty</div><input type="number" id="BR_E14" placeholder="342" oninput="calcBR()"></div>
+      <div class="fg"><div class="fl">5 Kg Empty</div><input type="number" id="BR_E5" placeholder="0"></div>
+      <div class="fg"><div class="fl">19 Kg Empty</div><input type="number" id="BR_E19" placeholder="0"></div>
+    </div>
+  </div>
+  <div id="BR_CALC" class="al ali mb10" style="font-size:11px"></div>
+  <div class="fg mb10"><div class="fl">Notes (exception/delay reason)</div><input id="BR_NOTE" placeholder="Truck delay / partial unloading / emergency driver…"></div>
+  <div class="al alw mb10" style="font-size:11px">Auto-credit: Sandeep ₹400 + Sager ₹400 = ₹800 per truck receipt</div>
+  <button class="btn bpri" onclick="saveBPCLR()">✅ Confirm Receipt → Godown Updates</button>
+</div></div>
+
+<!-- TRIP CLOSE -->
+<div class="mov" id="M_TC"><div class="mod">
+  <div class="mhd"><div class="mtitle">🔒 Close Trip<span id="TC_NM">— Cannot edit after close</span></div><button class="cx" onclick="closeM('M_TC')">✕</button></div>
+  <div class="g4 mb12" id="TC_STATS"></div>
+  <div class="fr mb10">
+    <div class="fg"><div class="fl">14.2 Empty Returned to Godown</div><input type="number" id="TC_E14" placeholder="0"></div>
+    <div class="fg"><div class="fl">5 Kg Empty</div><input type="number" id="TC_E5" placeholder="0"></div>
+    <div class="fg"><div class="fl">Full Remaining (unsold)</div><input type="number" id="TC_REM" placeholder="0"></div>
+  </div>
+  <div class="card mb10">
+    <div class="ctitle mb8">💵 Cash Denomination — नोटा मोजणी</div>
+    <div id="TC_DEN"></div>
+    <div class="dentot"><span style="font-family:var(--fmr)">एकूण रोख</span><span id="TC_TOT" style="color:var(--green);font-family:var(--fmn)">₹0</span></div>
+  </div>
+  <div class="fr mb10">
+    <div class="fg"><div class="fl">GPay Received ₹</div><input type="number" id="TC_GP" placeholder="0"></div>
+    <div class="fg"><div class="fl">QR/Paytm ₹</div><input type="number" id="TC_QR" placeholder="0"></div>
+    <div class="fg"><div class="fl">PhonePe ₹</div><input type="number" id="TC_PP" placeholder="0"></div>
+    <div class="fg"><div class="fl">BPCL Adv ₹</div><input type="number" id="TC_BA" placeholder="0"></div>
+  </div>
+  <div class="fg mb12"><div class="fl">Reason for mismatch / कारण (मराठीत)</div><input id="TC_RSN" placeholder="कारण असल्यास मराठीत लिहा…"></div>
+  <button class="btn byl blg" style="width:100%" onclick="closeTrip()">🔒 Close Trip & Submit</button>
+</div></div>
+
+<!-- ADVANCE -->
+<div class="mov" id="M_ADV"><div class="mod" style="max-width:460px">
+  <div class="mhd"><div class="mtitle">💸 Advance<span>Priority: Cash Shortage→Recovery→Net Wages</span></div><button class="cx" onclick="closeM('M_ADV')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Staff</div><select id="ADV_ST" onchange="refreshAdvBal()"></select></div>
+    <div class="fg"><div class="fl">Type</div><select id="ADV_TY"><option value="give">Give Advance</option><option value="recovery">Recovery</option><option value="short">Cash Shortage (auto)</option><option value="received">Cash Received</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Amount ₹</div><input type="number" id="ADV_AMT"></div>
+    <div class="fg"><div class="fl">Monthly Recovery ₹</div><input type="number" id="ADV_REC" placeholder="Set monthly deduction"></div>
+  </div>
+  <div style="background:var(--bgp);border-radius:8px;padding:12px;margin-bottom:12px">
+    <div style="font-size:10px;color:var(--td)">Current Balance</div>
+    <div id="ADV_BAL" style="font-size:28px;font-weight:700;color:var(--orange)">₹0</div>
+  </div>
+  <button class="btn bpri" onclick="saveAdvance()">💾 Save</button>
+</div></div>
+
+<!-- STOCK UPDATE (owner/office only) -->
+<div class="mov" id="M_STKU"><div class="mod" style="max-width:460px">
+  <div class="mhd"><div class="mtitle">🛢️ Manual Stock Adjustment<span>Owner/Office only — reason mandatory</span></div><button class="cx" onclick="closeM('M_STKU')">✕</button></div>
+  <div class="al alw mb10" style="font-size:11px">All adjustments logged with timestamp, user, old value, new value, reason.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Location / Item</div>
+      <select id="SK_LOC">
+        <option value="off_f14">Office 14.2 Full</option>
+        <option value="off_e14">Office 14.2 Empty</option>
+        <option value="off_f5">Office 5 Kg Full</option>
+        <option value="off_e5">Office 5 Kg Empty</option>
+        <option value="off_sv">Office SV Stock</option>
+        <option value="off_bb">Office Blue Book</option>
+        <option value="off_pipe">Office Suraksha Pipe</option>
+        <option value="off_dpr_g">DPR Good</option>
+        <option value="off_dpr_d">DPR Defective</option>
+        <option value="gdn_f14">Godown 14.2 Full</option>
+        <option value="gdn_e14">Godown 14.2 Empty</option>
+        <option value="gdn_f5">Godown 5 Kg Full</option>
+        <option value="gdn_e5">Godown 5 Kg Empty</option>
+        <option value="gdn_f19">Godown 19 Kg Full</option>
+        <option value="gdn_e19">Godown 19 Kg Empty</option>
+        <option value="gdn_def">Godown Defective</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:100px"><div class="fl">New Value</div><input type="number" id="SK_VAL"></div>
+  </div>
+  <div class="fg mb12"><div class="fl">Reason (mandatory / कारण)</div><input id="SK_RSN" placeholder="Reason for adjustment…"></div>
+  <button class="btn byl" onclick="saveStockAdj()">💾 Save Adjustment</button>
+</div></div>
+
+<!-- ADD STAFF -->
+<div class="mov" id="M_STAFF"><div class="mod">
+  <div class="mhd"><div class="mtitle">👤 Staff<span>Add or manage staff member</span></div><button class="cx" onclick="closeM('M_STAFF')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Name</div><input id="ST_NM" placeholder="Full name"></div>
+    <div class="fg"><div class="fl">Role</div><select id="ST_RL"><option value="delivery">Delivery Man</option><option value="office">Office</option><option value="loader">Loader/Unloader</option><option value="truck">Truck Driver</option><option value="helper">Helper</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Mobile 1</div><input type="tel" id="ST_M1"></div>
+    <div class="fg"><div class="fl">Mobile 2</div><input type="tel" id="ST_M2"></div>
+  </div>
+  <div class="fr">
+    <div class="fg" style="max-width:90px"><div class="fl">Urban ₹/cyl</div><input type="number" id="ST_WU" value="8"></div>
+    <div class="fg" style="max-width:90px"><div class="fl">Rural ₹/cyl</div><input type="number" id="ST_WR" value="7"></div>
+    <div class="fg"><div class="fl">Monthly Salary ₹</div><input type="number" id="ST_SAL" value="0"></div>
+    <div class="fg"><div class="fl">Advance ₹</div><input type="number" id="ST_ADV" value="0"></div>
+    <div class="fg"><div class="fl">Monthly Rec ₹</div><input type="number" id="ST_REC" value="0"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Username</div><input id="ST_US"></div>
+    <div class="fg"><div class="fl">Password</div><input type="password" id="ST_PW" value="1234"></div>
+  </div>
+  <button class="btn bpri" onclick="saveStaff()">💾 Save Staff</button>
+</div></div>
+
+<!-- EXPENSE -->
+<div class="mov" id="M_EXP"><div class="mod" style="max-width:480px">
+  <div class="mhd"><div class="mtitle">🧾 Expense<span>Auto-deducts from cash register</span></div><button class="cx" onclick="closeM('M_EXP')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Category</div>
+      <select id="EX_CAT">
+        <option>Diesel / डिझेल (Mangave Pump)</option>
+        <option>Vehicle Maintenance</option>
+        <option>Salary / Wages Paid</option>
+        <option>Advance to Staff</option>
+        <option>Unloading Wages (BPCL)</option>
+        <option>Office Stationery / Courier</option>
+        <option>Cylinder Testing Fee</option>
+        <option>Other Expense</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:130px"><div class="fl">Paid Via</div><select id="EX_VIA"><option>Office Cash</option><option>GPay (Shourya BharatGas)</option><option>Owner Cash</option><option>Staff (Reimbursable)</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Amount ₹</div><input type="number" id="EX_AMT"></div>
+    <div class="fg" style="max-width:140px"><div class="fl">Date</div><input type="date" id="EX_DT"></div>
+  </div>
+  <div class="fg mb12"><div class="fl">Description / तपशील</div><input id="EX_DSC" placeholder="Details…"></div>
+  <button class="btn bpri" onclick="saveExpense()">💾 Save Expense</button>
+</div></div>
+
+<!-- BDA MODAL -->
+<div class="mov" id="M_BDA"><div class="mod">
+  <div class="mhd"><div class="mtitle" id="BDA_TL">BDA<span id="BDA_SB"></span></div><button class="cx" onclick="closeM('M_BDA')">✕</button></div>
+  <div class="tabs">
+    <div class="tab act" onclick="bdaTab('stock',this)">🛢️ Stock</div>
+    <div class="tab" onclick="bdaTab('cash',this)">💵 Cash</div>
+    <div class="tab" onclick="bdaTab('otp',this)">🔑 OTP</div>
+    <div class="tab" onclick="bdaTab('spot',this)">⚡ Spot</div>
+  </div>
+  <div id="BDA_stock">
+    <div class="al ali mb10" style="font-size:11px">Stock transfer: wages auto-calculated at rural rate ₹7/cyl for delivery man.</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">14.2 Full Given</div><input type="number" id="BS_F14" placeholder="0"></div>
+      <div class="fg"><div class="fl">14.2 Empty Taken</div><input type="number" id="BS_E14" placeholder="0"></div>
+      <div class="fg"><div class="fl">5 Kg Given</div><input type="number" id="BS_F5" placeholder="0"></div>
+    </div>
+    <button class="btn bpri" onclick="saveBDAStock()">💾 Transfer Stock</button>
+  </div>
+  <div id="BDA_cash" style="display:none">
+    <div class="fr">
+      <div class="fg"><div class="fl">Cyls Sold</div><input type="number" id="BC_QTY" oninput="calcBDASale()"></div>
+      <div class="fg"><div class="fl">Type</div><select id="BC_TY" onchange="calcBDASale()"><option value="14.2">14.2 Kg</option><option value="5">5 Kg</option><option value="19">19 Kg</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cash ₹</div><input type="number" id="BC_CA"></div>
+      <div class="fg"><div class="fl">GPay (Shourya acct) ₹</div><input type="number" id="BC_GP"></div>
+      <div class="fg"><div class="fl">QR ₹</div><input type="number" id="BC_QR"></div>
+      <div class="fg"><div class="fl">Paytm ₹</div><input type="number" id="BC_PT"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cash Given To</div><select id="BC_TO"><option>Office</option><option>Owner (Vishal)</option><option>Baba Patil</option><option>Delivery Man</option></select></div>
+    </div>
+    <div id="BC_CALC" class="al ali mb8" style="font-size:11px"></div>
+    <button class="btn bpri" onclick="saveBDACash()">💾 Save Payment</button>
+  </div>
+  <div id="BDA_otp" style="display:none">
+    <div class="al ali mb8" style="font-size:11px">Area-wise OTPs stored centrally. Office + delivery man in area can view.</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Consumer No.</div><input id="BO_C"></div>
+      <div class="fg"><div class="fl">Name</div><input id="BO_N"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">OTP</div><input type="text" id="BO_OTP" maxlength="6" placeholder="______" style="letter-spacing:8px;font-size:22px;text-align:center;font-family:var(--fmn)"></div>
+      <div class="fg"><div class="fl">Area</div><input id="BO_AR"></div>
+    </div>
+    <button class="btn bpri mb8" onclick="saveBDAOTP()">✅ Save OTP</button>
+    <div id="BO_LIST"></div>
+  </div>
+  <div id="BDA_spot" style="display:none">
+    <div class="fr">
+      <div class="fg"><div class="fl">Consumer No. *</div><input type="number" id="BSP_C"></div>
+      <div class="fg"><div class="fl">Mobile</div><input type="tel" id="BSP_M"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cylinder</div><select id="BSP_CY"><option value="14.2">14.2 Kg (₹856)</option><option value="5">5 Kg</option></select></div>
+      <div class="fg" style="max-width:110px"><div class="fl">Amount ₹</div><input type="number" id="BSP_A" value="856"></div>
+    </div>
+    <div class="paymgrid" id="BSP_PM">
+      <div class="paymode sel" data-p="cash" onclick="selPay(this,'BSP_PM')"><div class="pic">💵</div><div class="plb">Cash</div></div>
+      <div class="paymode" data-p="gpay" onclick="selPay(this,'BSP_PM')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+      <div class="paymode" data-p="qr" onclick="selPay(this,'BSP_PM')"><div class="pic">📷</div><div class="plb">QR</div></div>
+    </div>
+    <button class="btn bor" onclick="saveBDASpot()">⚡ Confirm BDA Spot</button>
+  </div>
+</div></div>
+
+<!-- OPENING STOCK (office morning) -->
+<div class="mov" id="M_OPSTK"><div class="mod" style="max-width:500px">
+  <div class="mhd"><div class="mtitle">🌅 Office Opening Stock<span>Morning physical count — must match last closing</span></div><button class="cx" onclick="closeM('M_OPSTK')">✕</button></div>
+  <div class="al ali mb10" style="font-size:11px">Enter physical count. System shows last closing. RED = mismatch → office reviews.</div>
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0;border:1px solid var(--bdr);border-radius:8px;overflow:hidden;margin-bottom:12px">
+    <div style="background:var(--bgp);padding:7px 10px;font-size:9px;color:var(--td);font-weight:700">ITEM</div>
+    <div style="background:var(--bgp);padding:7px 10px;font-size:9px;color:var(--accent);text-align:center">PHYSICAL</div>
+    <div style="background:var(--bgp);padding:7px 10px;font-size:9px;color:var(--td);text-align:center">SYSTEM</div>
+    <div style="background:var(--bgp);padding:7px 10px;font-size:9px;color:var(--td);text-align:center">DIFF</div>
+    ${genOSRow('off_f14','Office 14.2 Full')}
+    ${genOSRow('off_e14','Office 14.2 Empty')}
+    ${genOSRow('off_f5','Office 5 Kg Full')}
+    ${genOSRow('off_e5','Office 5 Kg Empty')}
+    ${genOSRow('off_f19','Office 19 Kg Full')}
+  </div>
+  <button class="btn byl blg" style="width:100%" onclick="saveOpeningStock()">✅ Save & Lock Opening Stock</button>
+</div></div>
+
+<script>
+const SK='shourya_v6';
+const RATES={'14.2':856,'5':352.5,'19':2132};
+const URBAN_AREAS=['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk','Jaysingpur City'];
+const ALL_AREAS=['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk','Jaysingpur City','Shirol','Sakharale','Yadrav','Hebbal','Kondigre','Nimshirgav','Danoli','Kothali','Kavatesar','Chipri Beghar','Rural-Haroon','Other'];
+
+// BPCL SAP 21-Feb-2026 reference data
+const BPCL_REF={
+  day:'21-Feb-2026',
+  stock:{'5240':66,'5250':20,'5260':23,'5350':500,'5370':6,'5400':64,'5450':4,'BPCDPR':325,'BPCDPRF':62},
+  txn:{'5350':{refills:132,opening:357,current:80,cancelled:0,closing:305},'5370':{refills:28,opening:96,current:10,cancelled:0,closing:78}}
+};
+
+const DEF={
+  staff:[
+    {id:'s_vishal',name:'Vishal Patil',role:'owner',m1:'7887456789',m2:'9869234868',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'vishal',pw:'1234'},
+    {id:'s_mrinmayi',name:'Mrinmayi Patil',role:'owner',m1:'8080802880',m2:'',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'mrinmayi',pw:'1234'},
+    {id:'s_baba',name:'Baba Patil',role:'owner',m1:'7276884888',m2:'',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'baba',pw:'1234'},
+    {id:'s_rajesh',name:'Rajesh Awale',role:'office',m1:'8007183197',m2:'',wu:0,wr:0,sal:15000,adv:0,mrec:0,active:true,un:'office',pw:'1234'},
+    {id:'s_bhore',name:'Vishwas Bhore',role:'delivery',m1:'7643982982',m2:'9975464383',wu:8,wr:7,sal:0,adv:5000,mrec:1000,active:true,un:'bhore',pw:'1234'},
+    {id:'s_swapnil',name:'Swapnil Patil',role:'delivery',m1:'8830669611',m2:'',wu:8,wr:7,sal:0,adv:2000,mrec:500,active:true,un:'swapnil',pw:'1234'},
+    {id:'s_haroon',name:'Haroon Fakir',role:'delivery',m1:'9970660901',m2:'',wu:8,wr:7,sal:0,adv:0,mrec:0,active:true,un:'haroon',pw:'1234'},
+    {id:'s_magdum',name:'Vishal Magdum',role:'delivery',m1:'9096853954',m2:'7643987987',wu:8,wr:7,sal:0,adv:3000,mrec:500,active:true,un:'magdum',pw:'1234'},
+    {id:'s_ajinath',name:'Ajinath',role:'loader',m1:'8669164977',m2:'',wu:0,wr:0,sal:18000,adv:0,mrec:0,active:true,un:'ajinath',pw:'1234'},
+    {id:'s_sandeep',name:'Sandeep',role:'loader',m1:'8788076864',m2:'',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'sandeep',pw:'1234'},
+    {id:'s_sager',name:'Sager',role:'loader',m1:'8605444617',m2:'',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'sager',pw:'1234'},
+  ],
+  bda:[
+    {id:'b1',name:'Sarika Waghmode',area:'Kondigre',mob:'9561242972',f14:0,e14:0,f5:0,un:'bda1',pw:'1234'},
+    {id:'b2',name:'Kumar Thomake',area:'Nimshirgav',mob:'9673824646',f14:0,e14:0,f5:0,un:'bda2',pw:'1234'},
+    {id:'b3',name:'Lakhane',area:'Nimshirgav',mob:'7588262265',f14:0,e14:0,f5:0,un:'bda3',pw:'1234'},
+    {id:'b4',name:'Manoj',area:'Danoli',mob:'9970731436',f14:0,e14:0,f5:0,un:'bda4',pw:'1234'},
+    {id:'b5',name:'Yadav',area:'Kothali',mob:'9405744020',f14:0,e14:0,f5:0,un:'bda5',pw:'1234'},
+    {id:'b6',name:'Sudhakar Patil',area:'Kavatesar',mob:'9822180498',f14:0,e14:0,f5:0,un:'bda6',pw:'1234'},
+    {id:'b7',name:'Vikrant Kamble',area:'Shirol',mob:'7028502299',f14:0,e14:0,f5:0,un:'bda7',pw:'1234'},
+    {id:'b8',name:'Rajesh A',area:'Chipri Beghar',mob:'8007183197',f14:0,e14:0,f5:0,un:'bda8',pw:'1234'},
+  ],
+  stock:{
+    godown:{f14:0,e14:0,f5:0,e5:0,f19:0,e19:0,def:0},
+    office:{f14:0,e14:0,f5:0,e5:0,f19:0,sv:0,bb:0,pipe:0,dpr_g:0,dpr_d:0},
+    vehicles:{}
+  },
+  deliveries:[],trips:[],bpclReceipts:[],
+  cashLedger:[],expenses:[],notices:[],
+  otpStore:[],customerPins:{},stockLog:[],
+  chatMsg:{'All Staff':[{from:'System',msg:'ERP v6 Ready — शौर्य भारत गॅस',ts:'00:00',mine:false}]},
+  erpDay:new Date().toISOString().slice(0,10),
+  morningLocked:false,dayEndLocked:false,
+  openingStockDate:null,bpclSapDate:null,bpclSapData:null
+};
+
+let D;
+function loadData(){
+  try{const s=localStorage.getItem(SK);if(s){const d=JSON.parse(s);if(!d.stock.office.hasOwnProperty('f5'))d.stock.office.f5=0;d.staff.forEach(s=>{if(!s.hasOwnProperty('adv'))s.adv=0;if(!s.hasOwnProperty('mrec'))s.mrec=0;});return d;}}catch(e){}
+  return JSON.parse(JSON.stringify(DEF));
+}
+function save(){try{localStorage.setItem(SK,JSON.stringify(D));}catch(e){console.warn(e);}}
+function resetBlank(){if(!confirm('Reset ALL data? / सर्व डेटा रीसेट करायचा?'))return;localStorage.removeItem(SK);location.reload();}
+
+D=loadData();
+setInterval(save,20000);
+
+// Helpers
+const G=id=>document.getElementById(id);
+const fmt=n=>'₹'+(+n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fN=n=>(+n||0).toLocaleString('en-IN');
+const ts=()=>new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+const today=()=>new Date().toISOString().slice(0,10);
+const isOwner=()=>D.role==='owner';
+const isOff=()=>['owner','office','accountant'].includes(D.role);
+const isLoad=()=>['loader','truck'].includes(D.role);
+const getLedBal=()=>D.cashLedger.reduce((b,l)=>b+(+l.cr||0)-(+l.dr||0),0);
+const totBDA=()=>D.bda.reduce((t,b)=>t+(+b.f14||0),0);
+const totVeh=()=>Object.values(D.stock.vehicles||{}).reduce((t,v)=>t+(+v.f14||0),0);
+function ensVeh(){D.staff.filter(s=>s.role==='delivery').forEach(s=>{if(!D.stock.vehicles[s.id])D.stock.vehicles[s.id]={f14:0,e14:0,f5:0,f19:0};});}
+
+// ── LOGIN ──
+let selRole='owner';
+function selR(el,r){document.querySelectorAll('.rb').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');selRole=r;}
+function doLogin(){
+  const u=(G('lu').value||'').trim(),p=G('lp').value||'';
+  if(!u||!p){toast('Enter credentials','e');return;}
+  let found=[...D.staff,...D.bda].find(s=>s.un===u&&s.pw===p);
+  if(!found){
+    const rm={owner:'s_vishal',office:'s_rajesh',delivery:'s_bhore',loader:'s_sandeep',bda:'b1',accountant:'s_rajesh'};
+    if(p==='1234')found=[...D.staff,...D.bda].find(x=>x.id===rm[selRole]);
+  }
+  if(!found){toast('Invalid login','e');return;}
+  D.role=['s_vishal','s_mrinmayi','s_baba'].includes(found.id)?'owner':(found.id?.startsWith('b')?'bda':found.role||selRole);
+  D.userId=found.id;D.userName=found.name||'User';
+  if(D.role==='delivery')D.myId=found.id;
+  if(D.role==='bda')D.myBDA=found.id;
+  D.activeChatC='All Staff';
+  ensVeh();
+  G('LS').style.display='none';G('APP').style.display='flex';
+  initApp();
+}
+function doLogout(){save();G('LS').style.display='flex';G('APP').style.display='none';}
+
+// ── NAV ──
+const NAVS={
+  owner:[
+    {s:'Overview'},{p:'dash',i:'📊',l:'Dashboard',m:'डॅशबोर्ड'},{p:'tracking',i:'🗺️',l:'Live Map',m:'नकाशा'},
+    {s:'Operations'},{p:'godown',i:'🏭',l:'Godown Board',m:'गोदाम'},{p:'deliveries',i:'🚚',l:'All Deliveries',m:'डिलिव्हरी'},{p:'bda',i:'🤝',l:'BDA',m:'बीडीए'},{p:'otpall',i:'🔑',l:'Central OTP',m:'केंद्रीय OTP'},
+    {s:'Finance'},{p:'cash',i:'💵',l:'Cash Register',m:'रोख'},{p:'expenses',i:'🧾',l:'Expenses',m:'खर्च'},{p:'dayend',i:'📋',l:'Day End',m:'दिवसअखेर'},{p:'payroll',i:'💰',l:'Payroll',m:'वेतन'},{p:'accounts',i:'📑',l:'Accounts',m:'लेखा'},
+    {s:'Admin'},{p:'stock',i:'🛢️',l:'Stock',m:'स्टॉक'},{p:'bpclverify',i:'✅',l:'BPCL Verify',m:'बीपीसीएल'},{p:'staff',i:'👥',l:'Staff',m:'कर्मचारी'},{p:'settings',i:'⚙️',l:'Settings',m:'सेटिंग'}
+  ],
+  office:[
+    {s:'Daily'},{p:'dash',i:'📊',l:'Dashboard',m:'डॅशबोर्ड'},{p:'morning',i:'🌅',l:'Morning Stock',m:'सकाळी'},{p:'godown',i:'🏭',l:'Godown Board',m:'गोदाम'},{p:'deliveries',i:'🚚',l:'Deliveries',m:'डिलिव्हरी'},{p:'officesales',i:'🏪',l:'Office Sales',m:'विक्री'},{p:'otpall',i:'🔑',l:'OTP Central',m:'केंद्रीय OTP'},
+    {s:'Finance'},{p:'cash',i:'💵',l:'Cash',m:'रोख'},{p:'expenses',i:'🧾',l:'Expenses',m:'खर्च'},{p:'dayend',i:'📋',l:'Day End',m:'दिवसअखेर'},{p:'payroll',i:'💰',l:'Wages',m:'वेतन'},
+    {s:'Stock'},{p:'stock',i:'🛢️',l:'Stock View',m:'स्टॉक'},{p:'bda',i:'🤝',l:'BDA',m:'बीडीए'},{p:'bpclverify',i:'✅',l:'BPCL',m:'बीपीसीएल'}
+  ],
+  delivery:[
+    {s:'My Day'},{p:'route',i:'📍',l:"Today's Route",m:'आजची यादी'},{p:'trip',i:'🚀',l:'Start Trip',m:'ट्रिप सुरू'},{p:'mystock',i:'🛢️',l:'My Stock',m:'माझा स्टॉक'},{p:'submcash',i:'💵',l:'Submit Cash',m:'रोख जमा'},{p:'mywages',i:'💰',l:'My Wages',m:'माझे वेतन'},{p:'otpall',i:'🔑',l:'Area OTPs',m:'क्षेत्र OTP'}
+  ],
+  loader:[
+    {s:'Godown'},{p:'godown',i:'🏭',l:'Godown Board',m:'गोदाम'},{p:'bpclentry',i:'📦',l:'BPCL Entry',m:'बीपीसीएल'},{p:'mystock',i:'🛢️',l:'My Stock Count',m:'स्टॉक'}
+  ],
+  bda:[
+    {s:'BDA'},{p:'bdadash',i:'📊',l:'My Dashboard',m:'डॅशबोर्ड'},{p:'bdaotp',i:'🔑',l:'OTP',m:'ओटीपी'},{p:'bdasspot',i:'⚡',l:'Spot',m:'स्पॉट'}
+  ],
+  accountant:[
+    {s:'Finance'},{p:'dash',i:'📊',l:'Dashboard',m:'डॅशबोर्ड'},{p:'accounts',i:'📑',l:'Accounts',m:'लेखा'},{p:'payroll',i:'💰',l:'Payroll',m:'वेतन'},{p:'bpclverify',i:'✅',l:'BPCL',m:'बीपीसीएल'}
+  ]
+};
+const PTITLES={dash:'Dashboard / डॅशबोर्ड',tracking:'Live Map / नकाशा',godown:'Godown Board / गोदाम बोर्ड',deliveries:'Deliveries / डिलिव्हरी',bda:'BDA Partners / बीडीए',otpall:'Central OTP / केंद्रीय OTP',cash:'Cash Register / रोख',expenses:'Expenses / खर्च',dayend:'Day End / दिवसअखेर',payroll:'Payroll / वेतन पत्रक',accounts:'Accounts / लेखा',stock:'Stock Summary / स्टॉक',bpclverify:'BPCL Verify / बीपीसीएल तुलना',staff:'Staff / कर्मचारी',settings:'Settings / सेटिंग',morning:'Morning Stock / सकाळी',officesales:'Office Sales / विक्री',route:"Today's Route / आजची यादी",trip:'Start Trip / ट्रिप',mystock:'My Stock / स्टॉक',submcash:'Submit Cash / रोख',mywages:'My Wages / वेतन',bpclentry:'BPCL Entry / बीपीसीएल',bdadash:'BDA Dashboard',bdaotp:'OTP',bdasspot:'Spot Booking'};
+
+function initApp(){
+  ensVeh();
+  G('TB_U').textContent=D.userName;G('S_NM').textContent=D.userName;G('S_AV').textContent=D.userName[0]||'U';
+  const rl={owner:'मालक',office:'व्यवस्थापक',delivery:'डिलिव्हरी',loader:'लोडिंग',bda:'बीडीए',accountant:'लेखापाल'};
+  G('S_RO').textContent=rl[D.role]||D.role;G('S_ROLE').textContent=rl[D.role]||D.role;
+  G('S_DAY').textContent='ERP: '+D.erpDay;
+  if(G('CSV_DT'))G('CSV_DT').value=D.erpDay;
+  if(G('BR_DT'))G('BR_DT').value=D.erpDay;
+  if(G('EX_DT'))G('EX_DT').value=D.erpDay;
+  if(G('CSV_DM'))G('CSV_DM').innerHTML='<option value="">Auto-assign</option>'+D.staff.filter(s=>s.role==='delivery').map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  if(G('ADV_ST'))G('ADV_ST').innerHTML=D.staff.map(s=>`<option value="${s.id}">${s.name} (${s.role})</option>`).join('');
+  buildNav();
+  const fp=(NAVS[D.role]||NAVS.owner).find(n=>n.p);
+  setPage(fp?fp.p:'dash');
+  startClock();
+  initChat();
+  if(G('L_TODAY'))G('L_TODAY').textContent='ERP Day: '+D.erpDay;
+}
+function toggleSB(){G('SB').classList.toggle('mini');}
+function buildNav(){
+  const items=NAVS[D.role]||NAVS.owner;
+  G('NAV').innerHTML=items.map(n=>n.s?`<div class="nsec">${n.s}</div>`:`<div class="ni" id="N_${n.p}" onclick="setPage('${n.p}')"><span class="ic">${n.i}</span><div><div class="snl">${n.l}</div><div class="snl2">${n.m}</div></div></div>`).join('');
+}
+function setPage(pg){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('act'));
+  const el=G('N_'+pg);if(el)el.classList.add('act');
+  G('TB_T').textContent=PTITLES[pg]||pg;
+  const fn=PAGES[pg];
+  G('PC').innerHTML=fn?fn():`<div class="pw"><div class="al ali">Page: ${pg}</div></div>`;
+  if(['tracking','route'].includes(pg))setTimeout(initMap,150);
+}
+</script>
+
+<script>
+const PAGES={};
+
+// ─── DASHBOARD (Owner/Partner SAP-like) ───
+PAGES.dash=function(){
+  const del=D.deliveries.filter(x=>x.st&&x.st.startsWith('del_')).length;
+  const pend=D.deliveries.filter(x=>!x.st||x.st==='scheduled').length;
+  const tot14=D.stock.godown.f14+D.stock.office.f14+totBDA()+totVeh();
+  const cash=getLedBal();
+  return`<div class="pw">
+<div class="daybar">
+  <div><div class="dblb">ERP DAY</div><div class="dbval" style="font-size:14px">${D.erpDay}</div></div>
+  <span class="badge ${D.dayEndLocked?'bg':'by'}">${D.dayEndLocked?'🟢 CLOSED':'🟡 OPEN'}</span>
+  <div><div class="dblb">DELIVERED</div><div class="dbval" style="color:var(--green)">${del}</div></div>
+  <div><div class="dblb">PENDING</div><div class="dbval" style="color:var(--yellow)">${pend}</div></div>
+  <div><div class="dblb">14.2 TOTAL</div><div class="dbval" style="color:var(--accent)">${tot14}</div></div>
+  <div><div class="dblb">CASH BAL</div><div class="dbval" style="font-size:15px">${fmt(cash)}</div></div>
+  ${D.notices&&D.notices.length?`<div style="flex:1;font-size:11px;color:var(--yellow);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📢 ${D.notices[0].en}</div>`:''}
+  <div style="display:flex;gap:6px;margin-left:auto">
+    <button class="btn bpri bsm" onclick="openM('M_SPOT')">⚡ Emergency</button>
+    <button class="btn bg2 bsm" onclick="openM('M_BPCLR')">📦 BPCL</button>
+  </div>
+</div>
+
+<!-- STOCK EXPANDABLE BLOCK -->
+<div class="exs mb8">
+  <div class="exshd" onclick="tog('stk14')">
+    <div class="exstitle">🛢️ 14.2 Kg Stock Summary <span class="badge ${tot14===0?'br':'bb'}">${tot14} total</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><span class="badge bg" style="font-size:9px">BPCL: 5350+5370</span><span class="exsarr">▼</span></div>
+  </div>
+  <div class="exsbody open" id="stk14">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px">
+      ${[['🏭 Godown',D.stock.godown.f14,D.stock.godown.e14],['🏢 Office',D.stock.office.f14,D.stock.office.e14],['🤝 BDA',totBDA(),D.bda.reduce((t,b)=>t+(+b.e14||0),0)],['🚐 Vehicles',totVeh(),0],['⚠️ Defective',D.stock.godown.def,0]].map(([l,f,e])=>`<div class="card csm" style="text-align:center;cursor:pointer" onclick="setPage('stock')"><div style="font-size:10px;color:var(--td);margin-bottom:4px">${l}</div><div style="font-size:26px;font-weight:700;color:var(--green)">${f}</div>${e?`<div style="font-size:9px;color:var(--td)">Empty:${e}</div>`:''}</div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--td)">BPCL SAP Ref (${BPCL_REF.day}): 5350→${BPCL_REF.stock['5350']} | 5370→${BPCL_REF.stock['5370']} | BPCDPR→${BPCL_REF.stock['BPCDPR']}</div>
+  </div>
+</div>
+
+<!-- DELIVERY MEN EXPANDABLE -->
+<div class="exs mb8">
+  <div class="exshd" onclick="tog('dlv_all')">
+    <div class="exstitle">🚚 Delivery Men / डिलिव्हरी मॅन <span class="badge bb">${D.staff.filter(s=>s.role==='delivery').length} active</span></div>
+    <span class="exsarr">▼</span>
+  </div>
+  <div class="exsbody open" id="dlv_all">
+    ${D.staff.filter(s=>s.role==='delivery').map(s=>{
+      const v=D.stock.vehicles[s.id]||{f14:0};
+      const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');
+      const dD=D.deliveries.filter(d=>d.sid===s.id&&d.st&&d.st.startsWith('del_')).length;
+      const dP=D.deliveries.filter(d=>d.sid===s.id&&(!d.st||d.st==='scheduled')).length;
+      return`<div class="exs" style="margin-bottom:6px">
+        <div class="exshd" onclick="tog('dm_${s.id}')">
+          <div class="exstitle"><span class="dot" style="background:${trip?'var(--green)':'var(--yellow)'}"></span>${s.name} <span class="badge bg" style="font-size:9px">${dD}✓</span> <span class="badge by" style="font-size:9px">${dP}⏳</span></div>
+          <div style="display:flex;gap:5px;align-items:center"><span class="badge ${trip?'bg':'bdm'}" style="font-size:9px">${trip?'ON TRIP':'STANDBY'}</span><a class="cbtn" href="tel:${s.m1}" onclick="event.stopPropagation()" style="font-size:10px">📞</a><span class="exsarr">▼</span></div>
+        </div>
+        <div class="exsbody" id="dm_${s.id}">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:8px">
+            ${[['🛢️ Loaded',v.f14,'var(--accent)'],['✅ Done',dD,'var(--green)'],['⏳ Pending',dP,'var(--yellow)'],['💵 Cash',fmt(D.cashLedger.filter(l=>l.src===s.id).reduce((t,l)=>t+(+l.cr||0),0)),'var(--orange)']].map(([l,n,c])=>`<div class="card csm" style="text-align:center"><div style="font-size:18px;font-weight:700;color:${c}">${n}</div><div style="font-size:9px;color:var(--td)">${l}</div></div>`).join('')}
+          </div>
+          ${D.trips.filter(t=>t.sid===s.id).map(tr=>`<div style="background:var(--bgp);border-radius:6px;padding:9px;margin-bottom:5px;border-left:3px solid ${tr.status==='open'?'var(--green)':'var(--td)'}"><div style="font-size:10px;font-weight:700;color:${tr.status==='open'?'var(--green)':'var(--td)'}">TRIP ${tr.id}|${tr.status.toUpperCase()}|${tr.ts}</div><div style="font-size:11px;margin-top:3px">Loaded:${tr.f14} | Cash:${fmt(tr.cash||0)} | Online:${fmt((tr.gp||0)+(tr.qr||0)+(tr.pp||0))}</div></div>`).join('')}
+          <div style="display:flex;gap:6px;margin-top:6px">
+            ${trip?`<button class="btn brd bsm" onclick="openTC('${s.id}')">🔒 Close Trip</button>`:''}
+            <button class="btn bpri bsm" onclick="openM('M_ADV');document.getElementById('ADV_ST').value='${s.id}';refreshAdvBal()">💸 Advance</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+</div>
+
+<!-- CASH SUMMARY -->
+<div class="exs mb8">
+  <div class="exshd" onclick="tog('cash_s')">
+    <div class="exstitle">💵 Cash Register <span style="font-family:var(--fmn);font-size:15px;color:var(--yellow)">${fmt(cash)}</span></div><span class="exsarr">▼</span>
+  </div>
+  <div class="exsbody" id="cash_s">
+    <div class="g3" style="margin-bottom:10px">
+      <div class="card csm" style="border-left:3px solid var(--accent)"><div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:6px">🏢 OFFICE</div>${['Delivery Cash','BDA Cash','Counter Sale','Other Income'].map(t=>{const v=D.cashLedger.filter(l=>l.type===t.toLowerCase().replace(/ /g,'_')).reduce((a,l)=>a+(+l.cr||0),0);return v?`<div style="font-size:11px;display:flex;justify-content:space-between"><span>${t}</span><span style="color:var(--green)">${fmt(v)}</span></div>`:''}).join('')}</div>
+      <div class="card csm" style="border-left:3px solid var(--green)"><div style="font-size:10px;color:var(--green);font-weight:700;margin-bottom:6px">🚚 DELIVERY MEN</div>${D.staff.filter(s=>s.role==='delivery').map(s=>{const v=D.cashLedger.filter(l=>l.src===s.id&&l.type==='delivery').reduce((a,l)=>a+(+l.cr||0),0);return`<div style="font-size:11px;display:flex;justify-content:space-between"><span>${s.name.split(' ')[0]}</span><span style="color:var(--green)">${fmt(v)}</span></div>`;}).join('')}</div>
+      <div class="card csm" style="border-left:3px solid var(--yellow)"><div style="font-size:10px;color:var(--yellow);font-weight:700;margin-bottom:6px">🤝 BDA</div>${D.bda.slice(0,5).map(b=>{const v=D.cashLedger.filter(l=>l.src===b.id).reduce((a,l)=>a+(+l.cr||0),0);return`<div style="font-size:11px;display:flex;justify-content:space-between"><span>${b.name.split(' ')[0]}</span><span style="color:var(--yellow)">${fmt(v)}</span></div>`;}).join('')}</div>
+    </div>
+    <button class="btn bg2 bsm" onclick="setPage('cash')">📒 Full Ledger →</button>
+  </div>
+</div>
+
+<!-- BPCL -->
+<div class="exs mb8">
+  <div class="exshd" onclick="tog('bpcl_s')">
+    <div class="exstitle">📊 BPCL Day End Comparison <span class="badge by">SAP Ref: ${BPCL_REF.day}</span></div><span class="exsarr">▼</span>
+  </div>
+  <div class="exsbody" id="bpcl_s">
+    <div class="g4" style="margin-bottom:10px">
+      ${[['5350 (14.2)',D.stock.godown.f14+D.stock.office.f14+totBDA()+totVeh(),BPCL_REF.stock['5350']],['5370 (Empty)',D.stock.godown.e14,BPCL_REF.stock['5370']],['5400 (19Kg)',D.stock.godown.f19,BPCL_REF.stock['5400']],['BPCDPR',D.stock.office.dpr_g,BPCL_REF.stock['BPCDPR']]].map(([l,erp,sap])=>{const diff=erp-sap;return`<div class="card csm"><div style="font-size:9px;color:var(--accent);font-weight:700;margin-bottom:4px">${l}</div><div style="font-size:11px">ERP: <strong style="color:var(--green)">${erp}</strong></div><div style="font-size:11px">SAP: <strong style="color:var(--td)">${sap}</strong></div><div style="font-size:11px;font-weight:700;color:${diff===0?'var(--green)':'var(--red)'}">${diff===0?'✅ OK':'⚠️ '+diff}</div></div>`;}).join('')}
+    </div>
+    <button class="btn bpri bsm" onclick="setPage('bpclverify')">→ Full BPCL Verify</button>
+  </div>
+</div>
+</div>`;
+};
+
+// ─── GODOWN BOARD ───
+PAGES.godown=function(){
+  const g=D.stock.godown;
+  const canEdit=isOff()||isLoad();
+  return`<div class="pw">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div><div style="font-size:18px;font-weight:700">🏭 Godown Board / गोदाम बोर्ड</div><div style="font-size:11px;color:var(--td)">Visual operational board — ALL roles view. Loader/Driver enter BPCL receipt. Owner/Office adjust.</div></div>
+  ${D.morningLocked?'<span class="lockbadge">🔒 Morning Locked</span>':'<button class="btn byl bsm" onclick="lockMorning()">🔒 Lock Morning</button>'}
+</div>
+
+<!-- CURRENT GODOWN STOCK — real-time, auto-updated -->
+<div class="card mb10" style="border-left:4px solid var(--green)">
+  <div class="chd"><div><div class="ctitle">📊 Current Godown Stock / सध्याचा साठा</div><div class="csub" style="font-family:var(--fmr)">Auto-updates: BPCL receipt in ↑ | Vehicle load out ↓ | Physical count override by owner/office</div></div>
+  ${canEdit?`<button class="btn bg2 bsm" onclick="openM('M_BPCLR')">📦 BPCL Receipt</button>`:''}</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+    ${[['14.2 Full / भरलेले',g.f14,'var(--green)',true],['14.2 Empty / रिकामे',g.e14,'var(--td)',false],['5 Kg Full',g.f5,'var(--accent)',true],['5 Kg Empty',g.e5,'var(--td)',false],['19 Kg Full',g.f19,'var(--yellow)',true],['Defective',g.def,'var(--red)',false]].map(([l,v,c,main])=>`<div class="card csm" style="background:var(--bgp);text-align:center;${main?'border-top:2px solid '+c:''}"><div style="font-size:10px;color:var(--td);margin-bottom:4px">${l}</div><div style="font-size:${main?'34px':'24px'};font-weight:700;color:${c};font-family:var(--fmn)">${v}</div></div>`).join('')}
+  </div>
+</div>
+
+<!-- PHYSICAL COUNT (morning verification — any delivery man / loader can enter) -->
+<div class="card mb10">
+  <div class="ctitle mb10">📋 Physical Count Verification / प्रत्यक्ष मोजणी</div>
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:0;border:1px solid var(--bdr);border-radius:8px;overflow:hidden">
+    ${['','PHYSICAL','SYSTEM','DIFF'].map((h,i)=>`<div style="background:var(--bgp);padding:7px 10px;font-size:9px;color:${i===1?'var(--accent)':'var(--td)'};font-weight:700">${h}</div>`).join('')}
+    ${[{l:'14.2 Full',k:'f14',s:g.f14},{l:'14.2 Empty',k:'e14',s:g.e14},{l:'5 Kg Full',k:'f5',s:g.f5},{l:'19 Kg Full',k:'f19',s:g.f19},{l:'Defective',k:'def',s:g.def}].map(r=>`<div style="padding:9px 11px;border-top:1px solid var(--bdr);font-weight:600">${r.l}</div><div style="padding:6px 8px;border-top:1px solid var(--bdr);text-align:center"><input type="number" id="pc_${r.k}" data-sys="${r.s}" placeholder="Count" style="width:80px;text-align:center;font-size:18px;font-weight:700" oninput="calcPCDiff('${r.k}',${r.s})"></div><div style="padding:9px;border-top:1px solid var(--bdr);text-align:center;font-family:var(--fmn);font-size:18px;color:var(--accent)">${r.s}</div><div id="pd_${r.k}" style="padding:7px;border-top:1px solid var(--bdr)"><span style="color:var(--td)">--</span></div>`).join('')}
+  </div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    ${!D.morningLocked?`<button class="btn bgr" onclick="savePhysCount()">✅ Save Physical Count</button>`:`<span class="lockbadge">🔒 ${D.morningLockedAt||''}</span>`}
+  </div>
+</div>
+
+<!-- EMPTY CYLINDER COUNTER (Marathi grid method) -->
+<div class="card mb10">
+  <div class="ctitle mb8">🔢 Empty Cylinder Counter — Marathi Grid Method<br><span style="font-size:10px;color:var(--td);font-weight:400;font-family:var(--fmr)">सूत्र: (उभ्या ओळी × आडव्या ओळी × 2) + एकेरी</span></div>
+  <div class="g3 mb10">
+    ${['R','D','L'].map((s,i)=>{const lbl=['उजवी बाजू (Right)','दरवाजा उजवीकडे','दरवाजा डावीकडे'][i];return`<div class="card csm" style="background:var(--bgp)"><div style="font-size:10px;color:var(--td);font-family:var(--fmr);margin-bottom:7px">${lbl}</div><div class="fr" style="gap:4px"><div class="fg"><div class="fl" style="font-family:var(--fmr)">उभ्या</div><input type="number" id="ec_${s}v" style="text-align:center" oninput="calcEC()"></div><span style="padding-top:18px;color:var(--td)">×</span><div class="fg"><div class="fl" style="font-family:var(--fmr)">आडव्या</div><input type="number" id="ec_${s}h" style="text-align:center" oninput="calcEC()"></div><span style="padding-top:18px;color:var(--td)">+</span><div class="fg"><div class="fl" style="font-family:var(--fmr)">एकेरी</div><input type="number" id="ec_${s}e" style="text-align:center" oninput="calcEC()"></div></div><div id="ec_${s}r" style="text-align:center;font-size:22px;font-weight:700;color:var(--green);padding:5px;background:var(--bgc);border-radius:6px;margin-top:5px">--</div></div>`;}).join('')}
+  </div>
+  <div style="background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);border-radius:8px;padding:12px;text-align:center">
+    <div style="font-size:10px;color:var(--td);font-family:var(--fmr)">एकूण रिकामे / Total Empties</div>
+    <div id="ec_tot" style="font-size:42px;font-weight:700;color:var(--green);font-family:var(--fmn)">0</div>
+  </div>
+</div>
+
+<!-- VEHICLE LOADING BOARD -->
+<div class="card mb10">
+  <div class="ctitle mb10">🚐 Vehicle Loading / वाहन लोडिंग Board</div>
+  ${D.staff.filter(s=>s.role==='delivery').map(s=>{
+    const v=D.stock.vehicles[s.id]||{f14:0};
+    const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');
+    return`<div class="vblock">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+        <span style="font-size:20px">🚐</span>
+        <div style="flex:1"><div style="font-size:15px;font-weight:700">${s.name}</div><div style="font-size:9px;color:var(--td)">${trip?'🟢 ON TRIP':'⚫ STANDBY'}</div></div>
+        <a class="cbtn" href="tel:${s.m1}" style="font-size:10px">📞 ${s.m1}</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px">
+        <div style="text-align:center;background:var(--bgc);border-radius:6px;padding:8px"><div style="font-size:22px;font-weight:700;color:var(--td);font-family:var(--fmn)">${v.f14}</div><div style="font-size:9px;color:var(--td)">Opening</div></div>
+        <div style="text-align:center;background:var(--bgc);border-radius:6px;padding:8px"><input type="number" id="vl_${s.id}" placeholder="Load" style="font-size:18px;font-weight:700;text-align:center;border:none;background:transparent;color:var(--accent)"><div style="font-size:9px;color:var(--td)">Load Now</div></div>
+        <div style="text-align:center;background:var(--bgc);border-radius:6px;padding:8px"><div id="vlt_${s.id}" style="font-size:22px;font-weight:700;color:var(--green);font-family:var(--fmn)">${v.f14}</div><div style="font-size:9px;color:var(--td)">Total</div></div>
+        <div style="text-align:center;background:var(--bgc);border-radius:6px;padding:8px"><div style="font-size:22px;font-weight:700;color:var(--yellow);font-family:var(--fmn)">${D.deliveries.filter(d=>d.sid===s.id&&(!d.st||d.st==='scheduled')).length}</div><div style="font-size:9px;color:var(--td)">Planned</div></div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button class="btn bgr bsm" onclick="loadVeh('${s.id}')">✅ Confirm Load</button>
+        ${!trip?`<button class="btn bpri bsm" onclick="setPage('trip')">🚀 Start Trip</button>`:`<button class="btn brd bsm" onclick="openTC('${s.id}')">🔒 Close Trip</button>`}
+      </div>
+    </div>`;
+  }).join('')}
+</div>
+
+<!-- DPR (Office only, view for godown) -->
+<div class="card mb10">
+  <div class="chd"><div><div class="ctitle">📋 DPR / डीपीआर — Office Stock Only</div><div class="csub">Godown staff can VIEW only. Office/Owner can edit.</div></div>
+  ${isOff()?`<button class="btn bg2 bsm" onclick="openM('M_STKU');document.getElementById('SK_LOC').value='off_dpr_g'">✏️ Adjust</button>`:''}</div>
+  <div class="g4">
+    <div class="card csm" style="background:var(--bgp);text-align:center"><div style="font-size:10px;color:var(--td)">DPR Good</div><div style="font-size:28px;font-weight:700;color:var(--green)">${D.stock.office.dpr_g||0}</div><div style="font-size:9px;color:var(--td)">SAP Ref: ${BPCL_REF.stock.BPCDPR}</div></div>
+    <div class="card csm" style="background:var(--bgp);text-align:center"><div style="font-size:10px;color:var(--td)">DPR Defective</div><div style="font-size:28px;font-weight:700;color:var(--red)">${D.stock.office.dpr_d||0}</div><div style="font-size:9px;color:var(--td)">SAP Ref: ${BPCL_REF.stock.BPCDPRF}</div></div>
+    <div class="card csm" style="background:var(--bgp);text-align:center"><div style="font-size:10px;color:var(--td)">5 Kg Godown</div><div style="font-size:28px;font-weight:700;color:var(--accent)">${D.stock.godown.f5}</div><div style="font-size:9px;color:var(--td)">SAP 5240: ${BPCL_REF.stock['5240']}</div></div>
+    <div class="card csm" style="background:var(--bgp);text-align:center"><div style="font-size:10px;color:var(--td)">19 Kg Godown</div><div style="font-size:28px;font-weight:700;color:var(--yellow)">${D.stock.godown.f19}</div><div style="font-size:9px;color:var(--td)">SAP 5400: ${BPCL_REF.stock['5400']}</div></div>
+  </div>
+</div>
+</div>`;
+};
+
+// ─── MORNING STOCK (Office) ───
+PAGES.morning=function(){
+  const o=D.stock.office;
+  return`<div class="pw">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div><div style="font-size:18px;font-weight:700">🌅 Office Opening Stock / सकाळचा कार्यालय साठा</div><div style="font-size:11px;color:var(--td)">Enter physical count. Must match last closing. RED = mismatch.</div></div>
+  ${isOff()?`<button class="btn bpri bsm" onclick="openM('M_OPSTK')">📋 Enter Opening</button>`:''}
+</div>
+${D.openingStockDate===D.erpDay?`<div class="al als mb10">✅ Opening stock saved for ${D.erpDay} at ${D.openingStockTime||'--'}</div>`:'<div class="al alw mb10">⚠️ Opening stock not yet saved for today. Office please enter morning count.</div>'}
+<div class="g3 mb12">
+  ${[['14.2 Kg Full',o.f14,'var(--green)'],['14.2 Kg Empty',o.e14,'var(--td)'],['5 Kg Full',o.f5,'var(--accent)'],['5 Kg Empty',o.e5,'var(--td)'],['19 Kg Full',o.f19,'var(--yellow)'],['SV Stock',o.sv,'var(--accent)'],['Blue Book',o.bb,'var(--yellow)'],['Suraksha Pipe',o.pipe,'var(--orange)'],['DPR Good',o.dpr_g,'var(--green)'],['DPR Defective',o.dpr_d,'var(--red)']].map(([l,v,c])=>`<div class="card csm" style="background:var(--bgp);text-align:center"><div style="font-size:10px;color:var(--td);margin-bottom:4px">${l}</div><div style="font-size:28px;font-weight:700;color:${c};font-family:var(--fmn)">${v||0}</div></div>`).join('')}
+</div>
+${D.stockLog&&D.stockLog.length?`<div class="card"><div class="ctitle mb8">📒 Adjustment Log</div><div class="tw"><table><thead><tr><th>Time</th><th>Who</th><th>Item</th><th>Old</th><th>New</th><th>Reason</th></tr></thead><tbody>${D.stockLog.slice(-10).reverse().map(l=>`<tr><td style="font-size:10px">${l.ts}</td><td>${l.who}</td><td><span class="badge bdm" style="font-size:9px">${l.loc}</span></td><td style="color:var(--red)">${l.old}</td><td style="color:var(--green)">${l.new}</td><td style="font-size:11px">${l.reason}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+</div>`;
+};
+
+// ─── TODAY'S ROUTE (Delivery Man — Uber-like) ───
+PAGES.route=function(){
+  const s=D.staff.find(x=>x.id===D.myId)||D.staff.find(x=>x.role==='delivery');
+  if(!s)return`<div class="pw"><div class="al ali">No delivery staff found</div></div>`;
+  const v=D.stock.vehicles[s.id]||{f14:0};
+  const myD=D.deliveries.filter(d=>d.sid===s.id);
+  const fA=D._routeArea||'all';
+  const filtered=fA==='all'?myD:myD.filter(d=>d.area===fA);
+  const areas=[...new Set(myD.map(d=>d.area).filter(Boolean))];
+  const del=myD.filter(d=>d.st&&d.st.startsWith('del_')).length;
+  const pend=myD.filter(d=>!d.st||d.st==='scheduled').length;
+  return`<div class="pw">
+<div class="al als mb10" style="font-family:var(--fmr)">नमस्कार ${s.name}! | ${D.erpDay} | Loaded: ${v.f14} | ✅ ${del} | ⏳ ${pend}</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+  <div class="stat sbl"><div class="slb">Loaded</div><div class="sv">${v.f14}</div></div>
+  <div class="stat sgy"><div class="slb">Pending</div><div class="sv">${pend}</div></div>
+  <div class="stat sgr"><div class="slb">Delivered</div><div class="sv">${del}</div></div>
+  <div class="stat srd"><div class="slb">Not Home</div><div class="sv">${myD.filter(d=>d.st==='not_home').length}</div></div>
+</div>
+
+<!-- AREA FILTER -->
+<div class="fl mb6">Filter by Area / क्षेत्र निवड:</div>
+<div class="areasel mb12">
+  <div class="areabt ${fA==='all'?'act':''}" onclick="setRouteA('all')">All (${myD.length})</div>
+  ${areas.map(a=>{const ac=myD.filter(d=>d.area===a);const otp=D.otpStore.filter(o=>o.area===a).length;return`<div class="areabt ${fA===a?'act':''}" onclick="setRouteA('${a}')">${a} (${ac.length})${otp?` 🔑${otp}`:''}</div>`;}).join('')}
+</div>
+
+<!-- MAP (Uber-like pinpoint) -->
+<div class="card mb12" style="padding:0;overflow:hidden">
+  <div style="padding:10px 13px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-weight:700;font-size:13px">🗺️ Uber-style Route Map — ${fA==='all'?'All Areas':fA}</div><div style="font-size:9px;color:var(--td)">🟣 Nearest Next · 🔵 Pending · 🟢 Done · 🏠 GPS Saved · 📍 1st Time</div></div>
+    <button class="btn bor bsm" onclick="openM('M_SPOT')">⚡ Emergency</button>
+  </div>
+  <div id="dmap"></div>
+</div>
+
+<!-- DELIVERY LIST -->
+<div style="font-size:13px;font-weight:700;margin-bottom:8px">📋 Customer List — <span style="font-family:var(--fmr)">${fA==='all'?'सर्व क्षेत्र':fA}</span> (${filtered.length})</div>
+${filtered.map((d,i)=>{
+  const st=d.st||'scheduled';
+  const isPend=!d.st||d.st==='scheduled';
+  const isFirst=!D.customerPins[d.cid];
+  const hasOTP=D.otpStore.find(o=>String(o.cid)===String(d.cid));
+  const nearest=isPend&&i===0&&fA!=='all';
+  const cls={'scheduled':nearest?'dpl':'dbl','del_otp':'dgl','del_nootp':'dol','not_home':'drl','del_doorstep':'dgl','del_vehicle':'dbl'}[st]||'dbl';
+  return`<div class="dc ${cls}">
+    <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+      <span style="font-size:10px;color:var(--td)">CM:${d.cm||'--'} | ${d.cid}</span>
+      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+        ${nearest?'<span class="badge bp" style="font-size:9px">🟣 NEAREST</span>':''}
+        ${isFirst&&isPend?'<span style="background:rgba(255,107,0,.12);color:var(--orange);border:1px solid rgba(255,107,0,.25);padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">📍 1st Delivery</span>':''}
+        ${D.customerPins[d.cid]?'<span style="background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700">📍 GPS✓</span>':''}
+        ${hasOTP?'<span class="badge bg" style="font-size:9px">🔑OTP</span>':''}
+        ${'<span class="badge '+({'del_otp':'bg','del_nootp':'bo','not_home':'br','del_doorstep':'bg','del_vehicle':'bdm'}[st]||'bb')+'" style="font-size:9px">'+({'del_otp':'✅OTP','del_nootp':'⚡Spot','not_home':'🔴 Not Home','del_doorstep':'🏠Done','del_vehicle':'🚐Vehicle'}[st]||'⏳Pending')+'</span>'}
+      </div>
+    </div>
+    <div class="dcname">${d.name}</div>
+    <div class="dcaddr">📍 ${d.addr||d.area||'--'}</div>
+    <div class="dcmeta">
+      <span class="badge bb" style="font-size:9px">${d.area||'--'}</span>
+      ${d.mob?`<a class="cbtn" href="tel:${d.mob}" onclick="event.stopPropagation()" style="font-size:10px">📞 ${d.mob}</a>`:''}
+    </div>
+    ${isPend?`<div class="dcacts" onclick="event.stopPropagation()">
+      <button class="btn bgr bsm" onclick="event.stopPropagation();openDA(D.deliveries.find(x=>String(x.cid)==='${d.cid}')||D.deliveries[${i}])">✅ Deliver</button>
+      <button class="btn bor bsm" onclick="event.stopPropagation();quickSt('${d.cid}','del_nootp')">⚡ Emergency</button>
+      <button class="btn brd bsm" onclick="event.stopPropagation();quickSt('${d.cid}','not_home')">🔴 Not Home</button>
+      ${d.mob?`<a class="cbtn" href="tel:${d.mob}" onclick="event.stopPropagation()" style="font-size:10px">📞 Call</a>`:''}
+    </div>`:''}
+  </div>`;
+}).join('')||`<div class="al ali">No deliveries for ${fA==='all'?'today':'this area'}. Upload CSV first.</div>`}
+</div>`;
+};
+function setRouteA(a){D._routeArea=a;setPage('route');}
+
+// ─── ALL DELIVERIES ───
+PAGES.deliveries=function(){
+  const all=D.deliveries;
+  return`<div class="pw">
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px">
+  ${[['Total',all.length,'sbl'],['Delivered',all.filter(x=>x.st&&x.st.startsWith('del_')).length,'sgr'],['Pending',all.filter(x=>!x.st||x.st==='scheduled').length,'sgy'],['Not Home',all.filter(x=>x.st==='not_home').length,'srd'],['Emergency',all.filter(x=>x.st==='del_nootp').length,'sor']].map(([l,n,c])=>`<div class="stat ${c}"><div class="slb">${l}</div><div class="sv">${n}</div></div>`).join('')}
+</div>
+<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+  <button class="btn bpri bsm" onclick="openM('M_SPOT')">⚡ Emergency</button>
+  <button class="btn bg2 bsm" onclick="openM('M_CSV')">📤 Upload CSV</button>
+  ${isOff()?`<button class="btn bg2 bsm" onclick="clearDelivered()">🗑️ Clear Delivered</button>`:''}
+</div>
+<div class="tabs" id="DTAB">
+  <div class="tab act" onclick="filtD('all',this)">All (${all.length})</div>
+  ${D.staff.filter(s=>s.role==='delivery').map(s=>`<div class="tab" onclick="filtD('${s.id}',this)">${s.name.split(' ')[0]}</div>`).join('')}
+  <div class="tab" onclick="filtD('pend',this)">⏳ Pending</div>
+  <div class="tab" onclick="filtD('del',this)">✅ Done</div>
+  <div class="tab" onclick="filtD('not_home',this)">🔴 Not Home</div>
+</div>
+<div class="tw"><table>
+  <thead><tr><th>Area</th><th>Consumer</th><th>Address</th><th>Mobile</th><th>Staff</th><th>Status</th><th>Payment</th><th>Amount</th><th>OTP</th><th>Action</th></tr></thead>
+  <tbody id="DTBODY">${renderDR(all)}</tbody>
+</table></div></div>`;
+};
+function renderDR(list){
+  const stL={'del_otp':'bg','del_nootp':'bo','not_home':'br','del_doorstep':'bg','del_vehicle':'bdm','rescheduled':'by'};
+  const stT={'del_otp':'✅OTP','del_nootp':'⚡Spot','not_home':'🔴','del_doorstep':'🏠Done','del_vehicle':'🚐','rescheduled':'📅'};
+  return list.slice(0,200).map((d,i)=>{
+    const st=d.st||'scheduled';
+    const sf=D.staff.find(s=>s.id===d.sid);
+    return`<tr><td><span class="badge bb" style="font-size:9px">${d.area||'--'}</span></td><td><div style="font-weight:600;font-size:12px">${d.name||'--'}</div><div style="font-size:9px;color:var(--td)">${d.cid}</div></td><td style="font-size:10px;color:var(--td);max-width:100px;overflow:hidden;text-overflow:ellipsis">${d.addr||''}</td><td>${d.mob?`<a class="cbtn" href="tel:${d.mob}" style="font-size:10px">📞${d.mob}</a>`:'--'}</td><td style="font-size:11px">${sf?sf.name.split(' ')[0]:'--'}</td><td><span class="badge ${stL[st]||'bdm'}" style="font-size:9px">${stT[st]||'⏳'}</span></td><td style="font-size:10px">${d.pay||'--'}</td><td style="font-family:var(--fmn);font-size:11px">${d.amt?fmt(d.amt):''}</td><td><span style="font-family:var(--fmn);font-size:14px;color:var(--green);letter-spacing:3px">${d.otp||''}</span></td><td>${!d.st||d.st==='scheduled'?`<button class="btn bsm bpri" onclick="openDA(D.deliveries[${i}])">→</button>`:'✓'}</td></tr>`;
+  }).join('');
+}
+function filtD(f,el){
+  document.querySelectorAll('#DTAB .tab').forEach(t=>t.classList.remove('act'));el.classList.add('act');
+  let l=[...D.deliveries];
+  if(f!=='all'){if(f.startsWith('s_'))l=l.filter(d=>d.sid===f);else if(f==='del')l=l.filter(d=>d.st&&d.st.startsWith('del_'));else l=l.filter(d=>d.st===f||(!d.st&&f==='pend'));}
+  G('DTBODY').innerHTML=renderDR(l);
+}
+function clearDelivered(){if(!confirm('Clear all delivered entries?'))return;D.deliveries=D.deliveries.filter(d=>!d.st||!d.st.startsWith('del_'));save();toast('Cleared delivered entries','s');setTimeout(()=>setPage('deliveries'),300);}
+</script>
+
+<script>
+// ─── OFFICE SALES ───
+PAGES.officesales=function(){
+  const totSold=D.deliveries.filter(d=>d.st&&d.st.startsWith('del_'));
+  const byPay={};totSold.forEach(d=>{const p=d.pay||'cash';byPay[p]=(byPay[p]||{qty:0,amt:0});byPay[p].qty++;byPay[p].amt+=(+d.amt||0);});
+  return`<div class="pw">
+<div class="g2 mb12">
+  <!-- CYLINDER SALE -->
+  <div class="card">
+    <div class="ctitle mb10">🏪 Counter Sale / काउंटर विक्री</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cylinder</div><select id="OS_CYL" onchange="osCalc()"><option value="14.2">14.2 Kg — ₹856</option><option value="5">5 Kg — ₹352.50</option><option value="19">19 Kg — ₹2132</option></select></div>
+      <div class="fg" style="max-width:80px"><div class="fl">Qty</div><input type="number" id="OS_QTY" value="1" oninput="osCalc()"></div>
+      <div class="fg"><div class="fl">Consumer No.</div><input type="number" id="OS_CONS"></div>
+    </div>
+    <div class="fl mb6">Payment Mode</div>
+    <div class="paymgrid" id="OS_PM">
+      <div class="paymode sel" data-p="cash" onclick="selPay(this,'OS_PM')"><div class="pic">💵</div><div class="plb">Cash</div></div>
+      <div class="paymode" data-p="gpay" onclick="selPay(this,'OS_PM')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+      <div class="paymode" data-p="qr" onclick="selPay(this,'OS_PM')"><div class="pic">📷</div><div class="plb">QR</div></div>
+      <div class="paymode" data-p="paytm" onclick="selPay(this,'OS_PM')"><div class="pic">📱</div><div class="plb">Paytm</div></div>
+      <div class="paymode" data-p="phonepe" onclick="selPay(this,'OS_PM')"><div class="pic">📱</div><div class="plb">PhonePe</div></div>
+      <div class="paymode" data-p="bpcl_adv" onclick="selPay(this,'OS_PM')"><div class="pic">🔖</div><div class="plb">BPCL Adv</div></div>
+    </div>
+    <div style="background:var(--bgp);padding:10px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+      <span>Total / एकूण</span><strong id="OS_TOT" style="color:var(--yellow);font-family:var(--fmn);font-size:18px">₹856.00</strong>
+    </div>
+    <button class="btn byl" onclick="saveOfficeSale()">💾 Save Sale</button>
+  </div>
+
+  <!-- TODAY'S SALE SUMMARY TABLE -->
+  <div class="card">
+    <div class="ctitle mb10">📊 Today Payment Mode Summary / आजची विक्री</div>
+    <table class="salerowtbl">
+      <thead><tr style="background:var(--bgp)"><th style="padding:7px;font-size:9px;color:var(--td)">Mode</th><th style="padding:7px;font-size:9px;color:var(--td);text-align:center">Qty</th><th style="padding:7px;font-size:9px;color:var(--td);text-align:right">Amount</th></tr></thead>
+      <tbody>
+        ${['cash','gpay','qr','paytm','phonepe','bpcl_adv','partial'].map(p=>{const b=byPay[p];return b?`<tr><td style="padding:7px"><span class="badge bdm">${p}</span></td><td style="padding:7px;text-align:center;font-family:var(--fmn);font-weight:700">${b.qty}</td><td style="padding:7px;text-align:right;font-family:var(--fmn);color:var(--green)">${fmt(b.amt)}</td></tr>`:''}).join('')}
+        <tr style="background:rgba(255,215,0,.05)"><td style="padding:8px;font-weight:700">TOTAL</td><td style="padding:8px;text-align:center;font-weight:700;font-family:var(--fmn)">${totSold.length}</td><td style="padding:8px;text-align:right;font-family:var(--fmn);color:var(--yellow);font-weight:700;font-size:16px">${fmt(totSold.reduce((t,d)=>t+(+d.amt||0),0))}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ADDITIONAL SALES / SERVICES -->
+<div class="card mb12">
+  <div class="ctitle mb10">📦 Additional Sales & Services / अतिरिक्त विक्री</div>
+  <table><thead><tr><th>Item</th><th>Details</th><th>Cash to Office</th><th>Stock Effect</th><th>Action</th></tr></thead><tbody>
+    <tr><td style="font-weight:700">Subscription Voucher (SV)</td><td style="font-size:11px;color:var(--td)">New connection — Office stock deducted. BPCL debits ₹4000 from SOA.</td><td style="color:var(--green)">₹4000 from customer</td><td style="font-size:11px">SV stock -1</td><td><input type="number" id="SV_CONS" placeholder="Cons No" style="width:90px;margin-right:5px"><button class="btn bg2 bsm" onclick="addSV()">+ SV</button></td></tr>
+    <tr><td style="font-weight:700">Blue Book</td><td style="font-size:11px;color:var(--td)">Office stock. ₹60 per book.</td><td style="color:var(--green)">₹60 cash</td><td style="font-size:11px">BB stock -1</td><td><button class="btn bg2 bsm" onclick="addItem('Blue Book',60,'bb')">+ Sale</button></td></tr>
+    <tr><td style="font-weight:700">Suraksha Pipe</td><td style="font-size:11px;color:var(--td)">Safety pipe. ₹190 per piece.</td><td style="color:var(--green)">₹190 cash</td><td style="font-size:11px">Pipe stock -1</td><td><button class="btn bg2 bsm" onclick="addItem('Suraksha Pipe',190,'pipe')">+ Sale</button></td></tr>
+    <tr><td style="font-weight:700">DPR</td><td><select id="DPR_T" onchange="document.getElementById('DPR_AMT').value=this.value==='paid'?'150':'0'" style="font-size:11px;width:auto"><option value="free">Free</option><option value="paid">Paid ₹150</option></select></td><td><input type="number" id="DPR_AMT" value="0" style="width:70px"></td><td style="font-size:11px">DPR Good -1</td><td><button class="btn bg2 bsm" onclick="addDPR()">+ DPR</button></td></tr>
+    <tr><td style="font-weight:700">5 Kg Counter</td><td style="font-size:11px;color:var(--td)">Office stock 5 Kg</td><td style="color:var(--green)">₹352.50</td><td style="font-size:11px">Office 5Kg -1</td><td><button class="btn bg2 bsm" onclick="addItem('5 Kg Counter',352.5,'f5')">+ Sale</button></td></tr>
+    <tr style="background:rgba(255,23,68,.04)"><td style="font-weight:700">Termination Voucher</td><td style="font-size:10px;color:var(--td);font-family:var(--fmr)">बंद करणे — Cash PAID TO customer</td><td style="color:var(--red)"><input type="number" id="TV_AMT" placeholder="₹ to customer" style="width:100px"></td><td style="font-size:10px;color:var(--red)">DEBIT cash register</td><td><button class="btn brd bsm" onclick="addTV()">Debit →</button></td></tr>
+    <tr style="background:rgba(255,23,68,.04)"><td style="font-weight:700">Name Change</td><td style="font-size:10px;color:var(--td);font-family:var(--fmr)">नाव बदल — Cash PAID TO customer. Customer pays us fee separately.</td><td><div style="display:flex;gap:4px"><input type="number" id="NC_PAY" placeholder="₹ pay out" style="width:80px"><input type="number" id="NC_RCV" placeholder="₹ receive" style="width:80px"></div></td><td style="font-size:10px">Net: receive - pay out</td><td><button class="btn brd bsm" onclick="addNC()">Record →</button></td></tr>
+  </tbody></table>
+</div>
+
+<!-- STOCK TRANSFER TO DELIVERY MEN (office → vehicle, NO wages) -->
+<div class="card">
+  <div class="chd"><div><div class="ctitle">🔄 Stock Transfer to Delivery Men / डिलिव्हरी मॅनला हस्तांतरण</div><div class="csub">NO wages for office transfers. Wages only on delivery to customers.</div></div></div>
+  <table><thead><tr><th>Delivery Man</th><th>14.2 Full Given</th><th>14.2 Empty Taken</th><th>5 Kg Given</th><th>Action</th></tr></thead>
+  <tbody>${D.staff.filter(s=>s.role==='delivery').map(s=>`<tr><td style="font-weight:700">${s.name}<br><a class="cbtn" href="tel:${s.m1}" style="font-size:10px">📞 ${s.m1}</a></td><td><input type="number" id="of_f14_${s.id}" style="width:70px;text-align:center"></td><td><input type="number" id="of_e14_${s.id}" style="width:70px;text-align:center"></td><td><input type="number" id="of_f5_${s.id}" style="width:70px;text-align:center"></td><td><button class="btn bpri bsm" onclick="offTrans('${s.id}')">✓</button></td></tr>`).join('')}</tbody>
+  </table>
+</div>
+</div>`;
+};
+
+// ─── CENTRAL OTP ───
+PAGES.otpall=function(){
+  const otps=D.otpStore||[];
+  const fA=D._otpArea||'all';
+  const filtered=fA==='all'?otps:otps.filter(o=>o.area===fA);
+  const areas=[...new Set(otps.map(o=>o.area).filter(Boolean))];
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px">
+  <div><div style="font-size:18px;font-weight:700">🔑 Central OTP Store / केंद्रीय OTP</div><div style="font-size:11px;color:var(--td)">Area-wise. Delivery man + office + BDA all share. Print → buy BPCL bookings.</div></div>
+  <div style="display:flex;gap:6px">
+    <button class="btn bpri bsm" onclick="printOTP()">🖨️ Print</button>
+    <button class="btn bg2 bsm" onclick="exportOTPCSV()">📊 CSV</button>
+  </div>
+</div>
+<div class="fl mb6">Filter Area:</div>
+<div class="areasel mb12">
+  <div class="areabt ${fA==='all'?'act':''}" onclick="D._otpArea='all';setPage('otpall')">All (${otps.length})</div>
+  ${areas.map(a=>`<div class="areabt ${fA===a?'act':''}" onclick="D._otpArea='${a}';setPage('otpall')">${a} (${otps.filter(o=>o.area===a).length})</div>`).join('')}
+</div>
+${filtered.length===0?`<div class="al ali">No OTPs saved yet. BDA/Delivery man can add using their OTP screen.</div>`:''}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+  ${filtered.map(o=>`<div class="card csm" style="background:var(--bgp)">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bb" style="font-size:9px">${o.area||'--'}</span><span style="font-size:9px;color:var(--td)">${o.ts} | ${o.by}</span></div>
+    <div style="font-weight:700;margin-bottom:3px">${o.nm||'Consumer '+o.cid}</div>
+    <div style="font-size:10px;color:var(--td);margin-bottom:7px">No: ${o.cid}</div>
+    <div class="otpval">${o.otp}</div>
+  </div>`).join('')}
+</div></div>`;
+};
+
+// ─── CASH REGISTER ───
+PAGES.cash=function(){
+  const entries=D.cashLedger;
+  let bal=0;const lb=entries.map(l=>{bal+=(+l.cr||0)-(+l.dr||0);return{...l,bal};});
+  return`<div class="pw">
+<div class="g4 mb12">
+  <div class="stat sgr"><div class="slb">Total In</div><div class="sv" style="font-size:16px">${fmt(entries.reduce((t,l)=>t+(+l.cr||0),0))}</div></div>
+  <div class="stat srd"><div class="slb">Total Out</div><div class="sv" style="font-size:16px">${fmt(entries.reduce((t,l)=>t+(+l.dr||0),0))}</div></div>
+  <div class="stat sgy"><div class="slb">Balance</div><div class="sv" style="font-size:16px">${fmt(getLedBal())}</div></div>
+  <div class="stat sbl"><div class="slb">Entries</div><div class="sv">${entries.length}</div></div>
+</div>
+<div class="g2 mb12">
+  <div class="card">
+    <div class="ctitle mb10">💵 Note Denomination / नोटा मोजणी</div>
+    ${[500,200,100,50,20,10].map(d=>`<div class="denr"><div class="dennote">₹${d}</div><input type="number" id="dn_${d}" style="width:90px;text-align:center" placeholder="Qty" oninput="calcDen()"><div class="deneq" id="de_${d}">= ₹0</div></div>`).join('')}
+    <div class="denr"><div class="dennote">Coins</div><input type="number" id="dn_c" style="width:90px;text-align:center" placeholder="₹" oninput="calcDen()"><div class="deneq" id="de_c">₹0</div></div>
+    <div class="dentot"><span>Physical Total</span><span id="dn_tot" style="color:var(--green);font-family:var(--fmn)">₹0</span></div>
+    <div id="dn_diff" style="font-size:12px;margin-top:5px;color:var(--td)">Enter denominations to compare with ledger</div>
+  </div>
+  <div class="card">
+    <div class="ctitle mb10">➕ Quick Entry</div>
+    <div class="fg mb8"><div class="fl">Type</div>
+      <select id="CE_TY">
+        <option value="delivery">Cash from Delivery Man</option>
+        <option value="bda_cash">Cash from BDA</option>
+        <option value="gpay_in">GPay Received</option>
+        <option value="counter_sale">Counter Sale</option>
+        <option value="diesel">Diesel (Mangave Pump)</option>
+        <option value="vehicle_maint">Vehicle Maintenance</option>
+        <option value="salary">Salary Paid</option>
+        <option value="advance">Advance to Staff</option>
+        <option value="tv_nc">TV/NC Cash to Customer</option>
+        <option value="given_owner">Given to Owner/Baba</option>
+        <option value="bpcl_payment">BPCL Advance Online</option>
+        <option value="other_in">Other Income</option>
+        <option value="other_out">Other Expense</option>
+      </select>
+    </div>
+    <div class="fr"><div class="fg"><div class="fl">Amount ₹</div><input type="number" id="CE_AMT"></div><div class="fg"><div class="fl">Person / Note</div><input id="CE_NOTE" placeholder="Name / details"></div></div>
+    <button class="btn bpri" onclick="saveCashEntry()">💾 Save</button>
+  </div>
+</div>
+<div class="card">
+  <div class="chd"><div class="ctitle">📒 Cash Ledger (Tally Style)</div><button class="btn bg2 bsm" onclick="exportLedger()">📊 Export</button></div>
+  <div class="tw"><table>
+    <thead><tr><th>Time</th><th>Description</th><th>Type</th><th>Dr ₹</th><th>Cr ₹</th><th>Balance ₹</th></tr></thead>
+    <tbody>${lb.slice(-60).reverse().map(l=>`<tr><td style="font-family:var(--fmn);font-size:10px;color:var(--td)">${l.ts}</td><td style="font-size:12px">${l.desc||'--'}</td><td><span class="badge bdm" style="font-size:9px">${l.type||'--'}</span></td><td style="font-family:var(--fmn);color:var(--red);font-size:11px">${l.dr?fmt(l.dr):'--'}</td><td style="font-family:var(--fmn);color:var(--green);font-size:11px">${l.cr?fmt(l.cr):'--'}</td><td style="font-family:var(--fmn);font-weight:700;font-size:11px">${fmt(l.bal)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--td);padding:20px">No entries yet</td></tr>'}</tbody>
+  </table></div>
+</div></div>`;
+};
+
+// ─── EXPENSES ───
+PAGES.expenses=function(){
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:18px;font-weight:700">🧾 Expenses / खर्च</div><button class="btn bpri" onclick="openM('M_EXP')">+ Add Expense</button></div>
+<div class="g4 mb12">
+  <div class="stat srd"><div class="slb">Today</div><div class="sv" style="font-size:15px">${fmt(D.expenses.filter(e=>e.dt===D.erpDay).reduce((t,e)=>t+(+e.amt||0),0))}</div></div>
+  <div class="stat sor"><div class="slb">Total</div><div class="sv" style="font-size:15px">${fmt(D.expenses.reduce((t,e)=>t+(+e.amt||0),0))}</div></div>
+  <div class="stat sbl"><div class="slb">Diesel</div><div class="sv" style="font-size:15px">${fmt(D.expenses.filter(e=>e.cat.includes('Diesel')).reduce((t,e)=>t+(+e.amt||0),0))}</div></div>
+  <div class="stat sgy"><div class="slb">TV/NC Paid Out</div><div class="sv" style="font-size:15px">${fmt(D.expenses.filter(e=>e.cat.includes('Termination')||e.cat.includes('Name')).reduce((t,e)=>t+(+e.amt||0),0))}</div></div>
+</div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount ₹</th><th>Paid Via</th></tr></thead>
+  <tbody>${D.expenses.slice(-50).reverse().map(e=>`<tr><td style="font-size:10px">${e.dt}</td><td><span class="badge ${e.cat.includes('Diesel')?'bo':e.cat.includes('TV')||e.cat.includes('Name')?'br':'bdm'}">${e.cat.slice(0,25)}</span></td><td style="font-size:11px">${e.dsc||''}</td><td style="font-family:var(--fmn);color:var(--red);font-weight:700">${fmt(e.amt)}</td><td style="font-size:11px">${e.via||''}</td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--td);padding:20px">No expenses yet</td></tr>'}</tbody>
+</table></div></div></div>`;
+};
+
+// ─── PAYROLL ───
+PAGES.payroll=function(){
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:18px;font-weight:700">💰 Payroll / वेतन पत्रक</div><button class="btn bg2 bsm" onclick="openM('M_ADV')">💸 Advance</button></div>
+<div class="card mb12">
+  <div class="ctitle mb10">🚚 Delivery Wages — Urban ₹8/cyl | Rural ₹7/cyl | BDA Stock Transfer: Rural rate auto</div>
+  <div class="tw"><table>
+    <thead><tr><th>Staff</th><th>Urban Cyl</th><th>Rural Cyl</th><th>BDA Cyls</th><th>Gross</th><th>Cash Short</th><th>Adv Rec</th><th style="background:rgba(0,230,118,.05)">NET</th><th>Adv Bal</th></tr></thead>
+    <tbody>${D.staff.filter(s=>s.role==='delivery').map(s=>{
+      const uCyls=D.deliveries.filter(d=>d.sid===s.id&&URBAN_AREAS.includes(d.area)&&d.st&&d.st.startsWith('del_')).length;
+      const rCyls=D.deliveries.filter(d=>d.sid===s.id&&!URBAN_AREAS.includes(d.area)&&d.area&&d.st&&d.st.startsWith('del_')).length;
+      const bCyls=D.bda.reduce((t,b)=>{return t+(D.cashLedger.filter(l=>l.src===b.id&&l.deliveryBy===s.id).reduce((a,l)=>a+(+l.qty||0),0));},0);
+      const gross=uCyls*(+s.wu||8)+rCyls*(+s.wr||7)+bCyls*(+s.wr||7);
+      const rec=+s.mrec||0;const net=gross-rec;
+      return`<tr><td style="font-weight:700">${s.name}<br><a class="cbtn" href="tel:${s.m1}" style="font-size:9px">📞</a></td><td style="text-align:center;font-family:var(--fmn)">${uCyls}</td><td style="text-align:center;font-family:var(--fmn)">${rCyls}</td><td style="text-align:center;font-family:var(--fmn)">${bCyls}</td><td style="text-align:center;font-family:var(--fmn);color:var(--yellow)">${fmt(gross)}</td><td style="text-align:center;font-family:var(--fmn);color:var(--red)">--</td><td style="text-align:center;font-family:var(--fmn);color:var(--orange)">${rec?fmt(rec):'--'}</td><td style="text-align:center;font-family:var(--fmn);color:var(--green);font-weight:700;background:rgba(0,230,118,.04)">${fmt(net)}</td><td style="text-align:center;font-family:var(--fmn);color:${(+s.adv||0)>0?'var(--orange)':'var(--green)'}">${fmt(+s.adv||0)}</td></tr>`;
+    }).join('')}</tbody>
+  </table></div>
+</div>
+<div class="card"><div class="ctitle mb8">⚓ Loader / Driver / Office Wages</div>
+  <table><thead><tr><th>Name</th><th>Role</th><th>Salary</th><th>Loader Bonus</th></tr></thead>
+  <tbody>${D.staff.filter(s=>!['delivery','owner'].includes(s.role)).map(s=>`<tr><td style="font-weight:700">${s.name}</td><td><span class="badge bdm">${s.role}</span></td><td style="font-family:var(--fmn)">${s.sal?fmt(s.sal):'Per trip'}</td><td style="font-family:var(--fmn);color:var(--orange)">${['loader','truck'].includes(s.role)?'₹400/truck BPCL':''}</td></tr>`).join('')}</tbody>
+  </table>
+</div></div>`;
+};
+
+// ─── ACCOUNTS ───
+PAGES.accounts=function(){
+  let bal=0;const lb=D.cashLedger.map(l=>{bal+=(+l.cr||0)-(+l.dr||0);return{...l,bal};});
+  return`<div class="pw">
+<div class="g4 mb12">
+  ${[['Total Credit',D.cashLedger.reduce((t,l)=>t+(+l.cr||0),0),'sgr'],['Total Debit',D.cashLedger.reduce((t,l)=>t+(+l.dr||0),0),'srd'],['Net Balance',getLedBal(),'sgy'],['Total Expenses',D.expenses.reduce((t,e)=>t+(+e.amt||0),0),'sor']].map(([l,v,c])=>`<div class="stat ${c}"><div class="slb">${l}</div><div class="sv" style="font-size:15px">${fmt(v)}</div></div>`).join('')}
+</div>
+<div class="card mb12">
+  <div class="chd"><div class="ctitle">📒 Full Ledger</div><button class="btn bg2 bsm" onclick="exportLedger()">📊 Export</button></div>
+  <div class="tw"><table><thead><tr><th>Time</th><th>Description</th><th>Type</th><th>Dr ₹</th><th>Cr ₹</th><th>Balance ₹</th></tr></thead>
+  <tbody>${lb.map(l=>`<tr><td style="font-size:10px;color:var(--td)">${l.ts}</td><td style="font-size:11px">${l.desc||''}</td><td><span class="badge bdm" style="font-size:9px">${l.type||'--'}</span></td><td style="font-family:var(--fmn);color:var(--red);font-size:11px">${l.dr?fmt(l.dr):'--'}</td><td style="font-family:var(--fmn);color:var(--green);font-size:11px">${l.cr?fmt(l.cr):'--'}</td><td style="font-family:var(--fmn);font-weight:700;font-size:11px">${fmt(l.bal)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--td)">No entries</td></tr>'}</tbody>
+  </table></div>
+</div>
+<div class="card"><div class="ctitle mb8">🧾 GST Summary (CGST+SGST @5% LPG domestic)</div>
+  <table><thead><tr><th>Product</th><th>HSN</th><th>Qty</th><th>Taxable</th><th>CGST 2.5%</th><th>SGST 2.5%</th><th>Total GST</th></tr></thead>
+  <tbody>${[['14.2 Kg Domestic','2711',D.deliveries.filter(d=>(!d.cyl||d.cyl==='14.2')&&d.st&&d.st.startsWith('del_')).length,856],['5 Kg Commercial','2711',D.deliveries.filter(d=>d.cyl==='5'&&d.st&&d.st.startsWith('del_')).length,352.5],['19 Kg Commercial','2711',D.deliveries.filter(d=>d.cyl==='19'&&d.st&&d.st.startsWith('del_')).length,2132]].map(([p,h,q,r])=>{const tv=q*r;const g=tv*0.025;return`<tr><td>${p}</td><td style="font-family:var(--fmn);color:var(--td)">${h}</td><td style="font-family:var(--fmn)">${q}</td><td style="font-family:var(--fmn)">${fmt(tv)}</td><td style="color:var(--yellow);font-family:var(--fmn)">${fmt(g)}</td><td style="color:var(--yellow);font-family:var(--fmn)">${fmt(g)}</td><td style="color:var(--green);font-family:var(--fmn);font-weight:700">${fmt(g*2)}</td></tr>`;}).join('')}</tbody>
+  </table>
+</div></div>`;
+};
+
+// ─── STOCK SUMMARY ───
+PAGES.stock=function(){
+  const canAdj=isOff();
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:18px;font-weight:700">🛢️ Stock Summary / स्टॉक सारांश</div>${canAdj?`<button class="btn byl bsm" onclick="openM('M_STKU')">✏️ Adjust (Owner/Office only)</button>`:''}</div>
+<div class="g3 mb12">
+  <div class="card" style="border-top:3px solid var(--accent)">
+    <div class="chd"><div><div class="ctitle">🏭 Godown</div><div class="csub">Auto-updates via BPCL receipt & vehicle loads</div></div></div>
+    ${stRow([['14.2 Full',D.stock.godown.f14,'g'],['14.2 Empty',D.stock.godown.e14],['5 Kg Full',D.stock.godown.f5,'g'],['5 Kg Empty',D.stock.godown.e5],['19 Kg Full',D.stock.godown.f19,'g'],['19 Kg Empty',D.stock.godown.e19],['Defective',D.stock.godown.def,'r']])}
+  </div>
+  <div class="card" style="border-top:3px solid var(--yellow)">
+    <div class="chd"><div><div class="ctitle">🏢 Office Stock</div><div class="csub">Physical stock + items for sale</div></div></div>
+    ${stRow([['14.2 Full',D.stock.office.f14,'g'],['14.2 Empty',D.stock.office.e14],['5 Kg Full',D.stock.office.f5,'g'],['5 Kg Empty',D.stock.office.e5],['19 Kg Full',D.stock.office.f19,'g'],['SV Stock',D.stock.office.sv||0],['Blue Book',D.stock.office.bb||0,'g'],['Suraksha Pipe',D.stock.office.pipe||0,'g'],['DPR Good',D.stock.office.dpr_g||0,'g'],['DPR Defective',D.stock.office.dpr_d||0,'r']])}
+  </div>
+  <div class="card" style="border-top:3px solid var(--green)">
+    <div class="chd"><div><div class="ctitle">🤝 BDA Stock</div></div><button class="btn bg2 bsm" onclick="setPage('bda')">All →</button></div>
+    ${D.bda.map(b=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03)"><div><div style="font-size:12px;font-weight:700">${b.name}</div><div style="font-size:10px;color:var(--accent)">${b.area}</div></div><div style="text-align:right"><div style="font-size:14px;color:var(--green);font-family:var(--fmn)">${b.f14||0}</div><div style="font-size:9px;color:var(--td)">E:${b.e14||0}</div></div></div>`).join('')}
+  </div>
+</div>
+<div class="card">
+  <div class="ctitle mb8">🚐 Vehicle Stock</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+    ${D.staff.filter(s=>s.role==='delivery').map(s=>{const v=D.stock.vehicles[s.id]||{};return`<div class="card csm" style="background:var(--bgp)"><div style="font-weight:700;margin-bottom:5px">🚐 ${s.name.split(' ')[0]}</div><div style="font-size:12px"><div>F14: <strong style="color:var(--green)">${v.f14||0}</strong></div><div>E14: <strong style="color:var(--td)">${v.e14||0}</strong></div><div>5Kg: <strong>${v.f5||0}</strong></div></div></div>`;}).join('')}
+  </div>
+</div></div>`;
+};
+function stRow(items){return`<div>${items.map(r=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-size:12px;font-weight:600">${r[0]}</span><span style="font-size:22px;font-weight:700;font-family:var(--fmn);color:${r[2]==='g'?'var(--green)':r[2]==='r'?'var(--red)':'var(--t)'}">${r[1]}</span></div>`).join('')}</div>`;}
+
+// ─── BPCL VERIFY ───
+PAGES.bpclverify=function(){
+  const erpVals={'5350':D.stock.godown.f14+D.stock.office.f14+totBDA()+totVeh(),'5370':D.stock.godown.e14,'5240':D.stock.godown.f5,'5250':D.stock.office.f5,'5400':D.stock.godown.f19,'BPCDPR':D.stock.office.dpr_g||0,'BPCDPRF':D.stock.office.dpr_d||0};
+  return`<div class="pw">
+<div class="al ali mb12">BPCL SAP Reference loaded from 21-Feb-2026 day-end PDF. Enter current SAP values to compare. Mismatch → Office review only. No manual entry needed — upload BPCL PDF to auto-sync.</div>
+<div class="card mb12">
+  <div class="ctitle mb10">📊 ERP vs BPCL SAP — Auto Compare</div>
+  <div style="background:var(--bgp);border-radius:8px;overflow:hidden">
+    <div class="brow" style="background:var(--bgc)"><div class="bc">CODE</div><div class="bn" style="font-size:9px;color:var(--td)">PRODUCT</div><div class="bv" style="color:var(--accent)">ERP</div><div class="bv" style="color:var(--td)">SAP REF</div><div class="bv">DIFF</div></div>
+    ${[['5350','14.2 Kg Full (All locations)'],['5370','14.2 Kg Empty'],['5240','5 Kg Commercial Full'],['5250','5 Kg Domestic Full'],['5400','19 Kg Commercial Full'],['BPCDPR','DPR Good'],['BPCDPRF','DPR Defective']].map(([code,nm])=>{
+      const erp=erpVals[code]||0;const sap=BPCL_REF.stock[code]||0;const diff=erp-sap;
+      return`<div class="brow"><div class="bc">${code}</div><div class="bn">${nm}</div><div class="bv" style="color:var(--green)">${erp}</div><div class="bv" style="color:var(--td)">${sap}</div><div class="bv" style="color:${diff===0?'var(--green)':Math.abs(diff)<=5?'var(--yellow)':'var(--red)'}"><strong>${diff===0?'✅':diff>0?'+'+diff:diff}</strong></div></div>`;
+    }).join('')}
+  </div>
+</div>
+<div class="card mb12">
+  <div class="ctitle mb8">📋 Transaction Summary — ${BPCL_REF.day}</div>
+  <div style="background:var(--bgp);border-radius:8px;overflow:hidden">
+    ${[['5350','14.2 Kg'],['5370','5 Kg Alt']].map(([c,nm])=>{const t=BPCL_REF.txn[c]||{};return`<div class="brow"><div class="bc">${c}</div><div class="bn">${nm}</div><div style="flex:3;font-size:11px;display:flex;gap:12px;flex-wrap:wrap">
+      <span>Refills: <strong style="color:var(--green)">${t.refills||0}</strong></span>
+      <span>Opening: <strong>${t.opening||0}</strong></span>
+      <span>Current: <strong>${t.current||0}</strong></span>
+      <span>Closing: <strong style="color:var(--yellow)">${t.closing||0}</strong></span>
+    </div></div>`;}).join('')}
+  </div>
+</div>
+<div class="card">
+  <div class="ctitle mb8">📦 BPCL Receipts History / पावत्या</div>
+  ${(D.bpclReceipts||[]).slice(-5).reverse().map(r=>`<div style="background:var(--bgp);border-radius:7px;padding:10px;margin-bottom:6px"><div style="display:flex;justify-content:space-between"><strong>${r.inv||'No Invoice'}</strong><span style="font-size:10px;color:var(--td)">${r.dt||'--'} | ${r.by||'--'}</span></div><div style="font-size:12px;margin-top:4px;display:flex;gap:10px"><span>14.2 In: <strong style="color:var(--green)">${r.f14||0}</strong></span><span>Empty Out: <strong>${r.e14||0}</strong></span><span class="badge ${r.status==='complete'?'bg':'by'}" style="font-size:9px">${r.status||'--'}</span></div></div>`).join('')||'<div class="al ali">No receipts yet. Add using BPCL Receipt button.</div>'}
+</div></div>`;
+};
+
+// ─── DAY END ───
+PAGES.dayend=function(){
+  const tot14=D.stock.godown.f14+D.stock.office.f14+totBDA()+totVeh();
+  return`<div class="pw">
+<div class="daybar mb12">
+  <div><div class="dblb">DATE</div><div class="dbval" style="font-size:13px">${D.erpDay}</div></div>
+  <span class="badge ${D.dayEndLocked?'bg':'by'}">${D.dayEndLocked?'🟢 CLOSED':'🟡 OPEN'}</span>
+  <div><div class="dblb">DELIVERED</div><div class="dbval" style="color:var(--green)">${D.deliveries.filter(d=>d.st&&d.st.startsWith('del_')).length}</div></div>
+  <div><div class="dblb">CASH</div><div class="dbval" style="font-size:14px">${fmt(getLedBal())}</div></div>
+  <div><div class="dblb">14.2 TOTAL</div><div class="dbval" style="color:var(--accent)">${tot14}</div></div>
+</div>
+<div class="card mb10">
+  <div class="ctitle mb8">🛢️ Closing Stock by BPCL Code</div>
+  ${[['5350/5370','14.2 Kg (All)',tot14],['5240','5 Kg',D.stock.godown.f5],['5400','19 Kg',D.stock.godown.f19],['BPCDPR','DPR Good',D.stock.office.dpr_g||0]].map(([c,n,v])=>`<div style="display:flex;gap:10px;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-family:var(--fmn);color:var(--accent);font-weight:700;width:80px">${c}</span><div style="flex:1">${n}</div><span style="font-family:var(--fmn);font-size:24px;font-weight:700;color:var(--green)">${v}</span></div>`).join('')}
+</div>
+${D.staff.filter(s=>s.role==='delivery').map(s=>{
+  const dv=D.deliveries.filter(x=>x.sid===s.id);
+  const done=dv.filter(x=>x.st&&x.st.startsWith('del_')).length;
+  const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');
+  return`<div class="exs mb8"><div class="exshd" onclick="tog('de_${s.id}')"><div class="exstitle">🚚 ${s.name} <span class="badge bg" style="font-size:9px">${done}✓</span>${trip?'<span class="badge by" style="font-size:9px;margin-left:4px">TRIP OPEN</span>':''}</div><div style="display:flex;gap:6px"><button class="btn brd bsm" style="pointer-events:auto" onclick="event.stopPropagation();openTC('${s.id}')">🔒 Close Trip</button><span class="exsarr">▼</span></div></div>
+  <div class="exsbody" id="de_${s.id}"><div class="g4">${[['✅ Done',done,'var(--green)'],['🔴 Not Home',dv.filter(x=>x.st==='not_home').length,'var(--red)'],['🛢️ On Vehicle',(D.stock.vehicles[s.id]||{}).f14||0,'var(--accent)'],['💵 Cash',fmt(D.cashLedger.filter(l=>l.src===s.id).reduce((t,l)=>t+(+l.cr||0),0)),'var(--yellow)']].map(([l,n,c])=>`<div class="card csm" style="text-align:center"><div style="font-size:16px;font-weight:700;color:${c}">${n}</div><div style="font-size:9px;color:var(--td)">${l}</div></div>`).join('')}</div></div></div>`;
+}).join('')}
+<div style="margin-top:12px;display:flex;gap:8px">
+  <button class="btn bgr blg" onclick="lockDayEnd()">🔒 Lock Day End</button>
+</div></div>`;
+};
+
+// ─── STAFF ───
+PAGES.staff=function(){
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:18px;font-weight:700">👥 Staff (${D.staff.length})</div>${isOwner()?`<button class="btn byl" onclick="openM('M_STAFF')">+ Add Staff</button>`:''}</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px">
+  ${D.staff.map(s=>`<div class="card" style="border-top:3px solid ${s.role==='owner'?'var(--yellow)':s.role==='delivery'?'var(--green)':s.role==='loader'||s.role==='truck'?'var(--orange)':'var(--accent)'}">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <div><div style="font-size:14px;font-weight:700">${s.name}</div><span class="badge bdm" style="font-size:9px">${s.role}</span></div>
+      <span class="badge ${s.active?'bg':'br'}" style="font-size:9px">${s.active?'ACTIVE':'OFF'}</span>
+    </div>
+    <div style="font-size:11px;margin-bottom:8px"><a class="cbtn" href="tel:${s.m1}">📞 ${s.m1}</a>${s.m2?` <a class="cbtn" href="tel:${s.m2}" style="margin-top:3px">📞 ${s.m2}</a>`:''}</div>
+    ${s.role==='delivery'?`<div style="font-size:11px;color:var(--td);margin-bottom:5px">Urban ₹${s.wu||8}/cyl | Rural ₹${s.wr||7}/cyl | Adv: <span style="color:var(--orange)">${fmt(s.adv||0)}</span></div>`:''}
+    ${s.role==='loader'||s.role==='truck'?`<div style="font-size:11px;color:var(--orange);margin-bottom:5px">₹400 per BPCL truck</div>`:''}
+    <div style="font-size:10px;color:var(--td)">Login: <code style="background:var(--bgp);padding:2px 5px;border-radius:4px">${s.un}</code></div>
+    ${isOwner()?`<button class="btn bg2 bsm" style="margin-top:7px" onclick="openM('M_ADV');document.getElementById('ADV_ST').value='${s.id}';refreshAdvBal()">💸 Advance</button>`:''}
+  </div>`).join('')}
+</div></div>`;
+};
+
+// ─── SETTINGS ───
+PAGES.settings=function(){
+  return`<div class="pw"><div class="g2">
+<div class="card"><div class="ctitle mb10">⚙️ System</div>
+  <div style="font-size:12px;line-height:2;color:var(--td)">
+    <div>Store Key: <code>${SK}</code></div><div>Auto-save: 20 sec</div>
+    <div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn bpri bsm" onclick="save();toast('Saved!','s')">💾 Save Now</button>
+      <button class="btn bg2 bsm" onclick="exportBackup()">📤 Backup JSON</button>
+      <button class="btn brd bsm" onclick="resetBlank()">🗑️ Reset to Blank</button>
+    </div>
+    <div class="sep"></div>
+    <div><strong>BPCL SAP Ref Date:</strong> ${BPCL_REF.day}</div>
+    <div>Rates: 14.2=₹856 | 5Kg=₹352.50 | 19Kg=₹2132</div>
+    <div>Urban: ₹8/cyl | Rural: ₹7/cyl | Loader: ₹400/truck</div>
+    <div style="margin-top:8px"><strong>Blank Slate:</strong> Click "Reset to Blank" to wipe all data and start fresh as Day 1.</div>
+  </div>
+</div>
+<div class="card"><div class="ctitle mb8">👥 All Logins</div>
+  <table><thead><tr><th>Username</th><th>Name</th><th>Role</th></tr></thead>
+  <tbody>${[...D.staff,...D.bda].filter(s=>s.un).map(s=>`<tr><td style="font-family:var(--fmn);font-size:10px">${s.un}</td><td>${s.name}</td><td><span class="badge bdm" style="font-size:9px">${s.role||'BDA'}</span></td></tr>`).join('')}</tbody></table>
+</div></div></div>`;
+};
+
+// ─── TRACKING ───
+PAGES.tracking=function(){
+  return`<div class="pw"><div class="g2" style="gap:12px">
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:11px 13px;border-bottom:1px solid var(--bdr)"><div style="font-weight:700">🗺️ Live Map — Jaysingpur Area</div><div style="font-size:9px;color:var(--td)">🟣 Nearest | 🔵 Pending | 🟢 Done | 🔴 Not Home | 🚐 Vehicle</div></div>
+    <div id="dmap"></div>
+  </div>
+  <div class="card"><div class="ctitle mb10">🚐 Vehicle Status</div>
+    ${D.staff.filter(s=>s.role==='delivery').map(s=>{const v=D.stock.vehicles[s.id]||{};const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');const done=D.deliveries.filter(d=>d.sid===s.id&&d.st&&d.st.startsWith('del_')).length;return`<div style="background:var(--bgp);border-radius:8px;padding:11px;margin-bottom:8px;border-left:3px solid ${trip?'var(--green)':'var(--yellow)'}"><div style="display:flex;gap:8px;align-items:center;margin-bottom:7px"><span style="font-size:18px">🚐</span><div style="flex:1"><div style="font-weight:700">${s.name}</div></div><span class="badge ${trip?'bg':'by'}">${trip?'ON TRIP':'READY'}</span></div><div style="display:flex;gap:6px;margin-bottom:6px">${[['F14',v.f14||0,'var(--green)'],['Done',done,'var(--accent)'],['E14',v.e14||0,'var(--td)']].map(([l,n,c])=>`<div style="background:var(--bgc);border-radius:5px;padding:5px 8px;text-align:center"><div style="font-size:14px;font-weight:700;color:${c}">${n}</div><div style="font-size:9px;color:var(--td)">${l}</div></div>`).join('')}</div><a class="cbtn" href="tel:${s.m1}">📞 ${s.m1}</a></div>`;}).join('')}
+  </div>
+</div></div>`;
+};
+
+// ─── BDA PAGES ───
+PAGES.bda=function(){
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:18px;font-weight:700">🤝 BDA Partners (${D.bda.length})</div><div style="display:flex;gap:6px"><button class="btn bpri bsm" onclick="printOTP()">🖨️ OTP List</button><button class="btn bg2 bsm" onclick="setPage('otpall')">🔑 Central OTP</button></div></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">
+  ${D.bda.map(b=>`<div class="bdac">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><div><div style="font-size:15px;font-weight:700">${b.name}</div><div style="font-size:11px;color:var(--accent)">📍 ${b.area}</div></div><span class="badge bg">ACTIVE</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+      <div style="background:var(--bgp);border-radius:6px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--green)">${b.f14||0}</div><div style="font-size:9px;color:var(--td)">14.2 Full</div></div>
+      <div style="background:var(--bgp);border-radius:6px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700">${b.e14||0}</div><div style="font-size:9px;color:var(--td)">14.2 Empty</div></div>
+      <div style="background:var(--bgp);border-radius:6px;padding:8px;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--yellow)">${D.otpStore.filter(o=>o.area===b.area).length}</div><div style="font-size:9px;color:var(--td)">OTPs</div></div>
+    </div>
+    <a class="cbtn" href="tel:${b.mob}" style="margin-bottom:8px;display:inline-block">📞 ${b.mob}</a>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="btn bpri bsm" onclick="openBDA('${b.id}','stock')">🛢️</button>
+      <button class="btn bg2 bsm" onclick="openBDA('${b.id}','cash')">💵</button>
+      <button class="btn bg2 bsm" onclick="openBDA('${b.id}','otp')">🔑</button>
+      <button class="btn bor bsm" onclick="openBDA('${b.id}','spot')">⚡</button>
+    </div>
+  </div>`).join('')}
+</div></div>`;
+};
+PAGES.bdadash=function(){const b=D.bda.find(x=>x.id===D.myBDA)||D.bda[0];return`<div class="pw"><div class="g3 mb10"><div class="stat sgr"><div class="slb">Full Stock</div><div class="sv">${b?.f14||0}</div></div><div class="stat sbl"><div class="slb">Empty</div><div class="sv">${b?.e14||0}</div></div><div class="stat sgy"><div class="slb">OTPs</div><div class="sv">${D.otpStore.filter(o=>o.area===b?.area).length}</div></div></div><div class="card"><div class="ctitle mb8">${b?.name} | 📍 ${b?.area}</div><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn bpri" onclick="openBDA('${b?.id}','stock')">🛢️ Stock</button><button class="btn bg2" onclick="openBDA('${b?.id}','cash')">💵 Cash</button><button class="btn bg2" onclick="setPage('bdaotp')">🔑 OTP</button><button class="btn bor" onclick="setPage('bdasspot')">⚡ Spot</button></div></div></div>`;};
+PAGES.bdaotp=function(){const b=D.bda.find(x=>x.id===D.myBDA)||D.bda[0];return`<div class="pw"><div class="card"><div class="ctitle mb10">🔑 OTP — ${b?.area}</div><div class="fr"><div class="fg"><div class="fl">Consumer No.</div><input id="OD_C"></div><div class="fg"><div class="fl">Name</div><input id="OD_N"></div></div><div class="fr"><div class="fg"><div class="fl">OTP</div><input type="text" id="OD_O" maxlength="6" placeholder="______" style="letter-spacing:8px;font-size:22px;text-align:center;font-family:var(--fmn)"></div><div class="fg"><div class="fl">Area</div><input id="OD_A" value="${b?.area||''}"></div></div><button class="btn byl mb10" onclick="saveOTPd()">✅ Save OTP</button><div id="OD_LIST">${renderOTPL(b?.area)}</div><button class="btn bg2 bsm" onclick="printOTP()">🖨️ Print</button></div></div>`;};
+PAGES.bdasspot=function(){return`<div class="pw"><div class="card"><div class="ctitle mb10">⚡ Spot Booking</div><div class="fr"><div class="fg"><div class="fl">Consumer No. *</div><input type="number" id="BD_C"></div><div class="fg"><div class="fl">Mobile</div><input type="tel" id="BD_M"></div></div><div class="fr"><div class="fg"><div class="fl">Cylinder</div><select id="BD_CY"><option value="14.2">14.2 Kg (₹856)</option><option value="5">5 Kg (₹352.50)</option></select></div><div class="fg" style="max-width:110px"><div class="fl">Amount ₹</div><input type="number" id="BD_A" value="856"></div></div><div class="paymgrid" id="BD_PM"><div class="paymode sel" data-p="cash" onclick="selPay(this,'BD_PM')"><div class="pic">💵</div><div class="plb">Cash</div></div><div class="paymode" data-p="gpay" onclick="selPay(this,'BD_PM')"><div class="pic">📱</div><div class="plb">GPay</div></div><div class="paymode" data-p="qr" onclick="selPay(this,'BD_PM')"><div class="pic">📷</div><div class="plb">QR</div></div></div><button class="btn bor blg" style="width:100%" onclick="saveBDSpot()">⚡ Confirm</button></div></div>`;};
+PAGES.bpclentry=function(){return`<div class="pw"><div class="card"><div class="ctitle mb10">📦 BPCL Receipt Entry — Loader / Driver</div><div class="al ali mb10" style="font-size:11px">Standard: 342 filled received + 342 empty returned. Mixed case: enter each product separately.</div><button class="btn bpri blg" onclick="openM('M_BPCLR')">📦 Enter BPCL Receipt →</button><div style="margin-top:14px"><div class="ctitle mb8">Recent Receipts</div>${(D.bpclReceipts||[]).slice(-5).reverse().map(r=>`<div style="background:var(--bgp);border-radius:7px;padding:10px;margin-bottom:6px"><div style="display:flex;justify-content:space-between"><strong>${r.inv||'--'}</strong><span style="font-size:10px;color:var(--td)">${r.dt||''}</span></div><div style="font-size:12px;margin-top:4px">F14: ${r.f14||0} | E14: ${r.e14||0} | <span class="badge ${r.status==='complete'?'bg':'by'}" style="font-size:9px">${r.status}</span></div></div>`).join('')||'<div class="al ali">No receipts yet</div>'}</div></div></div>`;};
+PAGES.mystock=function(){const s=D.staff.find(x=>x.id===(D.myId||''))||D.staff.find(x=>x.role==='delivery');const v=D.stock.vehicles[s?.id]||{f14:0,e14:0};return`<div class="pw"><div class="card" style="max-width:500px;margin:0 auto"><div class="ctitle mb10">🛢️ My Vehicle Stock — ${s?.name||''}</div><div class="al ali mb10" style="font-size:11px;font-family:var(--fmr)">सिस्टीम आकडे खाली दाखवले आहेत. प्रत्यक्ष मोजणी वेगळी असल्यास कारण मराठीत लिहा.</div><div style="background:var(--bgp);border-radius:8px;padding:12px;margin-bottom:12px;display:flex;gap:14px"><span>System F14: <strong style="color:var(--green);font-size:20px">${v.f14}</strong></span><span>System E14: <strong style="font-size:20px">${v.e14}</strong></span></div><div class="fr"><div class="fg"><div class="fl" style="font-family:var(--fmr)">प्रत्यक्ष भरलेले</div><input type="number" id="VS_F14" style="font-size:18px;text-align:center"></div><div class="fg"><div class="fl" style="font-family:var(--fmr)">प्रत्यक्ष रिकामे</div><input type="number" id="VS_E14" style="font-size:18px;text-align:center"></div></div><div class="fg mb10"><div class="fl" style="font-family:var(--fmr)">फरकाचे कारण (असल्यास)</div><input id="VS_RSN" placeholder="कारण मराठीत…"></div><button class="btn bpri" style="width:100%" onclick="saveVehStk()">✅ Confirm</button></div></div>`;};
+PAGES.submcash=function(){return`<div class="pw"><div class="card" style="max-width:500px;margin:0 auto"><div class="ctitle mb10">💵 Submit Cash — <span style="font-family:var(--fmr)">रोख जमा करा</span></div>${[500,200,100,50,20,10,5].map(d=>`<div class="denr"><div class="dennote">₹${d}</div><input type="number" id="mc_${d}" style="width:90px;text-align:center" placeholder="Qty" oninput="calcMyC()"><div class="deneq" id="mce_${d}">= ₹0</div></div>`).join('')}<div class="denr"><div class="dennote">Coins</div><input type="number" id="mc_c" style="width:90px;text-align:center" placeholder="₹" oninput="calcMyC()"><div class="deneq" id="mce_c">₹0</div></div><div class="dentot mb10"><span style="font-family:var(--fmr)">एकूण रोख</span><span id="mc_tot" style="color:var(--green);font-family:var(--fmn)">₹0</span></div><div class="fr mb10"><div class="fg"><div class="fl">GPay ₹</div><input type="number" id="mc_gp" placeholder="0" oninput="calcMyC()"></div><div class="fg"><div class="fl">QR/Paytm ₹</div><input type="number" id="mc_qr" placeholder="0"></div></div><div id="mc_stat" class="al als" style="display:none;margin-bottom:10px"></div><button class="btn byl blg" style="width:100%" onclick="submitCash()">✅ <span style="font-family:var(--fmr)">कार्यालयात जमा करा</span></button></div></div>`;};
+PAGES.mywages=function(){const s=D.staff.find(x=>x.id===(D.myId||''))||D.staff.find(x=>x.role==='delivery')||D.staff[4];const uc=D.deliveries.filter(d=>d.sid===s.id&&URBAN_AREAS.includes(d.area)&&d.st&&d.st.startsWith('del_')).length;const rc=D.deliveries.filter(d=>d.sid===s.id&&d.area&&!URBAN_AREAS.includes(d.area)&&d.st&&d.st.startsWith('del_')).length;const gr=uc*(+s.wu||8)+rc*(+s.wr||7);const rec=+s.mrec||0;const net=gr-rec;return`<div class="pw"><div class="card" style="max-width:500px;margin:0 auto"><div class="ctitle mb10">💰 <span style="font-family:var(--fmr)">माझे वेतन</span> — ${s.name}</div><div class="g2 mb10"><div style="background:var(--bgp);border-radius:8px;padding:11px"><div style="font-size:10px;color:var(--td)">Urban ×₹${s.wu||8}</div><div style="font-size:20px;font-weight:700;color:var(--green)">${uc} cyls = ${fmt(uc*(+s.wu||8))}</div></div><div style="background:var(--bgp);border-radius:8px;padding:11px"><div style="font-size:10px;color:var(--td)">Rural ×₹${s.wr||7}</div><div style="font-size:20px;font-weight:700;color:var(--accent)">${rc} cyls = ${fmt(rc*(+s.wr||7))}</div></div></div><div style="padding:11px;background:rgba(255,215,0,.06);border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between"><span>GROSS</span><strong style="color:var(--yellow);font-family:var(--fmn)">${fmt(gr)}</strong></div><div style="padding:11px;background:rgba(255,23,68,.05);border-radius:8px;margin-bottom:12px"><div style="font-size:10px;color:var(--td);margin-bottom:4px">DEDUCTIONS (Priority order):</div><div style="font-size:12px;display:flex;justify-content:space-between"><span>1. Cash Shortage</span><span style="color:var(--red)">--</span></div><div style="font-size:12px;display:flex;justify-content:space-between"><span>2. Advance Recovery</span><span style="color:var(--orange)">${fmt(rec)}/month</span></div></div><div style="padding:13px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);border-radius:8px;display:flex;justify-content:space-between;font-size:18px;font-weight:700"><span style="font-family:var(--fmr)">निव्वळ वेतन</span><span style="color:var(--green);font-family:var(--fmn)">${fmt(net)}</span></div></div></div>`;};
+PAGES.trip=function(){const s=D.staff.find(x=>x.id===(D.myId||''))||D.staff.find(x=>x.role==='delivery');const v=D.stock.vehicles[s?.id]||{f14:0};return`<div class="pw"><div class="card" style="max-width:520px;margin:0 auto"><div class="ctitle mb12" style="text-align:center">🚀 Start Trip / <span style="font-family:var(--fmr)">ट्रिप सुरू करा</span> — ${s?.name||''}</div><div style="background:var(--bgp);border-radius:8px;padding:11px;margin-bottom:12px"><div style="font-size:10px;color:var(--td)">Godown Available / गोदामात उपलब्ध</div><div style="font-size:16px;margin-top:4px">14.2: <strong style="color:var(--green)">${D.stock.godown.f14}</strong> | 5Kg: <strong>${D.stock.godown.f5}</strong></div></div><div class="fr"><div class="fg"><div class="fl" style="font-family:var(--fmr)">१४.२ किलो लोड करा</div><input type="number" id="TL_14" placeholder="Cylinders" style="font-size:18px;text-align:center"></div><div class="fg" style="max-width:80px"><div class="fl">5 Kg</div><input type="number" id="TL_5" placeholder="0" style="text-align:center"></div></div><div class="fr"><div class="fg"><div class="fl">Opening Cash ₹</div><input type="number" id="TL_C" placeholder="Cash on hand"></div><div class="fg"><div class="fl">Vehicle No.</div><input id="TL_V" placeholder="MH09…"></div></div><div class="al ali mb10" style="font-size:11px">Auto-calculates: Loaded − Remaining = Delivered. Enter reason only if mismatch at trip close.</div><button class="btn byl blg" style="width:100%;font-size:15px" onclick="startTrip()">🚀 START TRIP</button></div></div>`;};
+</script>
+
+<script>
+// saveExpense (complete)
+function saveExpense(){const cat=G('EX_CAT')?.value,amt=parseFloat(G('EX_AMT')?.value)||0,via=G('EX_VIA')?.value,dsc=G('EX_DSC')?.value,dt=G('EX_DT')?.value||D.erpDay;if(!cat||!amt){toast('Fill required fields','w');return;}D.expenses.push({id:'e'+Date.now(),dt,cat,dsc,amt,via});addLedger({desc:cat+(dsc?' — '+dsc:''),type:'expense',dr:amt,src:'office'});save();closeM('M_EXP');toast('✅ Expense saved','s');setTimeout(()=>setPage('expenses'),300);}
+
+// ── BDA ──
+let _bdaId=null;
+function openBDA(id,tab){_bdaId=id;const b=D.bda.find(x=>x.id===id);G('BDA_TL').childNodes[0].textContent='BDA — '+(b?.name||id)+' ';G('BDA_SB').textContent=b?.area||'';bdaTab(tab||'stock',null);openM('M_BDA');}
+function bdaTab(t,el){document.querySelectorAll('#M_BDA .tab').forEach(x=>x.classList.remove('act'));if(el)el.classList.add('act');else{const all=document.querySelectorAll('#M_BDA .tab');all.forEach(x=>{if(x.textContent.toLowerCase().includes(t))x.classList.add('act');});}['stock','cash','otp','spot'].forEach(x=>G('BDA_'+x).style.display=x===t?'':'none';}
+function saveBDAStock(){const b=D.bda.find(x=>x.id===_bdaId);if(!b)return;const f14=parseInt(G('BS_F14')?.value)||0,e14=parseInt(G('BS_E14')?.value)||0,f5=parseInt(G('BS_F5')?.value)||0;const sid=D.myId||D.trips.find(t=>t.status==='open')?.sid;if(f14){b.f14=(b.f14||0)+f14;if(D.stock.vehicles[sid])D.stock.vehicles[sid].f14=Math.max(0,(D.stock.vehicles[sid].f14||0)-f14);}if(e14){b.e14=Math.max(0,(b.e14||0)-e14);if(D.stock.vehicles[sid])D.stock.vehicles[sid].e14=(D.stock.vehicles[sid].e14||0)+e14;}if(f5)b.f5=(b.f5||0)+f5;if(sid&&f14){const s=D.staff.find(x=>x.id===sid);const wage=f14*(+s?.wr||7);addLedger({desc:'BDA Transfer Wages — '+(b.name)+' '+f14+'cyl',type:'wages',cr:wage,src:sid,deliveryBy:sid,qty:f14});}save();closeM('M_BDA');toast('✅ BDA stock transfer done. Rural wages auto-calculated.','s');}
+function saveBDACash(){const b=D.bda.find(x=>x.id===_bdaId);if(!b)return;const ca=parseFloat(G('BC_CA')?.value)||0,gp=parseFloat(G('BC_GP')?.value)||0,qr=parseFloat(G('BC_QR')?.value)||0,pt=parseFloat(G('BC_PT')?.value)||0,qty=parseInt(G('BC_QTY')?.value)||0;if(ca>0)addLedger({desc:'BDA Cash — '+b.name,type:'bda_cash',cr:ca,src:b.id});if(gp>0)addLedger({desc:'BDA GPay — '+b.name,type:'gpay_in',cr:gp,src:b.id});if(qr>0)addLedger({desc:'BDA QR — '+b.name,type:'online_in',cr:qr,src:b.id});if(pt>0)addLedger({desc:'BDA Paytm — '+b.name,type:'online_in',cr:pt,src:b.id});save();closeM('M_BDA');toast('✅ BDA payment recorded','s');}
+function saveBDAOTP(){const b=D.bda.find(x=>x.id===_bdaId);const otp=G('BO_OTP')?.value||'',cid=G('BO_C')?.value||'',nm=G('BO_N')?.value||'',area=G('BO_AR')?.value||b?.area||'';if(!otp||!cid){toast('OTP + Consumer No. required','w');return;}D.otpStore.push({cid,nm,otp,area,ts:ts(),by:b?.name||'BDA'});save();if(G('BO_OTP'))G('BO_OTP').value='';if(G('BO_C'))G('BO_C').value='';toast('🔑 OTP saved','s');}
+function saveBDASpot(){const c=G('BSP_C')?.value;if(!c){toast('Consumer No. required','w');return;}const cy=G('BSP_CY')?.value||'14.2',a=parseFloat(G('BSP_A')?.value)||RATES[cy];const pay=gPay('BSP_PM'),b=D.bda.find(x=>x.id===_bdaId);if(pay==='cash')addLedger({desc:'BDA Spot — '+c,type:'bda_cash',cr:a,src:b?.id||'bda'});D.deliveries.push({id:'bsp_'+Date.now(),cid:c,name:'BDA Spot',area:b?.area||'',st:'del_nootp',pay,amt:a,sid:'',bdaId:_bdaId});save();closeM('M_BDA');toast('⚡ BDA spot recorded','s');}
+function saveOTPd(){const otp=G('OD_O')?.value||'',c=G('OD_C')?.value||'',nm=G('OD_N')?.value||'',ar=G('OD_A')?.value||'';if(!otp||!c){toast('OTP + Consumer No. required','w');return;}D.otpStore.push({cid:c,nm,otp,area:ar,ts:ts(),by:D.userName});save();if(G('OD_O'))G('OD_O').value='';if(G('OD_C'))G('OD_C').value='';toast('🔑 OTP saved centrally','s');setPage('bdaotp');}
+function saveBDSpot(){const c=G('BD_C')?.value;if(!c)return;const cy=G('BD_CY')?.value||'14.2',a=parseFloat(G('BD_A')?.value)||856;const pay=gPay('BD_PM');if(pay==='cash')addLedger({desc:'BDA Spot C:'+c,type:'bda_cash',cr:a,src:D.myBDA||'bda'});D.deliveries.push({id:'bdsp'+Date.now(),cid:c,name:'BDA Spot',st:'del_nootp',pay,amt:a,sid:'',bdaId:D.myBDA});save();toast('⚡ BDA spot done','s');setPage('bdadash');}
+function renderOTPL(area){const otps=D.otpStore.filter(o=>!area||o.area===area);return otps.slice(-5).map(o=>`<div style="background:var(--bgp);border-radius:7px;padding:9px;margin-bottom:5px;display:flex;justify-content:space-between"><div><div style="font-weight:700">${o.nm||'C:'+o.cid}</div><div style="font-size:10px;color:var(--td)">${o.cid} | ${o.ts}</div></div><div style="font-family:var(--fmn);font-size:20px;letter-spacing:4px;color:var(--green)">${o.otp}</div></div>`).join('')||'<div style="font-size:11px;color:var(--td)">No OTPs yet</div>';}
+
+// ── CSV PROCESSING ──
+function processCSV(){
+  const f=G('CSV_F')?.files[0];if(!f){toast('Select file first','w');return;}
+  const tp=G('CSV_T')?.value||'cashmemo',dm=G('CSV_DM')?.value||null;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n').filter(l=>l.trim());
+    if(lines.length<2){toast('Empty file','w');return;}
+    const hdr=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+    let added=0,dup=0;
+    const existing=new Set(D.deliveries.map(d=>String(d.cid)));
+    const done=new Set(D.deliveries.filter(d=>d.st&&d.st.startsWith('del_')).map(d=>String(d.cid)));
+    lines.slice(1).forEach(ln=>{
+      const cols=ln.split(',').map(c=>c.replace(/"/g,'').trim());
+      const row={};hdr.forEach((h,i)=>row[h]=cols[i]||'');
+      const cid=row['consumer no.'||'consumer_no']||row['consumer no']||row['consumerid']||row['consno']||Object.values(row)[0]||'';
+      if(!cid)return;
+      if(done.has(String(cid))){dup++;return;}
+      if(existing.has(String(cid))){dup++;return;}
+      const area=row['area']||row['locality']||row['booking area']||'';
+      const nm=row['name']||row['consumer name']||row['customername']||'';
+      D.deliveries.push({id:'csv_'+cid+'_'+Date.now(),cid,name:nm,addr:row['address']||row['addr']||'',mob:row['mobile']||row['phone']||row['mob']||'',area,cm:row['cash memo no']||row['cashmemo']||'',sid:dm||null,st:null,dt:D.erpDay,src:tp});
+      added++;
+    });
+    save();const res=G('CSV_RES');if(res)res.innerHTML=`<div class="al als">✅ Added: ${added} | Skipped (dup/done): ${dup} | Total route: ${D.deliveries.filter(d=>!d.st||d.st==='scheduled').length}</div>`;toast('CSV: +'+added+' deliveries','s');
+  };reader.readAsText(f);
+}
+
+// ── NOTICE ──
+function postNotice(){const en=G('N_EN')?.value||'',mr=G('N_MR')?.value||'';if(!en&&!mr){toast('Enter notice','w');return;}const n={id:'n'+Date.now(),en,mr,ts:ts(),dt:D.erpDay,by:D.userName};if(!D.notices)D.notices=[];D.notices.unshift(n);if(!D.chatMsg['All Staff'])D.chatMsg['All Staff']=[];D.chatMsg['All Staff'].push({from:D.userName,msg:'📢 NOTICE: '+en+(mr?' | '+mr:''),ts:ts(),mine:false});save();if(G('NB_LIST'))G('NB_LIST').innerHTML=D.notices.slice(0,5).map(x=>`<div class="al ali" style="margin-bottom:5px;font-size:11px"><strong>${x.ts} — ${x.by}</strong><br>${x.en}${x.mr?'<br><span style="font-family:var(--fmr)">'+x.mr+'</span>':''}</div>`).join('');if(G('N_EN'))G('N_EN').value='';toast('📢 Notice posted to chat','s');}
+
+// ── EXPORT ──
+function exportLedger(){const csv=[['Time','Description','Type','Dr','Cr','Balance']];let b=0;D.cashLedger.forEach(l=>{b+=(+l.cr||0)-(+l.dr||0);csv.push([l.ts,l.desc||'',l.type||'',l.dr||0,l.cr||0,b.toFixed(2)]);});const a=document.createElement('a');a.href='data:text/csv,'+encodeURIComponent(csv.map(r=>r.join(',')).join('\n'));a.download='Ledger_'+D.erpDay+'.csv';a.click();}
+function exportBackup(){const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(JSON.stringify(D,null,2));a.download='Shourya_ERP_Backup_'+D.erpDay+'.json';a.click();toast('📤 Backup downloaded','s');}
+function printOTP(){
+  const win=window.open('','_blank');
+  const areas=[...new Set((D.otpStore||[]).map(o=>o.area))];
+  win.document.write(`<html><head><title>OTP List — Shourya Bharat Gas Dist.187618</title><style>body{font-family:Arial,sans-serif;margin:20px}h2{margin-bottom:3px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px}th{background:#f0f0f0}.area{background:#e3f2fd;font-weight:bold;font-size:14px}</style></head><body>`);
+  win.document.write(`<h2>Shourya Bharat Gas — Dist. 187618 | OTP List</h2><p>Date: ${D.erpDay} | Printed: ${new Date().toLocaleTimeString('en-IN')} by ${D.userName}</p><table><thead><tr><th>Area</th><th>Consumer No.</th><th>Name</th><th>OTP</th><th>Saved By</th><th>Time</th></tr></thead><tbody>`);
+  if(areas.length){areas.forEach(a=>{win.document.write(`<tr class="area"><td colspan="6">📍 ${a}</td></tr>`);D.otpStore.filter(o=>o.area===a).forEach(o=>win.document.write(`<tr><td>${a}</td><td>${o.cid}</td><td>${o.nm||'--'}</td><td style="font-size:20px;font-weight:bold;letter-spacing:5px;color:#1565c0">${o.otp}</td><td>${o.by}</td><td>${o.ts}</td></tr>`));});}else{D.otpStore.forEach(o=>win.document.write(`<tr><td>${o.area||'--'}</td><td>${o.cid}</td><td>${o.nm||'--'}</td><td style="font-size:20px;font-weight:bold;letter-spacing:5px">${o.otp}</td><td>${o.by}</td><td>${o.ts}</td></tr>`));}
+  win.document.write('</tbody></table>
+<script>
+// ── ALIASES & MISSING ──
+function saveData(){save();}  // alias
+function calcOSDiff(k,sys){const inp=document.getElementById('os_'+k);if(!inp||!inp.value){const el=document.getElementById('osd_'+k);if(el)el.innerHTML='--';return;}const ph=parseInt(inp.value),diff=ph-sys;const el=document.getElementById('osd_'+k);if(el)el.innerHTML=diff===0?'<span style="color:var(--green)">✅ OK</span>':`<span style="color:var(--red)">${diff>0?'+':''}${diff} ⚠️</span>`;}
+function genOSRow(key,label){const v=D.stock.office[key.replace('off_','')]||0;return`<div style="padding:8px 11px;border-top:1px solid var(--bdr);font-weight:600">${label}</div><div style="padding:5px 8px;border-top:1px solid var(--bdr);text-align:center"><input type="number" id="os_${key}" placeholder="Count" style="width:75px;text-align:center;font-size:17px;font-weight:700" oninput="calcOSDiff('${key}',${v})"></div><div style="padding:8px;border-top:1px solid var(--bdr);text-align:center;font-family:var(--fmn);font-size:18px;color:var(--accent)">${v}</div><div id="osd_${key}" style="padding:7px;border-top:1px solid var(--bdr)">--</div>`;}
+</script>
+
+</body></html>');win.print();
+}
+function exportOTPCSV(){const rows=[['Area','Consumer No.','Name','OTP','Saved By','Time'],...D.otpStore.map(o=>[o.area||'',o.cid,o.nm||'',o.otp,o.by,o.ts])];const a=document.createElement('a');a.href='data:text/csv,'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));a.download='OTP_'+D.erpDay+'.csv';a.click();}
+
+// ── TOGGLES ──
+function tog(id){const el=G(id);if(el){el.classList.toggle('open');const hd=el.previousElementSibling;if(hd)hd.classList.toggle('open');}}
+
+// ── MAP ──
+function initMap(){
+  const el=G('dmap');if(!el)return;
+  try{if(window._map){window._map.remove();window._map=null;}}catch(e){}
+  window._map=L.map('dmap').setView([16.8118,74.5546],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'©OSM'}).addTo(window._map);
+  const mkIco=(color,txt)=>L.divIcon({html:`<div style="background:${color};color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid rgba(255,255,255,.6);box-shadow:0 2px 8px rgba(0,0,0,.4)">${txt}</div>`,iconSize:[30,30],className:''});
+  const stC={'del_otp':'#00e676','del_nootp':'#ff9800','not_home':'#ff1744','scheduled':'#0090ff','del_doorstep':'#00bcd4','del_vehicle':'#9c27b0'};
+  const fA=D._routeArea||'all';
+  const toShow=D.role==='delivery'?D.deliveries.filter(d=>(!d.sid||d.sid===D.myId)&&(fA==='all'||d.area===fA)):D.deliveries.filter(d=>fA==='all'||d.area===fA);
+  let cnt=0;
+  toShow.forEach((d,i)=>{
+    const pin=D.customerPins[d.cid];
+    const lat=pin?pin.lat:(16.8+Math.random()*0.05);
+    const lng=pin?pin.lng:(74.52+Math.random()*0.07);
+    const c=stC[d.st||'scheduled']||'#888';
+    const m=L.marker([lat,lng],{icon:mkIco(c,String(i+1))}).addTo(window._map);
+    m.bindPopup(`<b>${d.name||d.cid}</b><br>📍 ${d.area||'--'}<br>Status: ${d.st||'Pending'}${d.mob?'<br>📞 <a href="tel:'+d.mob+'">'+d.mob+'</a>':''}${pin?'<br>📍 GPS Saved':''}${!pin&&d.st==='scheduled'?'<br><i style="color:#888">1st delivery — GPS will save</i>':''}<br><button onclick="window.open('https://www.google.com/maps/dir//'+${lat}+','+${lng})" style="margin-top:6px;padding:4px 10px;background:#0090ff;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:11px">🗺️ Navigate</button>`);
+    cnt++;if(cnt>60)return;
+  });
+  D.staff.filter(s=>s.role==='delivery').forEach((s,i)=>{
+    const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');
+    if(trip){const lat=16.8118+i*0.005,lng=74.5546+i*0.004;L.marker([lat,lng],{icon:L.divIcon({html:`<div style="background:#ff9800;border-radius:8px;padding:4px 8px;color:#fff;font-weight:700;font-size:11px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.4)">🚐 ${s.name.split(' ')[0]}</div>`,className:''})}).addTo(window._map).bindPopup(`${s.name}<br>ON TRIP | F14:${(D.stock.vehicles[s.id]||{}).f14||0}<br><a href="tel:${s.m1}">📞 ${s.m1}</a>`);}
+  });
+}
+
+// ── CHAT ──
+function initChat(){buildCCL();renderCMsg(D.activeChatC||'All Staff');}
+function buildCCL(){
+  const el=G('CHAT_CL');if(!el)return;
+  const contacts=['All Staff','Office',...D.staff.filter(s=>s.role==='delivery').map(s=>s.name.split(' ')[0]),...D.bda.slice(0,3).map(b=>b.name.split(' ')[0])];
+  el.innerHTML=contacts.map(c=>`<div class="chatc ${D.activeChatC===c?'act':''}" onclick="swCh('${c}',this)">${c}</div>`).join('');
+}
+function swCh(c,el){document.querySelectorAll('.chatc').forEach(x=>x.classList.remove('act'));if(el)el.classList.add('act');D.activeChatC=c;if(!D.chatMsg[c])D.chatMsg[c]=[];renderCMsg(c);}
+function renderCMsg(c){
+  const wh=G('CHAT_WHO');if(wh)wh.textContent='💬 '+c;
+  const el=G('CHAT_MS');if(!el)return;
+  const msgs=D.chatMsg[c]||[];
+  el.innerHTML=msgs.slice(-30).map(m=>`<div class="chatmsg ${m.mine?'mine':''}"><div class="chatbub">${m.msg}</div><div class="chatmeta">${m.from} · ${m.ts}</div></div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function toggleChat(){const cp=G('CP');if(cp){cp.classList.toggle('open');if(cp.classList.contains('open'))renderCMsg(D.activeChatC||'All Staff');}}
+function sendMsg(){
+  const inp=G('CHAT_INP');if(!inp||!inp.value.trim())return;
+  const c=D.activeChatC||'All Staff';if(!D.chatMsg[c])D.chatMsg[c]=[];
+  const msg={from:D.userName,msg:inp.value.trim(),ts:ts(),mine:true};
+  D.chatMsg[c].push(msg);inp.value='';renderCMsg(c);save();
+  setTimeout(()=>{const auto=['OK 👍','Noted ✓','समजले','Will do!','OK sir','🙏'][Math.floor(Math.random()*6)];D.chatMsg[c].push({from:c,msg:auto,ts:ts(),mine:false});renderCMsg(c);save();},1800);
+}
+
+// ── TOAST ──
+function toast(msg,t){const el=document.createElement('div');el.className='toast t'+(t||'t');el.textContent=msg;document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('show'));setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),350);},3200);}
+
+// ── MODAL ──
+function openM(id){const el=G(id);if(el){el.style.display='flex';setTimeout(()=>el.classList.add('show'),10);}}
+function closeM(id){const el=G(id);if(el){el.classList.remove('show');setTimeout(()=>el.style.display='none',220);}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mov.show').forEach(m=>{m.classList.remove('show');setTimeout(()=>m.style.display='none',220);});}});
+
+// ── CLOCK ──
+function startClock(){function tick(){const c=G('CLK');if(c)c.textContent=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}tick();setInterval(tick,1000);}
+
+// ── DAY END ──
+function lockDayEnd(){if(!confirm('Lock Day End for '+D.erpDay+'?\nसर्व ट्रिप बंद आहेत का?'))return;const open=D.trips.filter(t=>t.status==='open');if(open.length){toast('⚠️ '+open.length+' trip(s) still open! Close first.','w');return;}D.dayEndLocked=true;D.dayEndTime=new Date().toISOString();save();toast('🔒 Day End Locked! Tomorrow reset to continue.','s');}
+
+window.addEventListener('load',()=>{G('LS').style.display='flex';G('APP').style.display='none';if(G('L_TODAY'))G('L_TODAY').textContent='Today: '+new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});});
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0D1B2A">
+<title>Shourya LPG ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0D1B2A;--bg2:#112236;--bg3:#162D45;--card:#1A3550;
+  --border:rgba(255,255,255,0.08);--orange:#F97316;--orange2:#FB923C;
+  --yellow:#FBBF24;--green:#10B981;--red:#EF4444;--blue:#3B82F6;
+  --text:#E2EAF4;--muted:#6B8CAD;--white:#F8FAFC;--radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);font-size:15px;}
+
+.screen{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden;background:var(--bg);}
+.screen.active{display:flex;}
+
+/* LOGIN */
+#screen-login{
+  background:linear-gradient(160deg,#0D1B2A 0%,#1A2E45 60%,#0D1B2A 100%);
+  align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto;
+}
+.lglow{position:absolute;width:380px;height:380px;background:radial-gradient(circle,rgba(249,115,22,0.14) 0%,transparent 70%);pointer-events:none;top:50%;left:50%;transform:translate(-50%,-60%);}
+.lbox{width:100%;max-width:370px;background:rgba(26,53,80,0.75);border:1px solid rgba(249,115,22,0.2);border-radius:20px;padding:2rem 1.8rem;backdrop-filter:blur(12px);position:relative;z-index:1;box-shadow:0 0 60px rgba(249,115,22,0.08),0 8px 32px rgba(0,0,0,0.5);}
+.lflame{font-size:2.6rem;display:block;text-align:center;animation:lfl 3s ease-in-out infinite;}
+@keyframes lfl{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.ltitle{font-family:'Teko',sans-serif;font-size:2rem;font-weight:600;text-align:center;background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.04em;line-height:1;}
+.lsub{font-size:0.76rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;text-align:center;margin-bottom:1.5rem;}
+.fg{margin-bottom:0.9rem;}
+.fg label{display:block;font-size:0.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.3rem;}
+.fg input{width:100%;background:rgba(13,27,42,0.8);border:1px solid var(--border);border-radius:10px;padding:0.72rem 0.9rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.93rem;outline:none;transition:border-color 0.2s;}
+.fg input:focus{border-color:var(--orange);}
+.lbtn{width:100%;padding:0.82rem;border:none;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:white;font-family:'DM Sans',sans-serif;font-size:0.97rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(249,115,22,0.32);transition:all 0.2s;margin-top:0.2rem;}
+.lbtn:active{transform:scale(0.97);}
+.lerr{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.55rem 0.8rem;font-size:0.83rem;color:#FCA5A5;margin-bottom:0.8rem;display:none;}
+.dhint{margin-top:1.1rem;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:0.8rem;}
+.dhint p{font-size:0.7rem;color:var(--muted);margin-bottom:0.45rem;text-transform:uppercase;letter-spacing:0.06em;}
+.du{display:flex;justify-content:space-between;font-size:0.78rem;cursor:pointer;padding:0.28rem 0;color:var(--text);border-bottom:1px solid var(--border);transition:color 0.15s;}
+.du:last-child{border-bottom:none;}
+.du span:last-child{color:var(--orange2);font-family:monospace;}
+.du:hover{color:var(--orange);}
+
+/* TOPBAR */
+.topbar{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1rem;flex-shrink:0;z-index:100;}
+.mbtn{background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;padding:0.25rem;display:flex;align-items:center;line-height:1;}
+.tbrand{font-family:'Teko',sans-serif;font-size:1.35rem;font-weight:600;margin-left:0.55rem;background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tright{margin-left:auto;display:flex;align-items:center;gap:0.55rem;}
+.tav{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange2));display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:white;flex-shrink:0;}
+.tname{font-size:0.8rem;color:var(--white);font-weight:600;}
+.tdate{font-size:0.7rem;color:var(--muted);}
+
+/* SIDEBAR */
+.sov{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;opacity:0;transition:opacity 0.2s;}
+.sov.open{display:block;opacity:1;}
+.sb{position:fixed;top:0;left:-280px;bottom:0;width:265px;background:var(--bg2);border-right:1px solid var(--border);z-index:201;transition:left 0.28s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;}
+.sb.open{left:0;}
+.sbh{padding:1.1rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sbbrand{font-family:'Teko',sans-serif;font-size:1.45rem;font-weight:600;background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sbrole{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-top:0.1rem;}
+.sbuser{display:flex;align-items:center;gap:0.65rem;margin-top:0.75rem;}
+.sbnm{font-size:0.85rem;color:var(--white);font-weight:600;}
+.sbnav{flex:1;overflow-y:auto;padding:0.5rem 0;}
+.nsec{font-size:0.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:0.65rem 1.1rem 0.22rem;}
+.ni{display:flex;align-items:center;gap:0.7rem;padding:0.68rem 1.1rem;cursor:pointer;font-size:0.88rem;color:var(--text);transition:background 0.15s,color 0.15s;position:relative;}
+.ni:hover{background:rgba(249,115,22,0.08);color:var(--orange2);}
+.ni.active{background:rgba(249,115,22,0.12);color:var(--orange);font-weight:600;}
+.ni.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange);border-radius:0 2px 2px 0;}
+.nico{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.nbadge{margin-left:auto;background:var(--red);color:white;font-size:0.62rem;font-weight:700;padding:0.08rem 0.38rem;border-radius:99px;}
+.sbft{padding:0.9rem 1.1rem;border-top:1px solid var(--border);flex-shrink:0;}
+.lout{display:flex;align-items:center;gap:0.65rem;cursor:pointer;color:var(--muted);font-size:0.86rem;padding:0.45rem 0;transition:color 0.2s;}
+.lout:hover{color:var(--red);}
+
+/* PAGE */
+.pa{flex:1;overflow-y:auto;padding:1.1rem;display:flex;flex-direction:column;gap:0.9rem;}
+.ph{display:flex;align-items:center;gap:0.65rem;margin-bottom:0.1rem;}
+.phi{font-size:1.45rem;}
+.pht{font-family:'Teko',sans-serif;font-size:1.65rem;font-weight:600;color:var(--white);letter-spacing:0.03em;line-height:1;}
+.phs{font-size:0.76rem;color:var(--muted);margin-top:0.12rem;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.05rem;}
+.ctitle{font-size:0.73rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.75rem;}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.85rem 0.95rem;position:relative;overflow:hidden;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc.or::before{background:linear-gradient(to right,var(--orange),var(--orange2));}
+.sc.gr::before{background:linear-gradient(to right,var(--green),#34D399);}
+.sc.bl::before{background:linear-gradient(to right,var(--blue),#60A5FA);}
+.sc.ye::before{background:linear-gradient(to right,var(--yellow),#FCD34D);}
+.sc.re::before{background:linear-gradient(to right,var(--red),#F87171);}
+.slbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+.sval{font-family:'Teko',sans-serif;font-size:1.9rem;font-weight:600;color:var(--white);line-height:1.1;margin-top:0.1rem;}
+.ssub{font-size:0.7rem;color:var(--muted);margin-top:0.12rem;}
+.sico{position:absolute;right:0.75rem;top:0.75rem;font-size:1.4rem;opacity:0.18;}
+
+/* FORMS */
+.fl{margin-bottom:0.85rem;}
+.fl label{display:block;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.28rem;}
+.fi,.fs{width:100%;background:rgba(13,27,42,0.7);border:1px solid var(--border);border-radius:9px;padding:0.68rem 0.85rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.fi:focus,.fs:focus{border-color:var(--orange);}
+.fs option{background:var(--bg2);}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.bsub{width:100%;padding:0.8rem;border:none;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:white;font-family:'DM Sans',sans-serif;font-size:0.92rem;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(249,115,22,0.26);transition:all 0.2s;margin-top:0.4rem;}
+.bsub:active{transform:scale(0.98);}
+.bsec{background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);color:var(--orange2);box-shadow:none;}
+.bsm{padding:0.38rem 0.8rem;font-size:0.78rem;border-radius:7px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all 0.2s;}
+.bsm.or{background:rgba(249,115,22,0.15);color:var(--orange2);}
+.bsm.re{background:rgba(239,68,68,0.15);color:var(--red);}
+.bsm.gr{background:rgba(16,185,129,0.15);color:var(--green);}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+thead tr{background:rgba(249,115,22,0.07);}
+th{padding:0.62rem 0.85rem;text-align:left;font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:0.62rem 0.85rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.tb{font-weight:600;color:var(--white);}
+.tg{color:var(--green);}
+.to{color:var(--orange2);}
+.tr{color:var(--red);}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;gap:0.22rem;padding:0.16rem 0.52rem;border-radius:99px;font-size:0.68rem;font-weight:600;}
+.bdg.gr{background:rgba(16,185,129,0.15);color:var(--green);}
+.bdg.or{background:rgba(249,115,22,0.15);color:var(--orange2);}
+.bdg.re{background:rgba(239,68,68,0.15);color:var(--red);}
+.bdg.bl{background:rgba(59,130,246,0.15);color:#60A5FA;}
+.bdg.ye{background:rgba(251,191,36,0.15);color:var(--yellow);}
+
+/* TABS */
+.tabs{display:flex;gap:0.22rem;background:rgba(0,0,0,0.22);border-radius:10px;padding:0.22rem;}
+.tab{flex:1;text-align:center;padding:0.5rem;border-radius:7px;font-size:0.78rem;cursor:pointer;color:var(--muted);transition:all 0.2s;font-weight:500;white-space:nowrap;}
+.tab.active{background:var(--orange);color:white;font-weight:600;box-shadow:0 2px 10px rgba(249,115,22,0.28);}
+
+/* ALERTS */
+.alt{border-radius:10px;padding:0.72rem 0.95rem;font-size:0.81rem;display:flex;align-items:flex-start;gap:0.5rem;}
+.alt.or{background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);color:#FDBA74;}
+.alt.gr{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#6EE7B7;}
+.alt.re{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#FCA5A5;}
+.alt.bl{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:#93C5FD;}
+
+/* DM CARD */
+.dmc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.95rem;display:flex;align-items:center;gap:0.85rem;}
+.dmav{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange2));display:flex;align-items:center;justify-content:center;font-family:'Teko',sans-serif;font-size:1rem;color:white;flex-shrink:0;}
+.dmi{flex:1;min-width:0;}
+.dmn{font-weight:600;color:var(--white);font-size:0.9rem;}
+.dmd{font-size:0.73rem;color:var(--muted);margin-top:0.08rem;}
+.dmnums{display:flex;gap:0.9rem;margin-top:0.3rem;flex-wrap:wrap;}
+.dmnum{font-size:0.73rem;color:var(--muted);}
+.dmnum b{color:var(--orange2);}
+
+/* MAP */
+.mapbox{height:210px;background:linear-gradient(135deg,rgba(22,45,69,0.9),rgba(13,27,42,1));border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;position:relative;overflow:hidden;}
+.mapgrid{position:absolute;inset:0;opacity:0.05;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,1) 28px,rgba(255,255,255,1) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(255,255,255,1) 28px,rgba(255,255,255,1) 29px);}
+.mdot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--orange);}
+.mdot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--orange);animation:mp 2s ease-in-out infinite;}
+@keyframes mp{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.9);opacity:0;}}
+
+/* DENOM */
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.45rem;}
+.di{background:rgba(13,27,42,0.6);border:1px solid var(--border);border-radius:8px;padding:0.5rem;text-align:center;}
+.dnote{font-size:0.65rem;color:var(--muted);margin-bottom:0.22rem;}
+.dinp{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);text-align:center;font-size:0.95rem;font-family:'Teko',sans-serif;font-weight:600;padding:0.12rem;outline:none;}
+.dtot{background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:9px;padding:0.75rem;display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;}
+.dtlbl{font-size:0.76rem;color:var(--muted);}
+.dtval{font-family:'Teko',sans-serif;font-size:1.5rem;color:var(--orange);}
+
+/* BOTTOM NAV */
+.bnav{height:60px;background:var(--bg2);border-top:1px solid var(--border);display:flex;flex-shrink:0;}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.14rem;cursor:pointer;color:var(--muted);transition:color 0.2s;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.04em;}
+.bni.active{color:var(--orange);}
+.bnico{font-size:1.2rem;}
+
+/* TOAST */
+.toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.6rem 1rem;font-size:0.84rem;color:var(--white);z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.s{border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.15);color:#34D399;}
+.toast.e{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.12);color:#FCA5A5;}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:99px;}
+
+/* DESKTOP */
+@media(min-width:768px){
+  .sgrid{grid-template-columns:repeat(4,1fr);}
+  .fr{grid-template-columns:repeat(3,1fr);}
+  .pa{padding:1.4rem 2rem;}
+  .bnav{display:none;}
+  .sb{left:0!important;position:relative;height:100%;flex-shrink:0;border-right:1px solid var(--border);}
+  .sov{display:none!important;}
+  #screen-app{flex-direction:row;}
+  .amain{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+  .mbtn{display:none;}
+  .toast{bottom:20px;}
+}
+@media(max-width:767px){
+  .amain{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="lglow"></div>
+  <div class="lbox">
+    <span class="lflame">🔥</span>
+    <div class="ltitle">SHOURYA LPG ERP</div>
+    <div class="lsub">Bharat Gas · Jaysingpur · v1.0</div>
+    <div id="lerr" class="lerr">❌ Wrong username or password. Please try again.</div>
+    <div class="fg"><label>Username</label>
+      <input type="text" id="iu" placeholder="Enter your username" autocomplete="username"></div>
+    <div class="fg"><label>Password</label>
+      <input type="password" id="ip" placeholder="Enter password" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" onclick="doLogin()">Sign In →</button>
+    <div class="dhint">
+      <p>Tap any account to fill in details</p>
+      <div class="du" onclick="fill('vishal','1234')"><span>👑 Vishal Patil (Owner)</span><span>vishal / 1234</span></div>
+      <div class="du" onclick="fill('mrinmayi','1234')"><span>👑 Mrinmayi Patil (Owner)</span><span>mrinmayi / 1234</span></div>
+      <div class="du" onclick="fill('manager','1234')"><span>🏢 Office Manager</span><span>manager / 1234</span></div>
+      <div class="du" onclick="fill('bhore','1234')"><span>🛵 Bhore (Delivery Man)</span><span>bhore / 1234</span></div>
+      <div class="du" onclick="fill('swapnil','1234')"><span>🛵 Swapnil Patil (Delivery)</span><span>swapnil / 1234</span></div>
+      <div class="du" onclick="fill('shirolbda','1234')"><span>🏘 Shirol BDA</span><span>shirolbda / 1234</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <div class="sov" id="sov" onclick="closeSB()"></div>
+  <div class="sb" id="sb">
+    <div class="sbh">
+      <div class="sbbrand">🔥 SHOURYA LPG</div>
+      <div class="sbrole" id="sbrole">—</div>
+      <div class="sbuser">
+        <div class="tav" id="sbav">?</div>
+        <div><div class="sbnm" id="sbnm">—</div>
+          <div style="font-size:0.7rem;color:var(--muted)" id="sbdt">—</div></div>
+      </div>
+    </div>
+    <nav class="sbnav" id="sbnav"></nav>
+    <div class="sbft">
+      <div class="lout" onclick="doLogout()">🚪 <span>Sign Out</span></div>
+    </div>
+  </div>
+  <div class="amain">
+    <div class="topbar">
+      <button class="mbtn" onclick="openSB()">☰</button>
+      <div class="tbrand">🔥 SHOURYA</div>
+      <div class="tright">
+        <div style="text-align:right">
+          <div class="tname" id="tbnm">—</div>
+          <div class="tdate" id="tbdt">—</div>
+        </div>
+        <div class="tav" id="tbav">?</div>
+      </div>
+    </div>
+    <div class="pa" id="pa"></div>
+    <div class="bnav" id="bnav"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── USERS ── */
+const USERS={
+  vishal:   {name:'Vishal Patil',   role:'owner',   av:'VP'},
+  mrinmayi: {name:'Mrinmayi Patil', role:'owner',   av:'MP'},
+  manager:  {name:'Office Manager', role:'manager', av:'OM'},
+  bhore:    {name:'Bhore',          role:'delivery',av:'BH'},
+  swapnil:  {name:'Swapnil Patil',  role:'delivery',av:'SP'},
+  shirolbda:{name:'Shirol BDA',     role:'bda',     av:'SB'},
+};
+
+/* ── APP DATA (replace with API calls in production) ── */
+const D={
+  today:new Date().toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}),
+  rate:956,
+  godown:{filled:187,empty:43,received:0},
+  vehicles:[
+    {id:1,name:'Bhore',    vehicle:'Tata Ace',   filled:65,sold:12,empty:12,status:'On Route',cash:11472,location:'Near Shirol Road'},
+    {id:2,name:'Swapnil',  vehicle:'Mega XL',    filled:35,sold:0, empty:0, status:'At Godown',cash:0,   location:'At Godown'},
+    {id:3,name:'Rahul',    vehicle:'Bajaj RE',   filled:40,sold:8, empty:8, status:'On Route',cash:7648, location:'Hupari Road'},
+    {id:4,name:'Anil',     vehicle:'Pickup',     filled:30,sold:5, empty:5, status:'On Route',cash:4780, location:'Near Uchgaon'},
+    {id:5,name:'Dinesh',   vehicle:'Mini Truck', filled:20,sold:0, empty:0, status:'At Godown',cash:0,   location:'At Godown'},
+  ],
+  bda:[
+    {name:'Shirol BDA',  filled:7,empty:3,sold:5,cash:4780},
+    {name:'Hupari BDA',  filled:5,empty:2,sold:3,cash:2868},
+    {name:'Uchgaon BDA', filled:6,empty:1,sold:4,cash:3824},
+  ],
+  sales:[
+    {time:'9:12 AM', by:'Office',   qty:5,  mode:'Cash',  amt:4780},
+    {time:'10:30 AM',by:'Bhore',    qty:12, mode:'GPay',  amt:11472},
+    {time:'11:45 AM',by:'Rahul',    qty:8,  mode:'Cash',  amt:7648},
+    {time:'2:15 PM', by:'Shirol',   qty:5,  mode:'Online',amt:4780},
+    {time:'3:00 PM', by:'Anil',     qty:5,  mode:'Cash',  amt:4780},
+  ],
+  office:{openCash:5000,expenses:[],advances:[]},
+  denom:{n2000:0,n500:4,n200:2,n100:5,n50:3,n20:2,n10:5,coins:3},
+};
+
+/* ── NAV CONFIG ── */
+const NAV={
+  owner:[
+    {s:'Overview'},{id:'dashboard',i:'📊',l:'Dashboard'},
+    {id:'tracking',i:'📍',l:'Live Tracking',b:'LIVE'},
+    {s:'Daily Ops'},{id:'stock',i:'📦',l:'Godown Stock'},
+    {id:'trips',i:'🛵',l:'Delivery Trips'},{id:'office',i:'💵',l:'Office Cash'},
+    {id:'sales',i:'🧾',l:'Today Sales'},
+    {s:'Reports'},{id:'dayend',i:'📋',l:'Day End Report'},{id:'payroll',i:'💰',l:'Payroll'},
+    {s:'Admin'},{id:'staff',i:'👥',l:'Staff & BDA'},
+  ],
+  manager:[
+    {s:'Today'},{id:'dashboard',i:'📊',l:'Dashboard'},
+    {id:'tracking',i:'📍',l:'Live Tracking',b:'LIVE'},
+    {s:'Ops'},{id:'stock',i:'📦',l:'Godown Stock'},
+    {id:'trips',i:'🛵',l:'Trips'},{id:'office',i:'💵',l:'Cash'},{id:'sales',i:'🧾',l:'Sales'},
+    {s:'Reports'},{id:'dayend',i:'📋',l:'Day End'},
+  ],
+  delivery:[
+    {s:'My Day'},{id:'mytrip',i:'🛵',l:'My Trip'},
+    {id:'mystock',i:'📦',l:'My Stock'},{id:'mysales',i:'💰',l:'My Sales'},
+  ],
+  bda:[
+    {s:'BDA Panel'},{id:'bdastock',i:'📦',l:'Stock'},
+    {id:'bdasales',i:'💰',l:'Sales'},{id:'bdacash',i:'💵',l:'Handover'},
+  ],
+};
+const BNAV={
+  owner:   [{id:'dashboard',i:'📊',l:'Home'},{id:'tracking',i:'📍',l:'Track'},{id:'trips',i:'🛵',l:'Trips'},{id:'dayend',i:'📋',l:'Report'}],
+  manager: [{id:'dashboard',i:'📊',l:'Home'},{id:'tracking',i:'📍',l:'Track'},{id:'stock',i:'📦',l:'Stock'},{id:'office',i:'💵',l:'Cash'}],
+  delivery:[{id:'mytrip',i:'🛵',l:'Trip'},{id:'mystock',i:'📦',l:'Stock'},{id:'mysales',i:'💰',l:'Sales'}],
+  bda:     [{id:'bdastock',i:'📦',l:'Stock'},{id:'bdasales',i:'💰',l:'Sales'},{id:'bdacash',i:'💵',l:'Cash'}],
+};
+
+let S={user:null,role:null,page:null};
+
+/* ── AUTH ── */
+function fill(u,p){document.getElementById('iu').value=u;document.getElementById('ip').value=p;}
+function doLogin(){
+  const u=document.getElementById('iu').value.trim().toLowerCase();
+  const p=document.getElementById('ip').value;
+  if(!USERS[u]||p!=='1234'){document.getElementById('lerr').style.display='block';return;}
+  document.getElementById('lerr').style.display='none';
+  S.user=USERS[u];S.role=USERS[u].role;
+  const dt=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+  ['tbnm','sbnm'].forEach(id=>document.getElementById(id).textContent=S.user.name);
+  ['tbdt','sbdt'].forEach(id=>document.getElementById(id).textContent=dt);
+  ['tbav','sbav'].forEach(id=>document.getElementById(id).textContent=S.user.av);
+  document.getElementById('sbrole').textContent={owner:'Owner / Partner',manager:'Office Manager',delivery:'Delivery Man',bda:'BDA Owner'}[S.role];
+  buildNav();buildBNav();
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  navigate(NAV[S.role].find(n=>n.id).id);
+  showToast('Welcome, '+S.user.name+' 👋','s');
+}
+function doLogout(){
+  S={user:null,role:null,page:null};
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('ip').value='';
+  closeSB();
+}
+
+/* ── SIDEBAR ── */
+function buildNav(){
+  const nav=document.getElementById('sbnav');nav.innerHTML='';
+  (NAV[S.role]||[]).forEach(item=>{
+    if(item.s){nav.innerHTML+=`<div class="nsec">${item.s}</div>`;return;}
+    nav.innerHTML+=`<div class="ni" id="ni-${item.id}" onclick="navigate('${item.id}');closeSB()">
+      <span class="nico">${item.i}</span><span>${item.l}</span>
+      ${item.b?`<span class="nbadge">${item.b}</span>`:''}
+    </div>`;
+  });
+}
+function buildBNav(){
+  const bn=document.getElementById('bnav');bn.innerHTML='';
+  (BNAV[S.role]||[]).forEach(item=>{
+    bn.innerHTML+=`<div class="bni" id="bn-${item.id}" onclick="navigate('${item.id}')">
+      <span class="bnico">${item.i}</span><span>${item.l}</span>
+    </div>`;
+  });
+}
+function setActive(id){
+  document.querySelectorAll('.ni,.bni').forEach(el=>el.classList.remove('active'));
+  const n=document.getElementById('ni-'+id);if(n)n.classList.add('active');
+  const b=document.getElementById('bn-'+id);if(b)b.classList.add('active');
+}
+function openSB(){document.getElementById('sb').classList.add('open');document.getElementById('sov').classList.add('open');}
+function closeSB(){document.getElementById('sb').classList.remove('open');document.getElementById('sov').classList.remove('open');}
+
+/* ── ROUTER ── */
+const PAGES={
+  dashboard:pgDash,tracking:pgTrack,stock:pgStock,trips:pgTrips,
+  office:pgOffice,sales:pgSales,dayend:pgDayend,payroll:pgPayroll,staff:pgStaff,
+  mytrip:pgMyTrip,mystock:pgMyStock,mysales:pgMySales,
+  bdastock:pgBdaStock,bdasales:pgBdaSales,bdacash:pgBdaCash,
+};
+function navigate(id){
+  S.page=id;setActive(id);
+  const pa=document.getElementById('pa');pa.scrollTop=0;
+  pa.innerHTML=PAGES[id]?PAGES[id]():`<div class="ph"><span class="phi">🚧</span><div><div class="pht">${id}</div><div class="phs">Coming soon</div></div></div>`;
+}
+
+/* ── HELPERS ── */
+function st(tabsId,idx,fn){
+  document.querySelectorAll(`#${tabsId} .tab`).forEach((t,i)=>t.classList.toggle('active',i===idx));
+  const bid=tabsId.replace('-tabs','-body');
+  const b=document.getElementById(bid);if(b&&fn)b.innerHTML=fn();
+}
+let _tt;
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+const inr=n=>n.toLocaleString('en-IN');
+const today=()=>new Date().toISOString().split('T')[0];
+
+/* ── PAGE: DASHBOARD ── */
+function pgDash(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const amt=D.sales.reduce((s,r)=>s+r.amt,0);
+  const onRoute=D.vehicles.filter(v=>v.status==='On Route').length;
+  return`
+  <div class="ph"><span class="phi">📊</span><div><div class="pht">Dashboard</div><div class="phs">${D.today}</div></div></div>
+  <div class="alt gr"><span>🌅</span><span>Day is <b>Open</b>. Opening cash: ₹${inr(D.office.openCash)}. ${onRoute} delivery men on route.</span></div>
+  <div class="sgrid">
+    <div class="sc or"><div class="sico">🧾</div><div class="slbl">Cylinders Sold</div><div class="sval">${sold}</div><div class="ssub">14.2 kg today</div></div>
+    <div class="sc gr"><div class="sico">💰</div><div class="slbl">Total Collection</div><div class="sval">₹${(amt/1000).toFixed(1)}k</div><div class="ssub">All modes</div></div>
+    <div class="sc bl"><div class="sico">📦</div><div class="slbl">Godown Filled</div><div class="sval">${D.godown.filled}</div><div class="ssub">${D.godown.empty} empty</div></div>
+    <div class="sc ye"><div class="sico">🛵</div><div class="slbl">On Route</div><div class="sval">${onRoute}/${D.vehicles.length}</div><div class="ssub">delivery men</div></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">🛵 Delivery Men — Live</div>
+    ${D.vehicles.map(v=>`
+    <div class="dmc" style="margin-bottom:0.6rem">
+      <div class="dmav">${v.name.slice(0,2).toUpperCase()}</div>
+      <div class="dmi">
+        <div class="dmn">${v.name} <span style="font-size:0.72rem;font-weight:400;color:var(--muted)">· ${v.vehicle}</span></div>
+        <div class="dmnums">
+          <div class="dmnum">Loaded <b>${v.filled}</b></div>
+          <div class="dmnum">Sold <b>${v.sold}</b></div>
+          <div class="dmnum">Cash <b>₹${inr(v.cash)}</b></div>
+        </div>
+      </div>
+      <span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status==='On Route'?'🟢':'🟡'} ${v.status}</span>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="ctitle">🏘 BDA Summary</div>
+    ${D.bda.map(b=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-weight:600;color:var(--white);font-size:0.86rem">${b.name}</div>
+        <div style="font-size:0.72rem;color:var(--muted)">Filled: ${b.filled} · Empty: ${b.empty}</div></div>
+      <div style="text-align:right"><div style="font-weight:600;color:var(--green)">₹${inr(b.cash)}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">${b.sold} sold</div></div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ── PAGE: TRACKING ── */
+function pgTrack(){
+  return`
+  <div class="ph"><span class="phi">📍</span><div><div class="pht">Live Tracking</div><div class="phs">Uber-style delivery map</div></div></div>
+  <div class="alt gr"><span>🟢</span><span>GPS active — ${D.vehicles.filter(v=>v.status==='On Route').length} delivery men sharing location live.</span></div>
+  <div class="mapbox">
+    <div class="mapgrid"></div>
+    <div class="mdot" style="top:32%;left:38%"></div>
+    <div class="mdot" style="top:52%;left:62%;animation-delay:0.8s"></div>
+    <div class="mdot" style="top:44%;left:22%;animation-delay:1.4s"></div>
+    <div style="font-size:0.82rem;color:var(--muted);z-index:1">📍 Jaysingpur Region — Live View</div>
+    <div style="font-size:0.74rem;color:rgba(249,115,22,0.8);z-index:1;text-decoration:underline;cursor:pointer" onclick="showToast('Full GPS map activates when deployed on server 📍','s')">Open Full Screen Map →</div>
+  </div>
+  <div class="card">
+    <div class="ctitle">🛵 Live Locations</div>
+    ${D.vehicles.map(v=>`
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0;border-bottom:1px solid var(--border)">
+      <div class="dmav" style="width:35px;height:35px;font-size:0.85rem">${v.name.slice(0,2).toUpperCase()}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;color:var(--white);font-size:0.86rem">${v.name}</div>
+        <div style="font-size:0.72rem;color:var(--muted)">📍 ${v.location}</div>
+      </div>
+      <span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status}</span>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="ctitle">ℹ️ How GPS Tracking Works</div>
+    <div style="font-size:0.81rem;color:var(--muted);line-height:1.7">
+      Each delivery man opens this app on their phone browser. When they tap <b style="color:var(--orange2)">Start Trip</b>, the phone asks for location permission.
+      Once allowed, their position updates on your map every 30 seconds — no extra app needed.
+      <br><br><b style="color:var(--green)">You and Mrinmayi</b> can both watch all delivery men move in real time from any device.
+    </div>
+  </div>`;
+}
+
+/* ── PAGE: STOCK ── */
+function pgStock(){
+  return`
+  <div class="ph"><span class="phi">📦</span><div><div class="pht">Godown Stock</div><div class="phs">Stock management & transfers</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc gr"><div class="slbl">Filled</div><div class="sval">${D.godown.filled}</div><div class="ssub">ready cylinders</div></div>
+    <div class="sc or"><div class="slbl">Empty</div><div class="sval">${D.godown.empty}</div><div class="ssub">to return BPCL</div></div>
+    <div class="sc bl"><div class="slbl">Received</div><div class="sval">${D.godown.received}</div><div class="ssub">from plant today</div></div>
+  </div>
+  <div class="tabs" id="stock-tabs">
+    <div class="tab active" onclick="st('stock-tabs',0,sStkOp)">Opening</div>
+    <div class="tab" onclick="st('stock-tabs',1,sStkTr)">Transfer</div>
+    <div class="tab" onclick="st('stock-tabs',2,sStkRcv)">BPCL Receipt</div>
+  </div>
+  <div id="stock-body">${sStkOp()}</div>`;
+}
+function sStkOp(){return`<div class="card"><div class="ctitle">📋 Morning Physical Count</div>
+  <div class="alt or" style="margin-bottom:0.8rem"><span>⚠️</span><span>First delivery man to arrive enters this. Must match yesterday's closing stock.</span></div>
+  <div class="fr">
+    <div class="fl"><label>Filled Cylinders</label><input class="fi" type="number" id="gf" value="${D.godown.filled}"></div>
+    <div class="fl"><label>Empty Cylinders</label><input class="fi" type="number" id="ge" value="${D.godown.empty}"></div>
+  </div>
+  <div class="fl"><label>Entered By</label>
+    <select class="fs"><option>Bhore</option><option>Swapnil</option><option>Sandeep</option><option>Sagar</option><option>Ajinath (Driver)</option></select></div>
+  <div class="fl"><label>Remarks</label><input class="fi" placeholder="Any discrepancy notes..."></div>
+  <button class="bsub" onclick="saveStk()">✅ Save Opening Stock</button>
+</div>`;}
+function sStkTr(){return`<div class="card"><div class="ctitle">🔄 Stock Transfer</div>
+  <div class="fl"><label>From</label><select class="fs"><option>Godown</option><option>Bhore's Vehicle</option><option>Swapnil's Vehicle</option><option>Shirol BDA</option><option>Hupari BDA</option><option>Office</option></select></div>
+  <div class="fl"><label>To</label><select class="fs"><option>Bhore's Vehicle</option><option>Swapnil's Vehicle</option><option>Godown</option><option>Shirol BDA</option><option>Hupari BDA</option><option>Office</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Filled Qty</label><input class="fi" type="number" placeholder="0"></div>
+    <div class="fl"><label>Empty Qty</label><input class="fi" type="number" placeholder="0"></div>
+  </div>
+  <button class="bsub" onclick="showToast('Transfer recorded ✅ Stock updated','s')">Record Transfer</button>
+</div>`;}
+function sStkRcv(){return`<div class="card"><div class="ctitle">🚛 BPCL Truck Receipt</div>
+  <div class="fl"><label>Invoice / DO Number</label><input class="fi" placeholder="BPCL invoice number"></div>
+  <div class="fr">
+    <div class="fl"><label>Filled Received</label><input class="fi" type="number" placeholder="342"></div>
+    <div class="fl"><label>Empty Returned</label><input class="fi" type="number" placeholder="300"></div>
+  </div>
+  <div class="fl"><label>Driver</label><select class="fs"><option>Ajinath</option><option>Other</option></select></div>
+  <button class="bsub" onclick="showToast('BPCL receipt saved ✅ Godown updated','s')">Save Receipt</button>
+</div>`;}
+function saveStk(){
+  D.godown.filled=parseInt(document.getElementById('gf').value)||D.godown.filled;
+  D.godown.empty=parseInt(document.getElementById('ge').value)||D.godown.empty;
+  showToast('Opening stock saved ✅','s');
+}
+
+/* ── PAGE: TRIPS ── */
+function pgTrips(){
+  return`
+  <div class="ph"><span class="phi">🛵</span><div><div class="pht">Delivery Trips</div><div class="phs">All delivery men</div></div></div>
+  <div class="tabs" id="trip-tabs">
+    <div class="tab active" onclick="st('trip-tabs',0,sTripAct)">Active</div>
+    <div class="tab" onclick="st('trip-tabs',1,sTripNew)">New Trip</div>
+    <div class="tab" onclick="st('trip-tabs',2,sTripHist)">History</div>
+  </div>
+  <div id="trip-body">${sTripAct()}</div>`;
+}
+function sTripAct(){return D.vehicles.map(v=>`
+  <div class="dmc" style="margin-bottom:0.75rem">
+    <div class="dmav">${v.name.slice(0,2).toUpperCase()}</div>
+    <div class="dmi">
+      <div class="dmn">${v.name} <span style="font-size:0.72rem;font-weight:400;color:var(--muted)">· ${v.vehicle}</span></div>
+      <div class="dmnums">
+        <div class="dmnum">Loaded <b>${v.filled}</b></div>
+        <div class="dmnum">Sold <b>${v.sold}</b></div>
+        <div class="dmnum">Left <b>${v.filled-v.sold}</b></div>
+        <div class="dmnum">Cash <b style="color:var(--green)">₹${inr(v.cash)}</b></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.35rem;align-items:flex-end">
+      <span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status==='On Route'?'🟢':'🟡'} ${v.status}</span>
+      <button class="bsm or" onclick="showToast('Sale panel for ${v.name} →','s')">+ Sale</button>
+    </div>
+  </div>`).join('');}
+function sTripNew(){return`<div class="card"><div class="ctitle">🆕 Start New Trip</div>
+  <div class="fl"><label>Delivery Man</label><select class="fs"><option>Bhore</option><option>Swapnil Patil</option><option>Rahul</option><option>Anil</option><option>Dinesh</option></select></div>
+  <div class="fl"><label>Vehicle</label><select class="fs"><option>Tata Ace</option><option>Mega XL</option><option>Bajaj RE</option><option>Pickup</option><option>Mini Truck</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Filled Loaded</label><input class="fi" type="number" placeholder="65"></div>
+    <div class="fl"><label>Empty Collected</label><input class="fi" type="number" placeholder="0"></div>
+  </div>
+  <div class="fl"><label>From</label><select class="fs"><option>Godown</option><option>Office</option><option>BDA</option></select></div>
+  <button class="bsub" onclick="showToast('Trip started! GPS tracking enabled 🛵','s')">🚀 Start Trip</button>
+</div>`;}
+function sTripHist(){return`<div class="card"><div class="ctitle">📜 Today's Sales Log</div>
+  <div class="tw"><table>
+    <thead><tr><th>Time</th><th>By</th><th>Qty</th><th>Mode</th><th>Amount</th></tr></thead>
+    <tbody>
+      ${D.sales.map(s=>`<tr>
+        <td style="color:var(--muted)">${s.time}</td><td class="tb">${s.by}</td>
+        <td><b>${s.qty}</b></td>
+        <td><span class="bdg ${s.mode==='Cash'?'gr':s.mode==='GPay'?'bl':'ye'}">${s.mode}</span></td>
+        <td class="tg tb">₹${inr(s.amt)}</td>
+      </tr>`).join('')}
+      <tr style="background:rgba(249,115,22,0.06)">
+        <td colspan="2"><b style="color:var(--white)">TOTAL</b></td>
+        <td><b class="to">${D.sales.reduce((s,r)=>s+r.qty,0)}</b></td><td></td>
+        <td><b class="tg">₹${inr(D.sales.reduce((s,r)=>s+r.amt,0))}</b></td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>`;}
+
+/* ── PAGE: OFFICE CASH ── */
+function pgOffice(){
+  return`
+  <div class="ph"><span class="phi">💵</span><div><div class="pht">Office Cash</div><div class="phs">Daily cash management</div></div></div>
+  <div class="sgrid">
+    <div class="sc gr"><div class="slbl">Opening</div><div class="sval">₹${inr(D.office.openCash)}</div></div>
+    <div class="sc or"><div class="slbl">Expenses</div><div class="sval">₹${inr(D.office.expenses.reduce((a,e)=>a+e.amt,0))}</div></div>
+    <div class="sc bl"><div class="slbl">Advances</div><div class="sval">₹${inr(D.office.advances.reduce((a,e)=>a+e.amt,0))}</div></div>
+    <div class="sc ye"><div class="slbl">Denomination</div><div class="sval">₹${inr(calcDenomTotal())}</div></div>
+  </div>
+  <div class="tabs" id="off-tabs">
+    <div class="tab active" onclick="st('off-tabs',0,sOffOpen)">Open Day</div>
+    <div class="tab" onclick="st('off-tabs',1,sOffExp)">Expenses</div>
+    <div class="tab" onclick="st('off-tabs',2,sOffDenom)">Cash Count</div>
+    <div class="tab" onclick="st('off-tabs',3,sOffClose)">Close Day</div>
+  </div>
+  <div id="off-body">${sOffOpen()}</div>`;
+}
+function calcDenomTotal(){const d=D.denom;return(d.n2000*2000)+(d.n500*500)+(d.n200*200)+(d.n100*100)+(d.n50*50)+(d.n20*20)+(d.n10*10)+d.coins;}
+function sOffOpen(){return`<div class="card"><div class="ctitle">🌅 Open Office Day</div>
+  <div class="fr">
+    <div class="fl"><label>Opening Cash (₹)</label><input class="fi" type="number" placeholder="5000" value="${D.office.openCash}"></div>
+    <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+  </div>
+  <div class="fl"><label>Opened By</label><select class="fs"><option>Office Manager</option><option>Vishal Patil</option><option>Mrinmayi Patil</option></select></div>
+  <button class="bsub" onclick="showToast('Office day opened ✅','s')">Open Day</button>
+</div>`;}
+function sOffExp(){return`
+  <div class="card"><div class="ctitle">➕ Add Expense</div>
+    <div class="fl"><label>Expense Head</label><select class="fs"><option>Fuel/Petrol</option><option>Stationary</option><option>Vehicle Repair</option><option>Electricity</option><option>Tea/Food</option><option>Other</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" id="eamt" placeholder="0"></div>
+      <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <div class="fl"><label>Remark</label><input class="fi" placeholder="Description..."></div>
+    <button class="bsub" onclick="showToast('Expense added ✅','s')">Add Expense</button>
+  </div>
+  <div class="card"><div class="ctitle">💰 Staff Advance</div>
+    <div class="fl"><label>Staff</label><select class="fs"><option>Bhore</option><option>Swapnil Patil</option><option>Sandeep</option><option>Sagar</option><option>Ajinath</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="0"></div>
+      <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <button class="bsub bsec" onclick="showToast('Advance recorded ✅','s')">Pay Advance</button>
+  </div>`;}
+function sOffDenom(){
+  const d=D.denom;
+  const notes=[{k:'n2000',v:2000,l:'₹2000'},{k:'n500',v:500,l:'₹500'},{k:'n200',v:200,l:'₹200'},
+    {k:'n100',v:100,l:'₹100'},{k:'n50',v:50,l:'₹50'},{k:'n20',v:20,l:'₹20'},
+    {k:'n10',v:10,l:'₹10'},{k:'coins',v:1,l:'Coins'}];
+  const tot=calcDenomTotal();
+  return`<div class="card"><div class="ctitle">💵 Denomination Count</div>
+    <div class="dgrid">${notes.map(n=>`
+      <div class="di"><div class="dnote">${n.l}</div>
+        <input class="dinp" type="number" id="dn-${n.k}" value="${d[n.k]||0}" oninput="updDenom()" min="0">
+      </div>`).join('')}
+    </div>
+    <div class="dtot"><span class="dtlbl">Total Cash in Hand</span><span class="dtval" id="dtval">₹${inr(tot)}</span></div>
+    <button class="bsub" style="margin-top:0.7rem" onclick="showToast('Cash count saved ✅','s')">Save Count</button>
+  </div>`;}
+function updDenom(){
+  const keys={n2000:2000,n500:500,n200:200,n100:100,n50:50,n20:20,n10:10,coins:1};
+  let total=0;
+  Object.entries(keys).forEach(([k,v])=>{const el=document.getElementById('dn-'+k);if(el)total+=parseInt(el.value||0)*v;});
+  const el=document.getElementById('dtval');if(el)el.textContent='₹'+inr(total);
+}
+function sOffClose(){return`<div class="card"><div class="ctitle">🌙 Close Day</div>
+  <div class="alt or" style="margin-bottom:0.75rem"><span>⚠️</span><span>All delivery men must submit cash before closing. This action locks the day.</span></div>
+  <div class="fl"><label>Closing Cash (₹)</label><input class="fi" type="number" placeholder="Enter closing cash"></div>
+  <div class="fl"><label>Remarks</label><input class="fi" placeholder="Notes for today..."></div>
+  <button class="bsub" onclick="showToast('Day closed ✅ Report generated','s')">🔒 Close Day</button>
+</div>`;}
+
+/* ── PAGE: SALES ── */
+function pgSales(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const cash=D.sales.filter(s=>s.mode==='Cash').reduce((a,r)=>a+r.amt,0);
+  const gpay=D.sales.filter(s=>s.mode==='GPay').reduce((a,r)=>a+r.amt,0);
+  const onl=D.sales.filter(s=>s.mode==='Online').reduce((a,r)=>a+r.amt,0);
+  return`
+  <div class="ph"><span class="phi">🧾</span><div><div class="pht">Today's Sales</div><div class="phs">${D.today}</div></div></div>
+  <div class="sgrid">
+    <div class="sc or"><div class="slbl">Total Sold</div><div class="sval">${sold}</div><div class="ssub">@ ₹${D.rate}/cyl</div></div>
+    <div class="sc gr"><div class="slbl">Cash</div><div class="sval">₹${(cash/1000).toFixed(1)}k</div></div>
+    <div class="sc bl"><div class="slbl">GPay</div><div class="sval">₹${(gpay/1000).toFixed(1)}k</div></div>
+    <div class="sc ye"><div class="slbl">Online</div><div class="sval">₹${(onl/1000).toFixed(1)}k</div></div>
+  </div>
+  <div class="card"><div class="ctitle">➕ Record Office Sale</div>
+    <div class="fr">
+      <div class="fl"><label>Cylinders Sold</label><input class="fi" type="number" id="sq" placeholder="Qty"></div>
+      <div class="fl"><label>Mode</label><select class="fs" id="sm"><option>Cash</option><option>GPay</option><option>Online</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" id="sa" placeholder="Auto: qty × ${D.rate}"></div>
+      <div class="fl"><label>Customer</label><input class="fi" id="sc2" placeholder="Name (optional)"></div>
+    </div>
+    <button class="bsub" onclick="recSale()">Record Sale</button>
+  </div>
+  <div class="card"><div class="ctitle">📜 All Sales Today</div>
+    <div class="tw"><table>
+      <thead><tr><th>Time</th><th>By</th><th>Qty</th><th>Mode</th><th>Amount</th></tr></thead>
+      <tbody>
+        ${D.sales.map(s=>`<tr>
+          <td style="color:var(--muted)">${s.time}</td><td class="tb">${s.by}</td>
+          <td><b>${s.qty}</b></td>
+          <td><span class="bdg ${s.mode==='Cash'?'gr':s.mode==='GPay'?'bl':'ye'}">${s.mode}</span></td>
+          <td class="tg tb">₹${inr(s.amt)}</td>
+        </tr>`).join('')}
+        <tr style="background:rgba(249,115,22,0.07)">
+          <td colspan="2"><b style="color:var(--white)">TOTAL</b></td>
+          <td><b class="to">${sold}</b></td><td></td>
+          <td><b class="tg">₹${inr(D.sales.reduce((s,r)=>s+r.amt,0))}</b></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>`;
+}
+function recSale(){
+  const qty=parseInt(document.getElementById('sq')?.value||0);
+  if(!qty){showToast('Please enter quantity','e');return;}
+  const mode=document.getElementById('sm')?.value||'Cash';
+  const amt=parseInt(document.getElementById('sa')?.value||qty*D.rate);
+  D.sales.push({time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),by:'Office',qty,mode,amt});
+  showToast(`${qty} cylinders sold — ₹${inr(amt)} recorded ✅`,'s');
+  navigate('sales');
+}
+
+/* ── PAGE: DAY END REPORT ── */
+function pgDayend(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const amt=D.sales.reduce((s,r)=>s+r.amt,0);
+  const cash=D.sales.filter(s=>s.mode==='Cash').reduce((a,r)=>a+r.amt,0);
+  const digi=amt-cash;
+  return`
+  <div class="ph"><span class="phi">📋</span><div><div class="pht">Day End Report</div><div class="phs">BPCL-style · ${D.today}</div></div></div>
+  <div class="alt gr"><span>✅</span><span>All data ready. Generate BPCL SAP-style PDF report below.</span></div>
+  <div class="card"><div class="ctitle">📦 Stock Summary — 14.2 kg (Code 5350/5370)</div>
+    <div class="tw"><table>
+      <thead><tr><th>Item</th><th>Filled</th><th>Empty</th></tr></thead>
+      <tbody>
+        <tr><td>Opening Stock (Godown)</td><td class="tb">230</td><td>28</td></tr>
+        <tr><td>Opening Stock (BDA)</td><td class="tb">18</td><td>6</td></tr>
+        <tr><td>Received from BPCL Plant</td><td class="tg tb">+${D.godown.received}</td><td>—</td></tr>
+        <tr><td>Total Sales (All)</td><td class="tr tb">−${sold}</td><td class="tg">+${sold}</td></tr>
+        <tr style="background:rgba(249,115,22,0.07)">
+          <td><b style="color:var(--white)">Closing Stock</b></td>
+          <td class="tb to">${D.godown.filled}</td><td class="tb">${D.godown.empty}</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><div class="ctitle">💰 Financial Summary</div>
+    <div class="tw"><table>
+      <thead><tr><th>Head</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Cylinders Sold (14.2 kg)</td><td class="tb">${sold} units</td></tr>
+        <tr><td>Gross Sales @ ₹${D.rate}</td><td class="tg tb">₹${inr(amt)}</td></tr>
+        <tr><td>Cash Collected</td><td class="tg">₹${inr(cash)}</td></tr>
+        <tr><td>Digital (GPay + Online)</td><td>₹${inr(digi)}</td></tr>
+        <tr><td>Office Expenses</td><td class="tr">−₹${inr(D.office.expenses.reduce((a,e)=>a+e.amt,0))}</td></tr>
+        <tr><td>Staff Advances</td><td class="tr">−₹${inr(D.office.advances.reduce((a,e)=>a+e.amt,0))}</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><div class="ctitle">🏘 BDA Summary</div>
+    <div class="tw"><table>
+      <thead><tr><th>BDA</th><th>Sold</th><th>Cash</th><th>Stock</th></tr></thead>
+      <tbody>
+        ${D.bda.map(b=>`<tr>
+          <td class="tb">${b.name}</td><td>${b.sold}</td>
+          <td class="tg">₹${inr(b.cash)}</td><td>${b.filled}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+  </div>
+  <button class="bsub" onclick="showToast('📄 Day End PDF generated & saved','s')">📥 Generate PDF Report</button>
+  <button class="bsub bsec" style="margin-top:0.5rem" onclick="showToast('✅ Submitted to BPCL SAP system','s')">🏦 Submit to BPCL SAP</button>`;
+}
+
+/* ── PAGE: PAYROLL ── */
+function pgPayroll(){return`
+  <div class="ph"><span class="phi">💰</span><div><div class="pht">Payroll</div><div class="phs">Staff salary management</div></div></div>
+  <div class="tabs" id="pay-tabs">
+    <div class="tab active" onclick="st('pay-tabs',0,sPayDel)">Delivery Men</div>
+    <div class="tab" onclick="st('pay-tabs',1,sPayLoad)">Loading Staff</div>
+    <div class="tab" onclick="st('pay-tabs',2,sPayOff)">Office Staff</div>
+  </div>
+  <div id="pay-body">${sPayDel()}</div>`;}
+function sPayDel(){return`
+  <div class="card"><div class="ctitle">📊 This Month Summary</div>
+    <div class="tw"><table>
+      <thead><tr><th>Name</th><th>Days</th><th>Gross</th><th>Advance</th><th>Net</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="tb">Bhore</td><td>24</td><td>₹16,800</td><td class="tr">₹2,000</td><td class="tg tb">₹14,800</td><td><span class="bdg or">Pending</span></td></tr>
+        <tr><td class="tb">Swapnil</td><td>26</td><td>₹18,200</td><td>₹0</td><td class="tg tb">₹18,200</td><td><span class="bdg gr">Paid</span></td></tr>
+        <tr><td class="tb">Rahul</td><td>22</td><td>₹15,400</td><td class="tr">₹1,500</td><td class="tg tb">₹13,900</td><td><span class="bdg or">Pending</span></td></tr>
+        <tr><td class="tb">Anil</td><td>20</td><td>₹14,000</td><td>₹0</td><td class="tg tb">₹14,000</td><td><span class="bdg or">Pending</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><div class="ctitle">💰 Pay Salary</div>
+    <div class="fl"><label>Delivery Man</label><select class="fs"><option>Bhore</option><option>Swapnil Patil</option><option>Rahul</option><option>Anil</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Month</label><select class="fs"><option>February 2026</option><option>January 2026</option></select></div>
+      <div class="fl"><label>Days Worked</label><input class="fi" type="number" placeholder="26"></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Daily Wage (₹)</label><input class="fi" type="number" value="700"></div>
+      <div class="fl"><label>Advance Deduct (₹)</label><input class="fi" type="number" placeholder="0"></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Mode</label><select class="fs"><option>Cash</option><option>Bank Transfer</option><option>GPay</option></select></div>
+      <div class="fl"><label>Pay Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Salary paid & recorded ✅','s')">Pay Salary</button>
+  </div>`;}
+function sPayLoad(){return`<div class="card"><div class="ctitle">🏗 Loading Staff — Sandeep / Sagar</div>
+  <div class="fl"><label>Staff</label><select class="fs"><option>Sandeep</option><option>Sagar</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Days Worked</label><input class="fi" type="number"></div>
+    <div class="fl"><label>Daily Wage (₹)</label><input class="fi" type="number" value="600"></div>
+  </div>
+  <button class="bsub" onclick="showToast('Loading staff salary paid ✅','s')">Pay</button>
+</div>`;}
+function sPayOff(){return`<div class="card"><div class="ctitle">🏢 Office Staff</div>
+  <div class="fl"><label>Name</label><input class="fi" placeholder="Staff name"></div>
+  <div class="fr">
+    <div class="fl"><label>Days</label><input class="fi" type="number"></div>
+    <div class="fl"><label>Wage/day (₹)</label><input class="fi" type="number"></div>
+  </div>
+  <button class="bsub" onclick="showToast('Staff salary paid ✅','s')">Pay</button>
+</div>`;}
+
+/* ── PAGE: STAFF & BDA ── */
+function pgStaff(){return`
+  <div class="ph"><span class="phi">👥</span><div><div class="pht">Staff & BDA</div><div class="phs">Manage all people</div></div></div>
+  <div class="tabs" id="staff-tabs">
+    <div class="tab active" onclick="st('staff-tabs',0,sStaffDM)">Delivery Men</div>
+    <div class="tab" onclick="st('staff-tabs',1,sStaffBDA)">BDA Owners</div>
+    <div class="tab" onclick="st('staff-tabs',2,sStaffAdd)">Add New</div>
+  </div>
+  <div id="staff-body">${sStaffDM()}</div>`;}
+function sStaffDM(){return D.vehicles.map(v=>`
+  <div class="dmc" style="margin-bottom:0.7rem">
+    <div class="dmav">${v.name.slice(0,2).toUpperCase()}</div>
+    <div class="dmi"><div class="dmn">${v.name}</div>
+      <div class="dmd">${v.vehicle} · ₹700/day</div>
+      <div class="dmnums"><div class="dmnum">Role: <b>Delivery Man</b></div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.35rem">
+      <span class="bdg gr">Active</span>
+      <button class="bsm re" onclick="showToast('${v.name} deactivated','e')">Remove</button>
+    </div>
+  </div>`).join('');}
+function sStaffBDA(){return D.bda.map(b=>`
+  <div class="dmc" style="margin-bottom:0.7rem">
+    <div class="dmav" style="background:linear-gradient(135deg,var(--blue),#60A5FA)">${b.name.slice(0,2).toUpperCase()}</div>
+    <div class="dmi"><div class="dmn">${b.name}</div>
+      <div class="dmd">BDA Point · Max 7 cylinders</div>
+      <div class="dmnums"><div class="dmnum">Filled: <b>${b.filled}</b></div><div class="dmnum">Empty: <b>${b.empty}</b></div></div>
+    </div>
+    <span class="bdg gr">Active</span>
+  </div>`).join('');}
+function sStaffAdd(){return`<div class="card"><div class="ctitle">➕ Add New Person</div>
+  <div class="fl"><label>Type</label><select class="fs"><option>Delivery Man</option><option>BDA Owner</option><option>Loading Staff</option><option>Office Staff</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Full Name</label><input class="fi" placeholder="Name"></div>
+    <div class="fl"><label>Mobile</label><input class="fi" type="tel" placeholder="9876543210"></div>
+  </div>
+  <div class="fl"><label>Village / Address</label><input class="fi" placeholder="Area"></div>
+  <div class="fl"><label>Daily Wage (₹)</label><input class="fi" type="number" placeholder="700"></div>
+  <button class="bsub" onclick="showToast('Added successfully ✅','s')">Add to System</button>
+</div>`;}
+
+/* ── DELIVERY MAN PAGES ── */
+function pgMyTrip(){return`
+  <div class="ph"><span class="phi">🛵</span><div><div class="pht">My Trip</div><div class="phs">${S.user?.name} · ${D.today}</div></div></div>
+  <div class="alt gr"><span>🟢</span><span>Trip <b>Active</b>. GPS ON. Office can see your location on their map.</span></div>
+  <div class="sgrid">
+    <div class="sc or"><div class="slbl">Loaded</div><div class="sval">65</div></div>
+    <div class="sc gr"><div class="slbl">Sold</div><div class="sval">12</div></div>
+    <div class="sc bl"><div class="slbl">Remaining</div><div class="sval">53</div></div>
+    <div class="sc ye"><div class="slbl">Collected</div><div class="sval">₹11.5k</div></div>
+  </div>
+  <div class="card"><div class="ctitle">💰 Record Sale</div>
+    <div class="fr">
+      <div class="fl"><label>Qty Sold</label><input class="fi" type="number" id="mtq" placeholder="1" value="1"></div>
+      <div class="fl"><label>Mode</label><select class="fs" id="mtm"><option>Cash</option><option>GPay</option><option>Online</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" id="mta" placeholder="956"></div>
+      <div class="fl"><label>From</label><select class="fs"><option>My Vehicle</option><option>Shirol BDA</option><option>Hupari BDA</option></select></div>
+    </div>
+    <div class="fl"><label>Customer OTP (BPCL App)</label><input class="fi" type="number" placeholder="6-digit OTP" maxlength="6"></div>
+    <button class="bsub" onclick="showToast('Sale recorded ✅ Stock updated','s')">Record Sale</button>
+  </div>
+  <div class="card"><div class="ctitle">💵 Cash Handover</div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="0"></div>
+      <div class="fl"><label>Handover To</label><select class="fs"><option>Office Manager</option><option>Vishal Patil</option><option>Mrinmayi Patil</option><option>Pundalik Patil</option></select></div>
+    </div>
+    <button class="bsub bsec" onclick="showToast('Cash handover recorded ✅','s')">Handover Cash</button>
+  </div>
+  <button class="bsub" style="background:linear-gradient(135deg,var(--red),#F87171);box-shadow:0 4px 16px rgba(239,68,68,0.25)" onclick="showToast('Trip ended. Final stock recorded.','s')">🏁 End Trip</button>`;}
+function pgMyStock(){return`
+  <div class="ph"><span class="phi">📦</span><div><div class="pht">My Stock</div><div class="phs">Vehicle count</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc gr"><div class="slbl">Filled</div><div class="sval">53</div></div>
+    <div class="sc or"><div class="slbl">Empty</div><div class="sval">12</div></div>
+    <div class="sc bl"><div class="slbl">Trips Today</div><div class="sval">1</div></div>
+  </div>
+  <div class="card"><div class="ctitle">📋 Update Physical Count</div>
+    <div class="fr">
+      <div class="fl"><label>Filled</label><input class="fi" type="number" value="53"></div>
+      <div class="fl"><label>Empty</label><input class="fi" type="number" value="12"></div>
+    </div>
+    <div class="fl"><label>Remarks / Shortage</label><input class="fi" placeholder="Any shortage or excess..."></div>
+    <button class="bsub" onclick="showToast('Stock count updated ✅','s')">Save Count</button>
+  </div>`;}
+function pgMySales(){return`
+  <div class="ph"><span class="phi">💰</span><div><div class="pht">My Sales Today</div><div class="phs">${S.user?.name}</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc or"><div class="slbl">Sold</div><div class="sval">12</div></div>
+    <div class="sc gr"><div class="slbl">Collected</div><div class="sval">₹11.5k</div></div>
+    <div class="sc ye"><div class="slbl">Handed Over</div><div class="sval">₹0</div></div>
+  </div>
+  <div class="card"><div class="ctitle">📜 My Sales Log</div>
+    <div class="tw"><table>
+      <thead><tr><th>Time</th><th>Qty</th><th>Mode</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--muted)">9:45 AM</td><td>3</td><td><span class="bdg gr">Cash</span></td><td class="tg">₹2,868</td></tr>
+        <tr><td style="color:var(--muted)">11:20 AM</td><td>5</td><td><span class="bdg bl">GPay</span></td><td class="tg">₹4,780</td></tr>
+        <tr><td style="color:var(--muted)">2:00 PM</td><td>4</td><td><span class="bdg gr">Cash</span></td><td class="tg">₹3,824</td></tr>
+      </tbody>
+    </table></div>
+  </div>`;}
+
+/* ── BDA PAGES ── */
+function pgBdaStock(){return`
+  <div class="ph"><span class="phi">📦</span><div><div class="pht">My BDA Stock</div><div class="phs">${S.user?.name}</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc gr"><div class="slbl">Filled</div><div class="sval">7</div><div class="ssub">max 7 allowed</div></div>
+    <div class="sc or"><div class="slbl">Empty</div><div class="sval">3</div></div>
+    <div class="sc bl"><div class="slbl">Sold Today</div><div class="sval">5</div></div>
+  </div>
+  <div class="card"><div class="ctitle">📋 Update My Stock</div>
+    <div class="fr">
+      <div class="fl"><label>Filled</label><input class="fi" type="number" value="7"></div>
+      <div class="fl"><label>Empty</label><input class="fi" type="number" value="3"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Stock updated ✅','s')">Save</button>
+  </div>`;}
+function pgBdaSales(){return`
+  <div class="ph"><span class="phi">💰</span><div><div class="pht">BDA Sales</div><div class="phs">Record sales</div></div></div>
+  <div class="card"><div class="ctitle">💰 Record Sale</div>
+    <div class="fr">
+      <div class="fl"><label>Qty</label><input class="fi" type="number" placeholder="1"></div>
+      <div class="fl"><label>Mode</label><select class="fs"><option>Cash</option><option>GPay</option><option>Online</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="956"></div>
+      <div class="fl"><label>OTP</label><input class="fi" type="number" placeholder="BPCL OTP"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Sale recorded ✅','s')">Record Sale</button>
+  </div>`;}
+function pgBdaCash(){return`
+  <div class="ph"><span class="phi">💵</span><div><div class="pht">Cash Handover</div><div class="phs">Send cash to delivery man</div></div></div>
+  <div class="card"><div class="ctitle">💵 Handover to Delivery Man</div>
+    <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="Total cash"></div>
+    <div class="fl"><label>Delivery Man</label><select class="fs"><option>Bhore</option><option>Swapnil</option><option>Rahul</option><option>Anil</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Mode</label><select class="fs"><option>Cash</option><option>GPay</option></select></div>
+      <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Handover recorded ✅','s')">Confirm Handover</button>
+  </div>
+  <div class="card"><div class="ctitle">📊 Today Summary</div>
+    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Sales</span><b class="to">5 cylinders</b></div>
+    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Amount</span><b class="tg">₹4,780</b></div>
+    <div style="display:flex;justify-content:space-between;padding:0.5rem 0"><span style="color:var(--muted)">Handed Over</span><b>₹0</b></div>
+  </div>`;}
+</script>
+</body>
+</html>

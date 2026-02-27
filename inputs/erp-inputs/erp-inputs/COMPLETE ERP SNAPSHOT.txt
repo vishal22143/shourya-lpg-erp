@@ -1,0 +1,580 @@
+1️⃣ Project root tree (structure only)
+
+PS C:\Users\257027> cd C:\Projects\SHOURYA_ERP
+PS C:\Projects\SHOURYA_ERP> tree /F
+Folder PATH listing
+Volume serial number is 3E1B-148A
+C:.
+│   .gitignore
+│   alembic.ini
+│   app_old.py
+│   build_erp.py
+│   check_models.py
+│   ERP_FREEZE.md
+│   fast_ui_build.ps1
+│   FINAL_EXECUTION_BRIDGE.txt
+│   main.py
+│   model_map.py
+│   README_S5_BRIDGE.txt
+│   requirements.txt
+│   seed_opening_stock.py
+│   seed_trial_users.py
+│   seed_users.py
+│   shourya_erp.db
+│   shourya_erp.db.bak
+│   shourya_erp.db.fullbackup
+│   SHOURYA_ERP_BACKEND.zip
+│   SHOURYA_ERP_FULL.zip
+│
+├───alembic
+│   │   env.py
+│   │   README
+│   │   script.py.mako
+│   │
+│   ├───versions
+│   │   │   656bdb3e32f8_add_office_auxiliary_stock_tables.poisoned.bak
+│   │   │   a0f3dc4406d2_baseline_schema.py
+│   │   │   f5a18fea31ef_initial_erp_schema.poisoned.bak
+│   │   │
+│   │   └───__pycache__
+│   │           a0f3dc4406d2_baseline_schema.cpython-312.pyc
+│   │
+│   └───__pycache__
+│           env.cpython-312.pyc
+│
+├───app
+│   │   __init__.py
+│   │
+│   ├───core
+│   │   │   base.py
+│   │   │   database.py
+│   │   │   deps.py
+│   │   │   init_db.py
+│   │   │   init_users.py
+│   │   │   tx.py
+│   │   │   __init__.py
+│   │   │
+│   │   └───__pycache__
+│   │           base.cpython-312.pyc
+│   │           database.cpython-312.pyc
+│   │           db.cpython-312.pyc
+│   │           deps.cpython-312.pyc
+│   │           tx.cpython-312.pyc
+│   │           __init__.cpython-312.pyc
+│   │
+│   ├───models
+│   │   │   app_user.py
+│   │   │   bda.py
+│   │   │   bda_sale.py
+│   │   │   cash.py
+│   │   │   cash_denomination.py
+│   │   │   delivery.py
+│   │   │   delivery_cylinder_detail.py
+│   │   │   delivery_day_summary.py
+│   │   │   delivery_payroll.py
+│   │   │   delivery_transfer.py
+│   │   │   office_cash.py
+│   │   │   office_expense.py
+│   │   │   staff_advance.py
+│   │   │   stock.py
+│   │   │   stock_day_end.py
+│   │   │   trip.py
+│   │   │   user.py
+│   │   │   _advance_notes.py
+│   │   │
+│   │   ├───auth
+│   │   │   │   user.py
+│   │   │   │   __init__.py
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │           user.cpython-312.pyc
+│   │   │           __init__.cpython-312.pyc
+│   │   │
+│   │   ├───office_aux
+│   │   │   │   office_aux_item.py
+│   │   │   │   office_aux_month_opening.py
+│   │   │   │   office_aux_month_physical.py
+│   │   │   │   office_aux_movement.py
+│   │   │   │   __init__.py
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │           office_aux_item.cpython-312.pyc
+│   │   │           office_aux_month_opening.cpython-312.pyc
+│   │   │           office_aux_month_physical.cpython-312.pyc
+│   │   │           office_aux_movement.cpython-312.pyc
+│   │   │           __init__.cpython-312.pyc
+│   │   │
+│   │   └───__pycache__
+│   │           app_user.cpython-312.pyc
+│   │           bda.cpython-312.pyc
+│   │           bda_sale.cpython-312.pyc
+│   │           bpcl_csv_row.cpython-312.pyc
+│   │           cash.cpython-312.pyc
+│   │           cash_denomination.cpython-312.pyc
+│   │           cash_ledger.cpython-312.pyc
+│   │           core.cpython-312.pyc
+│   │           delivery.cpython-312.pyc
+│   │           delivery_cylinder_detail.cpython-312.pyc
+│   │           delivery_day_summary.cpython-312.pyc
+│   │           delivery_man.cpython-312.pyc
+│   │           delivery_payroll.cpython-312.pyc
+│   │           delivery_transfer.cpython-312.pyc
+│   │           enums.cpython-312.pyc
+│   │           godown.cpython-312.pyc
+│   │           office_cash.cpython-312.pyc
+│   │           office_expense.cpython-312.pyc
+│   │           staff_advance.cpython-312.pyc
+│   │           stock.cpython-312.pyc
+│   │           stock_day_end.cpython-312.pyc
+│   │           trip.cpython-312.pyc
+│   │           user.cpython-312.pyc
+│   │           _advance_notes.cpython-312.pyc
+│   │           __init__.cpython-312.pyc
+│   │
+│   ├───routers
+│   │   │   auth.py
+│   │   │   bda.py
+│   │   │   day_end.py
+│   │   │   delivery.py
+│   │   │   delivery_payroll.py
+│   │   │   office_cash.py
+│   │   │   owner.py
+│   │   │   reports.py
+│   │   │   stock.py
+│   │   │   ui.py
+│   │   │   __init__.py
+│   │   │
+│   │   ├───s5_owner
+│   │   │   │   _presentation_guard.py
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │           owner_day_end_router.cpython-312.pyc
+│   │   │
+│   │   └───__pycache__
+│   │           auth.cpython-312.pyc
+│   │           bda.cpython-312.pyc
+│   │           day_end.cpython-312.pyc
+│   │           delivery.cpython-312.pyc
+│   │           delivery_payroll.cpython-312.pyc
+│   │           godown.cpython-312.pyc
+│   │           office_cash.cpython-312.pyc
+│   │           owner.cpython-312.pyc
+│   │           reports.cpython-312.pyc
+│   │           stock.cpython-312.pyc
+│   │           ui.cpython-312.pyc
+│   │           __init__.cpython-312.pyc
+│   │
+│   ├───services
+│   │   │   auth_service.py
+│   │   │   cash_register.py
+│   │   │   cash_short_auto.py
+│   │   │   day_end.py
+│   │   │   delivery_day_confirm.py
+│   │   │   delivery_payroll.py
+│   │   │   delivery_salary.py
+│   │   │   reports.py
+│   │   │   stock_atomic.py
+│   │   │   __init__.py
+│   │   │
+│   │   ├───auth
+│   │   │   │   admin_bootstrap.py
+│   │   │   │   password_service.py
+│   │   │   │   user_service.py
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │           admin_bootstrap.cpython-312.pyc
+│   │   │           password_service.cpython-312.pyc
+│   │   │           user_service.cpython-312.pyc
+│   │   │
+│   │   ├───office_aux
+│   │   │   │   movement_service.py
+│   │   │   │   opening_stock_service.py
+│   │   │   │   physical_stock_service.py
+│   │   │   │   reconciliation_service.py
+│   │   │   │
+│   │   │   ├───reports
+│   │   │   │   │   variance_report_service.py
+│   │   │   │   │
+│   │   │   │   └───__pycache__
+│   │   │   │           variance_report_service.cpython-312.pyc
+│   │   │   │
+│   │   │   └───__pycache__
+│   │   │           movement_service.cpython-312.pyc
+│   │   │           opening_stock_service.cpython-312.pyc
+│   │   │           physical_stock_service.cpython-312.pyc
+│   │   │           reconciliation_service.cpython-312.pyc
+│   │   │
+│   │   ├───s3_cash
+│   │   │   └───__pycache__
+│   │   ├───s3_delivery
+│   │   │   └───__pycache__
+│   │   ├───s3_wages
+│   │   │   └───__pycache__
+│   │   ├───s4_csv
+│   │   │   └───__pycache__
+│   │   ├───s5_owner
+│   │   │   └───__pycache__
+│   │   │           owner_day_end_aggregate.cpython-312.pyc
+│   │   │           owner_day_end_sections.cpython-312.pyc
+│   │   │
+│   │   └───__pycache__
+│   │           auth_service.cpython-312.pyc
+│   │           cash_register.cpython-312.pyc
+│   │           day_end.cpython-312.pyc
+│   │           delivery_payroll.cpython-312.pyc
+│   │           delivery_salary.cpython-312.pyc
+│   │           godown_service.cpython-312.pyc
+│   │           reports.cpython-312.pyc
+│   │           role_landing.cpython-312.pyc
+│   │           stock_atomic.cpython-312.pyc
+│   │           __init__.cpython-312.pyc
+│   │
+│   ├───static
+│   │   └───css
+│   │           style.css
+│   │
+│   ├───templates
+│   │   │   base.html
+│   │   │
+│   │   └───dashboard
+│   │           accounts.html
+│   │           owner.html
+│   │
+│   ├───ui
+│   │   │   ROLE_ROUTING_FREEZE.txt
+│   │   │
+│   │   ├───s5_accountant
+│   │   │   │   ACCOUNTANT_SCOPE_FREEZE.txt
+│   │   │   │   __init__.py
+│   │   │   │
+│   │   │   ├───contracts
+│   │   │   │   │   accountant_data_contract.py
+│   │   │   │   │   __init__.py
+│   │   │   │   │
+│   │   │   │   └───__pycache__
+│   │   │   │           accountant_data_contract.cpython-312.pyc
+│   │   │   │           __init__.py
+│   │   │   │
+│   │   │   └───pages
+│   │   │       │   accountant_dashboard_page.py
+│   │   │       │   __init__.py
+│   │   │       │
+│   │   │       └───__pycache__
+│   │   │               accountant_dashboard_page.cpython-312.pyc
+│   │   │               __init__.py
+│   │   │
+│   │   ├───s5_office
+│   │   │   │   OFFICE_SCOPE_FREEZE.txt
+│   │   │   │   __init__.py
+│   │   │   │
+│   │   │   ├───aux_stock
+│   │   │   │   │   AUX_STOCK_SCOPE_FREEZE.txt
+│   │   │   │   │   variance_visibility.py
+│   │   │   │   │   __init__.py
+│   │   │   │   │
+│   │   │   │   ├───components
+│   │   │   │   │   │   aux_stock_components.py
+│   │   │   │   │   │   __init__.py
+│   │   │   │   │   │
+│   │   │   │   │   └───__pycache__
+│   │   │   │   │           aux_stock_components.cpython-312.pyc
+│   │   │   │   │           __init__.py
+│   │   │   │   │
+│   │   │   │   ├───contracts
+│   │   │   │   │   │   aux_stock_ui_contract.py
+│   │   │   │   │   │   __init__.py
+│   │   │   │   │   │
+│   │   │   │   │   └───__pycache__
+│   │   │   │   │           aux_stock_ui_contract.cpython-312.pyc
+│   │   │   │   │           __init__.py
+│   │   │   │   │
+│   │   │   │   └───pages
+│   │   │   │       │   office_aux_stock_page.py
+│   │   │   │       │   __init__.py
+│   │   │   │       │
+│   │   │   │       └───__pycache__
+│   │   │   │               office_aux_stock_page.cpython-312.pyc
+│   │   │   │               __init__.py
+│   │   │   │
+│   │   │   ├───permissions
+│   │   │   │   │   office_permissions.py
+│   │   │   │   │   __init__.py
+│   │   │   │   │
+│   │   │   │   └───__pycache__
+│   │   │   │           office_permissions.cpython-312.pyc
+│   │   │   │           __init__.py
+│   │   │   │
+│   │   │   └───read_only
+│   │   │       │   office_read_only_sections.py
+│   │   │       │   __init__.py
+│   │   │       │
+│   │   │       └───__pycache__
+│   │   │               office_read_only_sections.cpython-312.pyc
+│   │   │               __init__.py
+│   │   │
+│   │   └───s5_owner
+│   │       │   __init__.py
+│   │       │
+│   │       ├───bindings
+│   │       │   │   owner_top_panel.py
+│   │       │   │   __init__.py
+│   │       │   │
+│   │       │   └───__pycache__
+│   │       │           owner_top_panel.cpython-312.pyc
+│   │       │           __init__.cpython-312.pyc
+│   │       │
+│   │       ├───navigation
+│   │       │   │   __init__.py
+│   │       │   │
+│   │       │   └───__pycache__
+│   │       │           owner_navigation.cpython-312.pyc
+│   │       │           __init__.py
+│   │       │
+│   │       ├───states
+│   │       │   │   __init__.py
+│   │       │   │
+│   │       │   └───__pycache__
+│   │       │           owner_state_rules.cpython-312.pyc
+│   │       │           __init__.py
+│   │       │
+│   │       └───__pycache__
+│   │               __init__.cpython-312.pyc
+│   │
+│   └───__pycache__
+│           __init__.cpython-312.pyc
+│
+├───data
+│   │   db.py
+│   │   deliveries.json
+│   │   erp.db
+│   │
+│   └───__pycache__
+│           db.cpython-312.pyc
+│
+├───office
+│   │   routes.py
+│   │   __init__.py
+│   │
+│   ├───models
+│   │       cash_register.py
+│   │       office_expenses.py
+│   │       office_sales.py
+│   │       office_stock.py
+│   │
+│   ├───routes
+│   │       office_router.py
+│   │       office_sales.py
+│   │
+│   └───templates
+│           office_cash.html
+│           office_day_end.html
+│           office_expenses.html
+│           office_home.html
+│           office_sales.html
+│
+├───scripts
+│       merge_delivery_csv.py
+│       write_file.vbs
+│
+├───services
+│       csv_loader.py
+│       delivery_actions.py
+│       delivery_store.py
+│       sap_pdf.py
+│       scheduled_filter.py
+│
+├───shell
+│   │   routes.py
+│   │   __init__.py
+│   │
+│   └───routes
+│           shell_router.py
+│
+├───static
+│       app.css
+│
+├───templates
+│   │   accounting.html
+│   │   base.html
+│   │   dashboard.html
+│   │   delivery.html
+│   │   delivery_hybrid.html
+│   │   delivery_mobile.html
+│   │   delivery_run.html
+│   │   godown.html
+│   │   godown_operational.html
+│   │   godown_strict.html
+│   │   login.html
+│   │   office.html
+│   │   office_dashboard.html
+│   │   office_home.html
+│   │   office_sales.html
+│   │   owner_dayend.html
+│   │   owner_dayend_top.html
+│   │   scheduled_list.html
+│   │   upload_scheduled.html
+│   │
+│   ├───accounts
+│   │       dashboard.html
+│   │
+│   ├───bda
+│   │       dashboard.html
+│   │
+│   ├───delivery
+│   │       dashboard.html
+│   │
+│   ├───office
+│   │       dashboard.html
+│   │
+│   ├───owner
+│   │       dashboard.html
+│   │
+│   └───partner
+│           dashboard.html
+│
+├───uploads
+│   │   CashMemoGeneratedList.csv
+│   │
+│   └───csv
+│           CashMemoGeneratedList.csv
+│
+├───utils
+│       bpcl_csv.py
+│
+└───__pycache__
+        main.cpython-312.pyc
+
+PS C:\Projects\SHOURYA_ERP>
+
+2️⃣ main.py (FULL FILE)
+
+from fastapi import FastAPI
+
+app = FastAPI(title="Shourya LPG ERP")
+
+def try_include(path, name):
+    try:
+        module = __import__(path, fromlist=["router"])
+        app.include_router(module.router)
+        print(f"✓ Loaded {name}")
+    except Exception as e:
+        print(f"⚠ Skipped {name}: {e}")
+
+# Core routers (only if present)
+try_include("app.auth.router", "Auth")
+try_include("app.ui.owner.router", "Owner UI")
+try_include("app.ui.accounts.router", "Accounts UI")
+try_include("app.ui.office.router", "Office UI")
+
+@app.get("/")
+def root():
+    return {"status": "ERP BOOT OK", "mode": "admin"}
+
+
+3️⃣ app/core/database.py
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "sqlite:///./shourya_erp.db"
+
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False}
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
+
+4️⃣ app/core/init_db.py
+
+from app.core.database import engine
+from app.core.base import Base
+
+# Core users & staff
+from app.models.user import User
+from app.models.delivery import DeliveryMan
+from app.models.bda import BDA
+
+# Stock system
+from app.models.stock import StockMovement as StockLocation, StockOpening, StockMovement
+from app.models.stock import StockMovement as StockDayEnd
+
+# Delivery salary system (NEW)
+from app.models.delivery_day_summary import DeliveryDaySummary
+from app.models.delivery_cylinder_detail import DeliveryCylinderDetail
+from app.models.delivery_payroll import DeliveryPayroll
+
+# Cash & advances
+from app.models.cash import CashHandover as OfficeCashDay
+from app.models.cash import CashHandover as OfficeExpense
+from app.models.staff_advance import StaffAdvance
+from app.models.cash_denomination import CashDenomination
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+if __name__ == '__main__':
+    init_db()
+
+5️⃣ app/core/init_users.py
+
+from app.core.database import engine
+from app.core.base import Base
+
+from app.models.user import User as AppUser
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+if __name__ == '__main__':
+    init_db()
+
+
+from app.core.database import engine
+from app.core.base import Base
+
+from app.models.user import User as AppUser
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+if __name__ == '__main__':
+    init_db()
+from app.core.database import engine
+from app.core.base import Base
+
+from app.models.user import User as AppUser
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+if __name__ == '__main__':
+    init_db()
+
+6️⃣ main router registration (critical)
+
+PS C:\Projects\SHOURYA_ERP> Select-String -Path main.py -Pattern "include_router"
+
+main.py:8:        app.include_router(module.router)
+
+PS C:\Projects\SHOURYA_ERP>
+
+
+7️⃣ Render runtime confirmation (local equivale
+
+PS C:\Projects\SHOURYA_ERP> uvicorn main:app --reload
+INFO:     Will watch for changes in these directories: ['C:\\Projects\\SHOURYA_ERP']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [22768] using WatchFiles
+⚠ Skipped Auth: No module named 'app.auth'
+⚠ Skipped Owner UI: No module named 'app.ui.owner'
+⚠ Skipped Accounts UI: No module named 'app.ui.accounts'
+⚠ Skipped Office UI: No module named 'app.ui.office'
+INFO:     Started server process [23228]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

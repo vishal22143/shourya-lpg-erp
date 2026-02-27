@@ -1,0 +1,157 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Projects\SHOURYA_ERP> python -m pip install -r requirements.txt
+Requirement already satisfied: fastapi in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 1)) (0.115.0)
+Requirement already satisfied: uvicorn in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 2)) (0.30.6)
+Requirement already satisfied: sqlalchemy in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 3)) (2.0.44)
+Requirement already satisfied: jinja2 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 4)) (3.1.6)
+Requirement already satisfied: python-multipart in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 5)) (0.0.9)
+Requirement already satisfied: starlette in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 6)) (0.38.6)
+Requirement already satisfied: itsdangerous in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from -r requirements.txt (line 7)) (2.2.0)
+Requirement already satisfied: pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from fastapi->-r requirements.txt (line 1)) (2.8.2)
+Requirement already satisfied: typing-extensions>=4.8.0 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from fastapi->-r requirements.txt (line 1)) (4.15.0)
+Requirement already satisfied: anyio<5,>=3.4.0 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from starlette->-r requirements.txt (line 6)) (4.11.0)
+Requirement already satisfied: idna>=2.8 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from anyio<5,>=3.4.0->starlette->-r requirements.txt (line 6)) (3.11)
+Requirement already satisfied: sniffio>=1.1 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from anyio<5,>=3.4.0->starlette->-r requirements.txt (line 6)) (1.3.1)
+Requirement already satisfied: annotated-types>=0.4.0 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi->-r requirements.txt (line 1)) (0.7.0)
+Requirement already satisfied: pydantic-core==2.20.1 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi->-r requirements.txt (line 1)) (2.20.1)
+Requirement already satisfied: click>=7.0 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from uvicorn->-r requirements.txt (line 2)) (8.3.1)
+Requirement already satisfied: h11>=0.8 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from uvicorn->-r requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: greenlet>=1 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from sqlalchemy->-r requirements.txt (line 3)) (3.2.4)
+Requirement already satisfied: MarkupSafe>=2.0 in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from jinja2->-r requirements.txt (line 4)) (3.0.3)
+Requirement already satisfied: colorama in c:\users\257027\appdata\local\programs\python\python312\lib\site-packages (from click>=7.0->uvicorn->-r requirements.txt (line 2)) (0.4.6)
+
+[notice] A new release of pip is available: 25.3 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+PS C:\Projects\SHOURYA_ERP> python -m app.core.init_db
+PS C:\Projects\SHOURYA_ERP> python - <<'PY'
+At line:1 char:11
++ python - <<'PY'
++           ~
+Missing file specification after redirection operator.
+At line:1 char:10
++ python - <<'PY'
++          ~
+The '<' operator is reserved for future use.
+At line:1 char:11
++ python - <<'PY'
++           ~
+The '<' operator is reserved for future use.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingFileSpecification
+
+PS C:\Projects\SHOURYA_ERP> from app.core.database import SessionLocal
+At line:1 char:1
++ from app.core.database import SessionLocal
++ ~~~~
+The 'from' keyword is not supported in this version of the language.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ReservedKeywordNotAllowed
+
+PS C:\Projects\SHOURYA_ERP> from app.services.auth.admin_bootstrap import bootstrap_admin
+At line:1 char:1
++ from app.services.auth.admin_bootstrap import bootstrap_admin
++ ~~~~
+The 'from' keyword is not supported in this version of the language.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ReservedKeywordNotAllowed
+
+PS C:\Projects\SHOURYA_ERP>
+PS C:\Projects\SHOURYA_ERP> db = SessionLocal()
+At line:1 char:19
++ db = SessionLocal()
++                   ~
+An expression was expected after '('.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ExpectedExpression
+
+PS C:\Projects\SHOURYA_ERP> try:
+try: : The term 'try:' is not recognized as the name of a cmdlet, function, script file, or operable program. Check
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ try:
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (try::String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Projects\SHOURYA_ERP>     admin = bootstrap_admin(db, username="admin", password="admin123")
+At line:1 char:31
++     admin = bootstrap_admin(db, username="admin", password="admin123" ...
++                               ~
+Missing argument in parameter list.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingArgument
+
+PS C:\Projects\SHOURYA_ERP>     print("ADMIN CREATED:", admin.username, admin.role)
+At line:1 char:28
++     print("ADMIN CREATED:", admin.username, admin.role)
++                            ~
+Missing expression after ','.
+At line:1 char:29
++     print("ADMIN CREATED:", admin.username, admin.role)
++                             ~~~~~~~~~~~~~~
+Unexpected token 'admin.username' in expression or statement.
+At line:1 char:28
++     print("ADMIN CREATED:", admin.username, admin.role)
++                            ~
+Missing closing ')' in expression.
+At line:1 char:55
++     print("ADMIN CREATED:", admin.username, admin.role)
++                                                       ~
+Unexpected token ')' in expression or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingExpressionAfterToken
+
+PS C:\Projects\SHOURYA_ERP> except Exception as e:
+except : The term 'except' is not recognized as the name of a cmdlet, function, script file, or operable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ except Exception as e:
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (except:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Projects\SHOURYA_ERP>     print("INFO:", e)
+At line:1 char:19
++     print("INFO:", e)
++                   ~
+Missing expression after ','.
+At line:1 char:20
++     print("INFO:", e)
++                    ~
+Unexpected token 'e' in expression or statement.
+At line:1 char:19
++     print("INFO:", e)
++                   ~
+Missing closing ')' in expression.
+At line:1 char:21
++     print("INFO:", e)
++                     ~
+Unexpected token ')' in expression or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingExpressionAfterToken
+
+PS C:\Projects\SHOURYA_ERP> finally:
+finally: : The term 'finally:' is not recognized as the name of a cmdlet, function, script file, or operable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ finally:
++ ~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (finally::String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS C:\Projects\SHOURYA_ERP>     db.close()
+At line:1 char:14
++     db.close()
++              ~
+An expression was expected after '('.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ExpectedExpression
+
+PS C:\Projects\SHOURYA_ERP> PY
+Python 3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>>

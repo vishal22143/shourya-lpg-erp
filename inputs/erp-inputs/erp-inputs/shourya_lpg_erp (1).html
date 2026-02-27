@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shourya LPG ERP | Distributor 187618</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bpcl-blue:#003087;
+  --bpcl-mid:#0057B8;
+  --bpcl-light:#E8F0FB;
+  --bpcl-gold:#FFB800;
+  --bpcl-yellow:#FFC72C;
+  --white:#FFFFFF;
+  --bg:#F0F4FA;
+  --panel:#FFFFFF;
+  --border:#D0DCF0;
+  --text:#0D1B3E;
+  --text2:#4A5F8A;
+  --text3:#7A90BC;
+  --green:#00A651;
+  --green-bg:#E6F7EE;
+  --red:#D92B3A;
+  --red-bg:#FDE8EA;
+  --orange:#E87722;
+  --orange-bg:#FEF0E6;
+  --yellow:#FFB800;
+  --yellow-bg:#FFF8E1;
+  --purple:#7B2FBE;
+  --purple-bg:#F3E9FD;
+  --shadow:0 2px 12px rgba(0,48,135,0.10);
+  --shadow-lg:0 8px 32px rgba(0,48,135,0.15);
+  --radius:10px;
+  --radius-lg:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+/* ============ LOGIN ============ */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#001C5A 0%,#003087 50%,#0057B8 100%);position:relative;overflow:hidden}
+#loginScreen::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.login-card{background:rgba(255,255,255,0.97);border-radius:20px;padding:48px 40px;width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.3);position:relative;z-index:1}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.login-logo-icon{width:52px;height:52px;background:var(--bpcl-blue);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.login-logo-text h1{font-size:22px;font-weight:700;color:var(--bpcl-blue)}
+.login-logo-text p{font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.login-welcome{margin-bottom:28px}
+.login-welcome h2{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px}
+.login-welcome p{color:var(--text2);font-size:13px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase}
+.form-group select,.form-group input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;color:var(--text);background:var(--white);transition:border-color 0.2s}
+.form-group select:focus,.form-group input:focus{outline:none;border-color:var(--bpcl-mid);box-shadow:0 0 0 3px rgba(0,87,184,0.12)}
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,var(--bpcl-blue),var(--bpcl-mid));color:white;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;letter-spacing:0.3px}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,48,135,0.35)}
+.btn-primary:active{transform:translateY(0)}
+.login-footer{text-align:center;margin-top:20px;font-size:11px;color:var(--text3)}
+/* ============ MAIN LAYOUT ============ */
+#mainApp{display:none;min-height:100vh;flex-direction:column}
+.topbar{background:var(--bpcl-blue);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;box-shadow:0 2px 12px rgba(0,0,0,0.2);position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.topbar-logo span{background:var(--bpcl-gold);color:var(--bpcl-blue);padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:1px}
+.topbar-date{font-size:12px;color:rgba(255,255,255,0.7);font-family:'IBM Plex Mono',monospace}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-badge{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);padding:6px 12px;border-radius:20px;font-size:13px}
+.role-chip{background:var(--bpcl-gold);color:var(--bpcl-blue);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:0.5px}
+.btn-logout{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit;transition:background 0.2s}
+.btn-logout:hover{background:rgba(255,255,255,0.25)}
+.app-body{display:flex;flex:1}
+/* ============ SIDEBAR ============ */
+.sidebar{width:220px;background:var(--white);border-right:1px solid var(--border);padding:12px 0;flex-shrink:0;overflow-y:auto;min-height:calc(100vh - 56px)}
+.nav-section{margin-bottom:4px}
+.nav-section-title{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;padding:8px 20px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;transition:all 0.15s;color:var(--text2);font-size:13px;font-weight:500;border-left:3px solid transparent;margin:0 0 1px 0}
+.nav-item:hover{background:var(--bpcl-light);color:var(--bpcl-blue)}
+.nav-item.active{background:var(--bpcl-light);color:var(--bpcl-blue);border-left-color:var(--bpcl-blue);font-weight:600}
+.nav-icon{width:18px;text-align:center;font-size:15px}
+/* ============ CONTENT ============ */
+.content{flex:1;overflow-y:auto;padding:24px;background:var(--bg)}
+.page{display:none}
+.page.active{display:block}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.page-title h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:2px}
+.page-title p{font-size:12px;color:var(--text3)}
+.page-actions{display:flex;gap:10px}
+/* ============ CARDS & WIDGETS ============ */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--panel);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:0;right:0;width:60px;height:100%;background:linear-gradient(to right,transparent,rgba(0,48,135,0.03))}
+.stat-icon{font-size:20px;margin-bottom:8px}
+.stat-value{font-size:26px;font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.stat-label{font-size:11px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:6px;display:flex;align-items:center;gap:4px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-orange{background:var(--orange-bg);color:var(--orange)}
+.badge-yellow{background:var(--yellow-bg);color:#A07000}
+.badge-blue{background:var(--bpcl-light);color:var(--bpcl-blue)}
+.badge-purple{background:var(--purple-bg);color:var(--purple)}
+.card{background:var(--panel);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-bottom:20px}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-header h3{font-size:14px;font-weight:700;color:var(--text)}
+.card-header p{font-size:11px;color:var(--text3);margin-top:1px}
+.card-body{padding:20px}
+/* ============ TABLE ============ */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 14px;background:var(--bg);font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid #EEF2F9;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bpcl-light)}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:12px}
+/* ============ STATUS DOTS ============ */
+.status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;flex-shrink:0}
+.dot-blue{background:#3B82F6}
+.dot-green{background:#22C55E}
+.dot-orange{background:#F97316}
+.dot-red{background:#EF4444}
+.dot-yellow{background:#EAB308}
+.dot-purple{background:#A855F7}
+/* ============ FORMS ============ */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:0.5px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-family:inherit;color:var(--text);background:var(--white);transition:border-color 0.2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--bpcl-mid);box-shadow:0 0 0 3px rgba(0,87,184,0.10)}
+.field-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.btn{padding:9px 18px;border-radius:7px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-blue{background:var(--bpcl-blue);color:white}
+.btn-blue:hover{background:var(--bpcl-mid)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--bpcl-mid);color:var(--bpcl-blue);background:var(--bpcl-light)}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:#008A44}
+.btn-red{background:var(--red);color:white}
+.btn-red:hover{background:#B5202E}
+.btn-gold{background:var(--bpcl-gold);color:var(--bpcl-blue)}
+.btn-gold:hover{background:#E0A200}
+/* ============ TABS ============ */
+.tab-bar{display:flex;gap:2px;background:var(--bg);padding:4px;border-radius:10px;margin-bottom:20px;overflow-x:auto}
+.tab-btn{padding:8px 18px;border:none;background:transparent;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;color:var(--text2);white-space:nowrap;transition:all 0.15s}
+.tab-btn.active{background:var(--white);color:var(--bpcl-blue);font-weight:700;box-shadow:0 1px 6px rgba(0,48,135,0.12)}
+/* ============ DENOMINATION BOX ============ */
+.denom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.denom-row{display:flex;align-items:center;gap:8px;background:var(--bg);padding:8px 10px;border-radius:7px}
+.denom-label{font-size:13px;font-weight:600;color:var(--text);min-width:50px}
+.denom-input{width:80px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'IBM Plex Mono',monospace;text-align:right}
+.denom-total{font-size:12px;color:var(--text2);min-width:60px;text-align:right;font-family:'IBM Plex Mono',monospace}
+/* ============ STOCK TABLE ============ */
+.stock-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stock-cell{background:var(--bg);border-radius:8px;padding:14px;text-align:center;border:1.5px solid var(--border)}
+.stock-cell.filled{border-color:#22C55E;background:#F0FBF4}
+.stock-cell.empty{border-color:#94A3B8;background:#F8FAFC}
+.stock-cell.defective{border-color:#F97316;background:#FFF8F4}
+.stock-location{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px}
+.stock-qty{font-size:28px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--text)}
+.stock-type{font-size:11px;font-weight:600;margin-top:2px}
+/* ============ DELIVERY LIST ============ */
+.delivery-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--white);border-radius:8px;margin-bottom:8px;border:1px solid var(--border);transition:box-shadow 0.15s}
+.delivery-row:hover{box-shadow:var(--shadow)}
+.del-status-bar{width:4px;height:52px;border-radius:2px;flex-shrink:0}
+.del-info{flex:1}
+.del-name{font-size:13px;font-weight:600;color:var(--text)}
+.del-area{font-size:11px;color:var(--text3)}
+.del-cash{font-size:13px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--text)}
+.del-actions{display:flex;gap:6px}
+/* ============ BPCL COMPARISON ============ */
+.bpcl-panel{background:var(--bpcl-blue);color:white;border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:20px}
+.bpcl-panel h3{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.bpcl-table{width:100%;border-collapse:collapse}
+.bpcl-table th{color:rgba(255,255,255,0.65);font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:6px 12px;text-align:right}
+.bpcl-table th:first-child{text-align:left}
+.bpcl-table td{padding:10px 12px;text-align:right;font-family:'IBM Plex Mono',monospace;border-top:1px solid rgba(255,255,255,0.08)}
+.bpcl-table td:first-child{text-align:left;font-family:inherit;font-weight:600}
+.match{color:#4ADE80}
+.mismatch{color:#FCA5A5}
+.pending-tag{background:rgba(255,184,0,0.2);color:var(--bpcl-gold);padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700}
+/* ============ ALERT ============ */
+.alert{padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;font-size:13px}
+.alert-info{background:var(--bpcl-light);color:var(--bpcl-blue);border:1px solid rgba(0,87,184,0.2)}
+.alert-warn{background:var(--yellow-bg);color:#7A5600;border:1px solid rgba(234,179,8,0.3)}
+.alert-success{background:var(--green-bg);color:#006830;border:1px solid rgba(34,197,94,0.3)}
+.alert-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(217,43,58,0.2)}
+/* ============ PAYROLL ============ */
+.payroll-row{background:var(--white);border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:10px}
+.payroll-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.15s}
+.payroll-header:hover{background:var(--bpcl-light)}
+.payroll-name{font-weight:600;font-size:14px}
+.payroll-area{font-size:11px;color:var(--text3)}
+.payroll-net{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:16px;color:var(--green)}
+.payroll-detail{display:none;padding:0 18px 16px;border-top:1px solid var(--border)}
+.payroll-detail.open{display:block}
+.payroll-line{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dotted var(--border)}
+.payroll-line:last-child{border-bottom:none}
+.payroll-line span:last-child{font-family:'IBM Plex Mono',monospace;font-weight:600}
+.deduction{color:var(--red)}
+.addition{color:var(--green)}
+/* ============ TRIP CARD ============ */
+.trip-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.trip-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.trip-man{display:flex;align-items:center;gap:10px}
+.trip-avatar{width:40px;height:40px;border-radius:10px;background:var(--bpcl-blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.trip-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.trip-stat{text-align:center;background:var(--bg);padding:8px;border-radius:7px}
+.trip-stat-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:16px}
+.trip-stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+/* ============ NOTICE ============ */
+.notice-item{background:var(--white);border-radius:8px;border:1px solid var(--border);padding:14px 18px;margin-bottom:8px;display:flex;gap:14px}
+.notice-dot{width:10px;height:10px;border-radius:50%;background:var(--bpcl-gold);flex-shrink:0;margin-top:4px}
+/* ============ MAP PLACEHOLDER ============ */
+.map-placeholder{background:linear-gradient(135deg,#E8F0FB,#D0DCF0);border-radius:12px;height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px dashed var(--border);gap:12px}
+.map-placeholder .map-icon{font-size:48px;opacity:0.4}
+/* ============ MODAL ============ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--radius-lg);width:560px;max-width:calc(100vw - 32px);max-height:calc(100vh - 64px);overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white)}
+.modal-header h3{font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);line-height:1;padding:4px}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+/* ============ BDA LIST ============ */
+.bda-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:16px;display:flex;align-items:flex-start;gap:14px}
+.bda-icon{width:44px;height:44px;border-radius:10px;background:var(--bpcl-light);color:var(--bpcl-blue);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bda-info{flex:1}
+.bda-name{font-weight:700;font-size:14px}
+.bda-area{font-size:12px;color:var(--text2);margin-top:1px}
+.bda-stats{display:flex;gap:12px;margin-top:8px}
+.bda-stat{font-size:11px;color:var(--text3)}
+.bda-stat strong{color:var(--text);font-size:13px}
+/* ============ SOA ============ */
+.soa-section{margin-bottom:20px}
+.soa-section h4{font-size:13px;font-weight:700;color:var(--bpcl-blue);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--bpcl-blue)}
+.soa-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dotted var(--border);font-size:13px}
+.soa-row:last-child{border-bottom:none}
+.soa-amount{font-family:'IBM Plex Mono',monospace;font-weight:600}
+/* ============ MARATHI LABEL ============ */
+.mr{font-size:11px;color:var(--text3);display:block}
+/* ============ SCROLL ============ */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* ============ RESPONSIVE ============ */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;top:56px;bottom:0;z-index:90;transition:left 0.3s;box-shadow:var(--shadow-lg)}
+  .sidebar.open{left:0}
+  .content{padding:16px}
+  .form-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+}
+/* ============ PRINT ============ */
+@media print{
+  .topbar,.sidebar,.page-actions,.btn,.tab-bar{display:none!important}
+  .content{padding:0}
+  .card{box-shadow:none;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================== LOGIN SCREEN ======================== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🔥</div>
+      <div class="login-logo-text">
+        <h1>Shourya LPG</h1>
+        <p>Dist Code: 187618 &nbsp;|&nbsp; ERP v3.0</p>
+      </div>
+    </div>
+    <div class="login-welcome">
+      <h2>स्वागत आहे / Welcome</h2>
+      <p>Sign in to your role dashboard</p>
+    </div>
+    <div class="form-group">
+      <label>Select Role / भूमिका निवडा</label>
+      <select id="loginRole">
+        <option value="">-- Choose Role --</option>
+        <option value="OWNER">👑 Owner (Vishal Patil)</option>
+        <option value="PARTNER">🤝 Partner (Dr. Mrinmayi Patil)</option>
+        <option value="OFFICE">🏢 Office Manager</option>
+        <option value="DELIVERY">🚚 Delivery Man / डिलिव्हरी</option>
+        <option value="BDA">🏪 BDA Operator</option>
+        <option value="ACCOUNTANT">📊 Accountant / CA</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Name / नाव</label>
+      <select id="loginUser">
+        <option value="">-- Select User --</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>PIN (4-digit)</label>
+      <input type="password" id="loginPin" placeholder="Enter PIN" maxlength="4" pattern="\d*">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Login →</button>
+    <div class="login-footer">Shourya Gas Agency, Jaysingpur, Kolhapur &nbsp;|&nbsp; BPCL Distributor</div>
+  </div>
+</div>
+
+<!-- ======================== MAIN APP ======================== -->
+<div id="mainApp">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button onclick="toggleSidebar()" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;display:none" id="menuBtn">☰</button>
+      <div class="topbar-logo">🔥 Shourya LPG <span>ERP</span></div>
+      <div class="topbar-date" id="topDate"></div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <span id="topUserName">User</span>
+        <span class="role-chip" id="topRoleChip">ROLE</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">⏻ Logout</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="nav-section" id="navAuth">
+        <div class="nav-section-title">Main / मुख्य</div>
+        <div class="nav-item" onclick="showPage('dashboard')" data-page="dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </div>
+      </div>
+      <div class="nav-section" id="navDelivery">
+        <div class="nav-section-title">Delivery / डिलिव्हरी</div>
+        <div class="nav-item" onclick="showPage('deliveries')" data-page="deliveries">
+          <span class="nav-icon">📋</span> Today's Deliveries
+          <span class="mr">आजची डिलिव्हरी</span>
+        </div>
+        <div class="nav-item" onclick="showPage('trips')" data-page="trips">
+          <span class="nav-icon">🚚</span> Trips / फेऱ्या
+        </div>
+        <div class="nav-item" onclick="showPage('tracking')" data-page="tracking">
+          <span class="nav-icon">📍</span> Live Tracking
+        </div>
+      </div>
+      <div class="nav-section" id="navStock">
+        <div class="nav-section-title">Stock / साठा</div>
+        <div class="nav-item" onclick="showPage('godown')" data-page="godown">
+          <span class="nav-icon">🏭</span> Godown / गोडाऊन
+        </div>
+        <div class="nav-item" onclick="showPage('stockTransfer')" data-page="stockTransfer">
+          <span class="nav-icon">↕️</span> Stock Transfer
+        </div>
+      </div>
+      <div class="nav-section" id="navOffice">
+        <div class="nav-section-title">Office / कार्यालय</div>
+        <div class="nav-item" onclick="showPage('office')" data-page="office">
+          <span class="nav-icon">💰</span> Cash & Sales / रोख
+        </div>
+        <div class="nav-item" onclick="showPage('expenses')" data-page="expenses">
+          <span class="nav-icon">🧾</span> Expenses / खर्च
+        </div>
+        <div class="nav-item" onclick="showPage('csvUpload')" data-page="csvUpload">
+          <span class="nav-icon">📤</span> CSV Upload
+        </div>
+      </div>
+      <div class="nav-section" id="navBDA">
+        <div class="nav-section-title">BDA</div>
+        <div class="nav-item" onclick="showPage('bda')" data-page="bda">
+          <span class="nav-icon">🏪</span> BDA Operations
+        </div>
+      </div>
+      <div class="nav-section" id="navReports">
+        <div class="nav-section-title">Reports / अहवाल</div>
+        <div class="nav-item" onclick="showPage('dayEnd')" data-page="dayEnd">
+          <span class="nav-icon">📅</span> Day End / दिवसअखेर
+        </div>
+        <div class="nav-item" onclick="showPage('payroll')" data-page="payroll">
+          <span class="nav-icon">💵</span> Payroll / पगार
+        </div>
+        <div class="nav-item" onclick="showPage('bpclCompare')" data-page="bpclCompare">
+          <span class="nav-icon">⚖️</span> BPCL Comparison
+        </div>
+        <div class="nav-item" onclick="showPage('accounting')" data-page="accounting">
+          <span class="nav-icon">📒</span> Accounting / GST
+        </div>
+        <div class="nav-item" onclick="showPage('soa')" data-page="soa">
+          <span class="nav-icon">📈</span> SOA / खाते विवरण
+        </div>
+      </div>
+      <div class="nav-section" id="navAdmin">
+        <div class="nav-section-title">Admin</div>
+        <div class="nav-item" onclick="showPage('staff')" data-page="staff">
+          <span class="nav-icon">👥</span> Staff Master
+        </div>
+        <div class="nav-item" onclick="showPage('notices')" data-page="notices">
+          <span class="nav-icon">📢</span> Notices / सूचना
+        </div>
+        <div class="nav-item" onclick="showPage('settings')" data-page="settings">
+          <span class="nav-icon">⚙️</span> Settings
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content" id="contentArea">
+
+      <!-- ====== DASHBOARD ====== -->
+      <div class="page" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-title">
+            <h2 id="dashTitle">Owner Dashboard</h2>
+            <p id="dashSub">Real-time ERP overview for today</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ Export</button>
+            <button class="btn btn-blue btn-sm" onclick="showPage('dayEnd')">Day End →</button>
+          </div>
+        </div>
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🛢️</div>
+            <div class="stat-value">132</div>
+            <div class="stat-label">14.2kg Delivered / वितरित</div>
+            <div class="stat-sub"><span class="badge badge-green">▲ 28 / OTP</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value">₹1,12,960</div>
+            <div class="stat-label">Cash Collection / रोख संकलन</div>
+            <div class="stat-sub"><span class="badge badge-blue">Online: ₹24,080</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏭</div>
+            <div class="stat-value">500</div>
+            <div class="stat-label">Godown Stock (Filled) / गोडाऊन</div>
+            <div class="stat-sub"><span class="badge badge-orange">Empty: 142</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🚚</div>
+            <div class="stat-value">3</div>
+            <div class="stat-label">Active Trips / सक्रिय फेऱ्या</div>
+            <div class="stat-sub"><span class="badge badge-yellow">1 Pending Close</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏪</div>
+            <div class="stat-value">52</div>
+            <div class="stat-label">BDA Stock (Filled) / BDA साठा</div>
+            <div class="stat-sub"><span class="badge badge-blue">8 BDA Agents</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⚖️</div>
+            <div class="stat-value" style="color:var(--green)">MATCH</div>
+            <div class="stat-label">BPCL Day-End Status</div>
+            <div class="stat-sub"><span class="badge badge-green">5350: ✓ &nbsp; 5370: ✓</span></div>
+          </div>
+        </div>
+
+        <!-- Stock Summary -->
+        <div class="card">
+          <div class="card-header">
+            <div><h3>📦 Stock Summary / साठा सारांश</h3><p>14.2 Kg Cylinders — Filled & Empty</p></div>
+            <span class="badge badge-green">Live</span>
+          </div>
+          <div class="card-body">
+            <div class="stock-grid">
+              <div class="stock-cell filled">
+                <div class="stock-location">Godown / गोडाऊन</div>
+                <div class="stock-qty">500</div>
+                <div class="stock-type" style="color:var(--green)">Filled / भरलेले</div>
+              </div>
+              <div class="stock-cell empty">
+                <div class="stock-location">Godown / गोडाऊन</div>
+                <div class="stock-qty">142</div>
+                <div class="stock-type" style="color:#64748B">Empty / रिकामे</div>
+              </div>
+              <div class="stock-cell filled">
+                <div class="stock-location">Office / कार्यालय</div>
+                <div class="stock-qty">5</div>
+                <div class="stock-type" style="color:var(--green)">Filled</div>
+              </div>
+              <div class="stock-cell empty">
+                <div class="stock-location">Office / कार्यालय</div>
+                <div class="stock-qty">8</div>
+                <div class="stock-type" style="color:#64748B">Empty</div>
+              </div>
+              <div class="stock-cell filled">
+                <div class="stock-location">BDA / BDA</div>
+                <div class="stock-qty">52</div>
+                <div class="stock-type" style="color:var(--green)">Filled</div>
+              </div>
+              <div class="stock-cell filled">
+                <div class="stock-location">Transit / वाहन</div>
+                <div class="stock-qty">35</div>
+                <div class="stock-type" style="color:#0057B8">On Vehicle</div>
+              </div>
+              <div class="stock-cell defective">
+                <div class="stock-location">Defective / दोषपूर्ण</div>
+                <div class="stock-qty">4</div>
+                <div class="stock-type" style="color:var(--orange)">Defective</div>
+              </div>
+              <div class="stock-cell">
+                <div class="stock-location">Manual Adj.</div>
+                <div class="stock-qty">12</div>
+                <div class="stock-type" style="color:var(--text3)">Adjustment</div>
+              </div>
+            </div>
+            <div style="margin-top:16px;padding:14px;background:var(--bpcl-blue);border-radius:8px;color:white;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:12px;opacity:0.7">Closing Stock Total (5350+5370)</div>
+                <div style="font-size:11px;opacity:0.6">Filled + Empty</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:24px;font-weight:700;font-family:'IBM Plex Mono',monospace">466 + 596</div>
+                <div style="font-size:13px;opacity:0.8">Total 14.2Kg: <strong>1062</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Delivery Summary -->
+        <div class="card">
+          <div class="card-header">
+            <div><h3>🚚 Today's Trips / आजच्या फेऱ्या</h3><p>All delivery men performance</p></div>
+            <button class="btn btn-outline btn-sm" onclick="showPage('trips')">View All →</button>
+          </div>
+          <div class="card-body">
+            <div id="dashTrips"></div>
+          </div>
+        </div>
+      </div><!-- end dashboard -->
+
+      <!-- ====== DELIVERIES PAGE ====== -->
+      <div class="page" id="page-deliveries">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📋 Today's Deliveries <span style="font-size:14px;color:var(--text3)">/ आजची डिलिव्हरी</span></h2>
+            <p>BPCL CSV — Loaded & Status Tracking</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline btn-sm" onclick="showPage('csvUpload')">📤 Upload CSV</button>
+            <button class="btn btn-blue btn-sm" onclick="openDeliveryFilter()">🔽 Filter</button>
+          </div>
+        </div>
+        <!-- Legend -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px"><span class="status-dot dot-blue"></span> Scheduled / प्रलंबित</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px"><span class="status-dot dot-yellow"></span> In Trip / सुरू</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px"><span class="status-dot dot-green"></span> Delivered / वितरित</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px"><span class="status-dot dot-orange"></span> Emergency / तातडी</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px"><span class="status-dot dot-red"></span> Not Available / अनुपलब्ध</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px"><span class="status-dot dot-purple"></span> Suggested Next / पुढील</div>
+        </div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="filterDeliveries('ALL',this)">All (132)</button>
+          <button class="tab-btn" onclick="filterDeliveries('DELIVERED',this)">✅ Delivered (96)</button>
+          <button class="tab-btn" onclick="filterDeliveries('SCHEDULED',this)">🔵 Pending (24)</button>
+          <button class="tab-btn" onclick="filterDeliveries('IN_TRIP',this)">🟡 In Trip (8)</button>
+          <button class="tab-btn" onclick="filterDeliveries('NOT_AVAILABLE',this)">🔴 N/A (4)</button>
+        </div>
+        <div id="deliveryList"></div>
+      </div><!-- end deliveries -->
+
+      <!-- ====== TRIPS ====== -->
+      <div class="page" id="page-trips">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>🚚 Trip Management <span style="font-size:14px;color:var(--text3)">/ फेरी व्यवस्थापन</span></h2>
+            <p>Open / Close trips — One per delivery man per day</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue" onclick="openModal('tripModal')">+ New Trip</button>
+          </div>
+        </div>
+        <div id="tripList"></div>
+      </div><!-- end trips -->
+
+      <!-- ====== TRACKING ====== -->
+      <div class="page" id="page-tracking">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📍 Live Tracking / लाइव ट्रॅकिंग</h2>
+            <p>Real-time vehicle positions & delivery progress</p>
+          </div>
+        </div>
+        <div class="map-placeholder">
+          <div class="map-icon">🗺️</div>
+          <div style="font-weight:700;font-size:16px;color:var(--text2)">Live Map Tracking</div>
+          <div style="font-size:13px;color:var(--text3);text-align:center;max-width:280px">GPS location tracking for all delivery vehicles. Pins saved on first doorstep delivery for future routing.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+            <span class="badge badge-blue">🔵 Bhore — Shahunagar (12 left)</span>
+            <span class="badge badge-green">🟢 Rajesh — Nandani (Done)</span>
+            <span class="badge badge-yellow">🟡 Harun — Jambhali (5 left)</span>
+            <span class="badge badge-orange">🟠 Mahesh — Kavathesar (3 left)</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">GPS integration requires device location permission</div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-header"><div><h3>🚗 Vehicle Status</h3><p>Today's fleet overview</p></div></div>
+          <div class="card-body">
+            <table><thead><tr><th>Delivery Man</th><th>Area / क्षेत्र</th><th>Trip</th><th>Delivered</th><th>Pending</th><th>Cash Collected</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Vishwas Bhore</strong></td><td>Shahunagar</td><td>T-2024-001</td><td class="mono">48</td><td class="mono">12</td><td class="mono">₹41,000</td><td><span class="badge badge-yellow">In Trip</span></td></tr>
+              <tr><td><strong>Rajesh</strong></td><td>Nandani Rd</td><td>T-2024-002</td><td class="mono">36</td><td class="mono">0</td><td class="mono">₹30,780</td><td><span class="badge badge-green">Complete</span></td></tr>
+              <tr><td><strong>Harun Fakir</strong></td><td>Jambhali</td><td>T-2024-003</td><td class="mono">28</td><td class="mono">5</td><td class="mono">₹24,000</td><td><span class="badge badge-yellow">In Trip</span></td></tr>
+              <tr><td><strong>Mahesh Patil</strong></td><td>Kavathesar</td><td>T-2024-004</td><td class="mono">20</td><td class="mono">7</td><td class="mono">₹17,180</td><td><span class="badge badge-blue">Open</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div><!-- end tracking -->
+
+      <!-- ====== GODOWN ====== -->
+      <div class="page" id="page-godown">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>🏭 Godown Stock <span style="font-size:14px;color:var(--text3)">/ गोडाऊन साठा</span></h2>
+            <p>Blind physical stock entry — Append only, no overwrite</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue" onclick="openModal('godownEntryModal')">+ Physical Entry</button>
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ Export</button>
+          </div>
+        </div>
+        <div class="alert alert-warn">⚠️ Physical stock count is blind entry. After saving, compare with calculated stock to find variance.</div>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('godownTabs','t-current',this)">Current Stock</button>
+          <button class="tab-btn" onclick="switchTab('godownTabs','t-movement',this)">BPCL Receipts</button>
+          <button class="tab-btn" onclick="switchTab('godownTabs','t-log',this)">Stock Log</button>
+          <button class="tab-btn" onclick="switchTab('godownTabs','t-defective',this)">Defective 🔶</button>
+        </div>
+
+        <div id="godownTabs">
+          <div id="t-current">
+            <div class="card">
+              <div class="card-header"><h3>14.2 Kg Cylinders — Physical Count</h3></div>
+              <div class="card-body">
+                <div class="stock-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+                  <div class="stock-cell filled"><div class="stock-location">Filled / भरलेले</div><div class="stock-qty">500</div><input type="number" placeholder="Physical count" style="width:100%;margin-top:8px;padding:6px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;text-align:center"></div>
+                  <div class="stock-cell empty"><div class="stock-location">Empty / रिकामे</div><div class="stock-qty">142</div><input type="number" placeholder="Physical count" style="width:100%;margin-top:8px;padding:6px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;text-align:center"></div>
+                  <div class="stock-cell defective"><div class="stock-location">Defective / दोषपूर्ण</div><div class="stock-qty">4</div><input type="number" placeholder="Defective count" style="width:100%;margin-top:8px;padding:6px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;text-align:center"></div>
+                </div>
+                <div style="margin-top:16px">
+                  <div class="field"><label>Reason for adjustment (if any)</label><input type="text" placeholder="Reason / कारण"></div>
+                  <button class="btn btn-blue" onclick="saveGodownCount()">💾 Save Physical Count</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>5 Kg Cylinders</h3></div>
+              <div class="card-body">
+                <div class="stock-grid" style="grid-template-columns:repeat(3,1fr)">
+                  <div class="stock-cell filled"><div class="stock-location">Domestic Filled</div><div class="stock-qty">20</div></div>
+                  <div class="stock-cell empty"><div class="stock-location">Domestic Empty</div><div class="stock-qty">0</div></div>
+                  <div class="stock-cell filled"><div class="stock-location">Commercial Filled</div><div class="stock-qty">66</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="t-movement" style="display:none">
+            <div class="card">
+              <div class="card-header"><div><h3>BPCL Receipts / BPCL पावती</h3><p>Incoming cylinder movements from BPCL</p></div><button class="btn btn-blue btn-sm" onclick="openModal('receiptModal')">+ Add Receipt</button></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Challan No.</th><th>Product</th><th>Filled Received</th><th>Empty Returned</th><th>Entered By</th><th>Status</th></tr></thead><tbody>
+              <tr><td>23/02/2026</td><td>BPC-2026-1872</td><td>14.2Kg (5350)</td><td class="mono">60</td><td class="mono">55</td><td>Office</td><td><span class="badge badge-green">Posted</span></td></tr>
+              <tr><td>21/02/2026</td><td>BPC-2026-1858</td><td>14.2Kg (5370)</td><td class="mono">30</td><td class="mono">28</td><td>Office</td><td><span class="badge badge-green">Posted</span></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="t-log" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>Stock Movement Log (Append-Only)</h3></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Timestamp</th><th>Type</th><th>From → To</th><th>Filled</th><th>Empty</th><th>Ref</th></tr></thead><tbody>
+              <tr><td class="mono">23/02 09:12</td><td>Issue</td><td>Godown → Vehicle (Bhore)</td><td class="mono">50</td><td class="mono">0</td><td>T-001</td></tr>
+              <tr><td class="mono">23/02 08:45</td><td>Receipt</td><td>BPCL → Godown</td><td class="mono">60</td><td class="mono">55</td><td>BPC-1872</td></tr>
+              <tr><td class="mono">22/02 18:30</td><td>Return</td><td>Vehicle → Godown</td><td class="mono">2</td><td class="mono">48</td><td>T-998</td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="t-defective" style="display:none">
+            <div class="card">
+              <div class="card-header"><div><h3>🔶 Defective Cylinders / दोषपूर्ण</h3><p>Quarantine log for damaged cylinders</p></div><button class="btn btn-red btn-sm" onclick="openModal('defectiveModal')">+ Log Defective</button></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Cylinder ID</th><th>Defect Type</th><th>Found By</th><th>Status</th></tr></thead><tbody>
+              <tr><td>20/02/2026</td><td class="mono">LPG-4471</td><td>Valve Leak</td><td>Bhore</td><td><span class="badge badge-red">Quarantine</span></td></tr>
+              <tr><td>18/02/2026</td><td class="mono">LPG-3892</td><td>Body Dent</td><td>Godown</td><td><span class="badge badge-orange">BPCL Return</span></td></tr>
+              <tr><td>15/02/2026</td><td class="mono">LPG-3210</td><td>Cap Missing</td><td>Rajesh</td><td><span class="badge badge-green">Repaired</span></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end godown -->
+
+      <!-- ====== STOCK TRANSFER ====== -->
+      <div class="page" id="page-stockTransfer">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>↕️ Stock Transfer <span style="font-size:14px;color:var(--text3)">/ सिलेंडर हस्तांतरण</span></h2>
+            <p>Office ↔ Delivery Man ↔ BDA</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>New Stock Transfer</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field"><label>Transfer Type</label><select><option>Office → Delivery Man</option><option>Delivery Man → Office</option><option>Delivery Man → BDA</option><option>BDA → Delivery Man</option><option>Godown → Office</option><option>Office → Godown</option></select></div>
+              <div class="field"><label>From</label><select><option>Office</option><option>Vishwas Bhore</option><option>Rajesh</option><option>Harun Fakir</option><option>Mahesh Patil</option><option>Godown</option></select></div>
+              <div class="field"><label>To / ला</label><select><option>Vishwas Bhore</option><option>Rajesh</option><option>Harun Fakir</option><option>Mahesh Patil</option><option>Office</option><option>BDA - Kondigre</option><option>BDA - Nimshirgav</option></select></div>
+              <div class="field"><label>14.2kg Filled / भरलेले</label><input type="number" placeholder="0"></div>
+              <div class="field"><label>14.2kg Empty / रिकामे</label><input type="number" placeholder="0"></div>
+              <div class="field"><label>5kg Filled</label><input type="number" placeholder="0"></div>
+              <div class="field"><label>Transfer Date / तारीख</label><input type="date" id="tDate"></div>
+              <div class="field"><label>Reason / कारण</label><input type="text" placeholder="Reason for transfer"></div>
+            </div>
+            <div class="alert alert-info" style="margin-top:8px">ℹ️ Stock transfer to Office — NO wages calculated. Transfer to Delivery Man for sales will count wages.</div>
+            <button class="btn btn-blue" onclick="saveTransfer()">✅ Confirm Transfer</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Transfer History / इतिहास</h3></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Date/Time</th><th>From</th><th>To</th><th>14.2F</th><th>14.2E</th><th>5kg</th><th>Reason</th></tr></thead><tbody>
+          <tr><td class="mono">23/02 07:30</td><td>Godown</td><td>Bhore Vehicle</td><td class="mono">50</td><td class="mono">0</td><td class="mono">0</td><td>Morning load</td></tr>
+          <tr><td class="mono">23/02 07:45</td><td>Godown</td><td>Rajesh Vehicle</td><td class="mono">40</td><td class="mono">0</td><td class="mono">0</td><td>Morning load</td></tr>
+          <tr><td class="mono">22/02 18:15</td><td>Bhore Vehicle</td><td>Godown</td><td class="mono">2</td><td class="mono">48</td><td class="mono">0</td><td>Evening return</td></tr>
+          </tbody></table></div></div>
+        </div>
+      </div><!-- end stockTransfer -->
+
+      <!-- ====== OFFICE CASH & SALES ====== -->
+      <div class="page" id="page-office">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>💰 Office Cash & Sales <span style="font-size:14px;color:var(--text3)">/ कार्यालय रोख</span></h2>
+            <p>Daily cash register, sales, denomination tracking</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue btn-sm" onclick="openModal('openingStockModal')">📦 Opening Stock</button>
+          </div>
+        </div>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('officeTabs','ot-cash',this)">💰 Cash Register</button>
+          <button class="tab-btn" onclick="switchTab('officeTabs','ot-sales',this)">🛢️ Sales</button>
+          <button class="tab-btn" onclick="switchTab('officeTabs','ot-sv',this)">📋 Additional Sales (SV)</button>
+          <button class="tab-btn" onclick="switchTab('officeTabs','ot-denom',this)">💵 Denomination</button>
+        </div>
+
+        <div id="officeTabs">
+          <div id="ot-cash">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="card">
+                <div class="card-header"><h3>Cash In / रोख जमा</h3></div>
+                <div class="card-body">
+                  <div class="field"><label>Source / स्रोत</label><select><option>Counter Sale</option><option>Delivery Man Handover</option><option>BDA Payment</option><option>Other</option></select></div>
+                  <div class="field"><label>Amount / रक्कम (₹)</label><input type="number" placeholder="0.00"></div>
+                  <div class="field"><label>Mode / पद्धत</label><select><option>Cash</option><option>QR Code Scan</option><option>GPay</option><option>Paytm</option><option>Advance BPCL Online</option><option>Cash + Online (Partial)</option></select></div>
+                  <div class="field"><label>Note / टीप</label><input type="text" placeholder="Notes"></div>
+                  <button class="btn btn-green">+ Add Cash In</button>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Cash Out / रोख खर्च</h3></div>
+                <div class="card-body">
+                  <div class="field"><label>Given To / कुणाला</label><input type="text" placeholder="Name (Vishal/Mrinmayi/Pundalik)"></div>
+                  <div class="field"><label>Amount / रक्कम (₹)</label><input type="number" placeholder="0.00"></div>
+                  <div class="field"><label>Purpose / उद्देश</label><select><option>Owner Withdrawal</option><option>Advance to Staff</option><option>Operating Expense</option><option>BPCL Payment</option></select></div>
+                  <button class="btn btn-red">- Cash Out</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Today's Cash Register Summary</h3></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+                  <div class="stat-card"><div class="stat-icon">🌅</div><div class="stat-value">₹8,500</div><div class="stat-label">Opening Balance</div></div>
+                  <div class="stat-card"><div class="stat-icon">➕</div><div class="stat-value">₹1,41,040</div><div class="stat-label">Total In</div></div>
+                  <div class="stat-card"><div class="stat-icon">➖</div><div class="stat-value">₹12,600</div><div class="stat-label">Total Out</div></div>
+                  <div class="stat-card"><div class="stat-icon">💼</div><div class="stat-value">₹1,36,940</div><div class="stat-label">Closing Balance</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="ot-sales" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>🛢️ Office Counter Sales / कार्यालय विक्री</h3></div>
+              <div class="card-body">
+                <div class="alert alert-info">Office has physical stock — enter opening stock first. Current 14.2kg price: <strong>₹856/-</strong></div>
+                <div class="form-grid">
+                  <div class="field"><label>Product / उत्पादन</label><select><option>14.2 Kg Cylinder</option><option>5 Kg Cylinder</option></select></div>
+                  <div class="field"><label>Quantity / प्रमाण</label><input type="number" placeholder="0" min="1"></div>
+                  <div class="field"><label>Consumer Number</label><input type="text" placeholder="BPCL Consumer No."></div>
+                  <div class="field"><label>Payment Mode / पैसे पद्धत</label>
+                    <select id="officePayMode" onchange="togglePartialPayment()">
+                      <option>Cash / रोख</option>
+                      <option>QR Code Scan</option>
+                      <option>GPay</option>
+                      <option>Paytm</option>
+                      <option>Advance BPCL Online Booking</option>
+                      <option>Cash + Online (Partial)</option>
+                    </select>
+                  </div>
+                  <div class="field" id="cashPartAmt" style="display:none"><label>Cash Amount / रोख रक्कम</label><input type="number" placeholder="Cash part"></div>
+                  <div class="field" id="onlinePartAmt" style="display:none"><label>Online Amount</label><input type="number" placeholder="Online part"></div>
+                  <div class="field"><label>OTP (if applicable)</label><input type="text" placeholder="6-digit OTP"></div>
+                  <div class="field"><label>Empty Cylinder Returned?</label><select><option>Yes</option><option>No</option></select></div>
+                </div>
+                <button class="btn btn-blue">✅ Record Sale</button>
+                <div style="margin-top:16px;padding:14px;background:var(--bg);border-radius:8px">
+                  <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:8px">TODAY'S OFFICE SALES TOTAL</div>
+                  <div style="display:flex;gap:20px;font-size:13px">
+                    <div>Cash: <strong class="mono">₹4,280</strong></div>
+                    <div>QR/GPay: <strong class="mono">₹1,712</strong></div>
+                    <div>Cylinders: <strong class="mono">7</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="ot-sv" style="display:none">
+            <div class="card">
+              <div class="card-header"><div><h3>📋 Additional Sales / अतिरिक्त विक्री</h3><p>SV, DPR, Accessories</p></div></div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="field"><label>Consumer Number</label><input type="text" placeholder="Consumer No."></div>
+                  <div class="field"><label>Category</label>
+                    <select id="svCategory" onchange="toggleSvFields()">
+                      <option>Subscription Voucher (SV)</option>
+                      <option>Suraksha Pipe</option>
+                      <option>Blue Book</option>
+                      <option>DPR - Free</option>
+                      <option>DPR - Paid</option>
+                      <option>5 Kg Cylinder</option>
+                      <option>Termination Voucher</option>
+                      <option>Name Change</option>
+                      <option>Cash Payment to Customer</option>
+                    </select>
+                  </div>
+                  <div class="field" id="svAmount"><label>Amount (₹) — if paid</label><input type="number" placeholder="0"></div>
+                  <div class="field"><label>Payment Mode</label><select><option>Cash</option><option>Free / Nil</option><option>GPay</option><option>QR Code</option></select></div>
+                  <div class="field"><label>Notes / टीप</label><input type="text" placeholder="Additional notes"></div>
+                </div>
+                <div class="alert alert-warn" id="svCashAlert" style="display:none">⚠️ Cash payment to customer — this amount will be DEDUCTED from cash register.</div>
+                <button class="btn btn-blue">+ Record Additional Sale</button>
+                <div class="card" style="margin-top:16px">
+                  <div class="card-header"><h3>Today's Additional Sales Log</h3></div>
+                  <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Time</th><th>Consumer</th><th>Category</th><th>Amount</th><th>Mode</th></tr></thead><tbody>
+                  <tr><td class="mono">09:22</td><td>40979342</td><td>SV - Subscription</td><td class="mono">₹0</td><td>Free</td></tr>
+                  <tr><td class="mono">10:15</td><td>40969027</td><td>DPR - Paid</td><td class="mono">₹50</td><td>Cash</td></tr>
+                  <tr><td class="mono">11:30</td><td>40977095</td><td>Suraksha Pipe</td><td class="mono">₹200</td><td>QR Code</td></tr>
+                  </tbody></table></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="ot-denom" style="display:none">
+            <div class="card">
+              <div class="card-header"><div><h3>💵 Cash Denomination Count / नोट मोजणी</h3><p>Count notes to verify cash balance</p></div></div>
+              <div class="card-body">
+                <div class="denom-grid">
+                  <div class="denom-row"><span class="denom-label">₹500</span><input class="denom-input" type="number" value="0" id="d500" oninput="calcDenom()"><span class="denom-total" id="t500">₹0</span></div>
+                  <div class="denom-row"><span class="denom-label">₹200</span><input class="denom-input" type="number" value="0" id="d200" oninput="calcDenom()"><span class="denom-total" id="t200">₹0</span></div>
+                  <div class="denom-row"><span class="denom-label">₹100</span><input class="denom-input" type="number" value="0" id="d100" oninput="calcDenom()"><span class="denom-total" id="t100">₹0</span></div>
+                  <div class="denom-row"><span class="denom-label">₹50</span><input class="denom-input" type="number" value="0" id="d50" oninput="calcDenom()"><span class="denom-total" id="t50">₹0</span></div>
+                  <div class="denom-row"><span class="denom-label">₹20</span><input class="denom-input" type="number" value="0" id="d20" oninput="calcDenom()"><span class="denom-total" id="t20">₹0</span></div>
+                  <div class="denom-row"><span class="denom-label">₹10</span><input class="denom-input" type="number" value="0" id="d10" oninput="calcDenom()"><span class="denom-total" id="t10">₹0</span></div>
+                  <div class="denom-row"><span class="denom-label">Coins</span><input class="denom-input" type="number" value="0" id="dcoins" oninput="calcDenom()"><span class="denom-total" id="tcoins">₹0</span></div>
+                </div>
+                <div style="margin-top:16px;padding:14px;background:var(--bpcl-blue);border-radius:8px;color:white;display:flex;justify-content:space-between;align-items:center">
+                  <div style="font-weight:700;font-size:16px">Total Counted / एकूण मोजलेले</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700" id="denomTotal">₹0</div>
+                </div>
+                <div id="denomCheck" style="margin-top:10px"></div>
+                <button class="btn btn-green" style="margin-top:10px">💾 Save Denomination Count</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end office -->
+
+      <!-- ====== EXPENSES ====== -->
+      <div class="page" id="page-expenses">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>🧾 Office Expenses <span style="font-size:14px;color:var(--text3)">/ खर्च</span></h2>
+            <p>All expenses debit from cash register</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-header"><h3>Add Expense / खर्च जोडा</h3></div>
+            <div class="card-body">
+              <div class="field"><label>Category / प्रकार</label>
+                <select>
+                  <option>Termination Voucher</option>
+                  <option>Name Change</option>
+                  <option>Salary / Wages</option>
+                  <option>Stationery / Courier</option>
+                  <option>Vehicle Maintenance</option>
+                  <option>Electricity</option>
+                  <option>Staff Advance</option>
+                  <option>BPCL Fees</option>
+                  <option>Other (Free Text)</option>
+                </select>
+              </div>
+              <div class="field"><label>Amount / रक्कम (₹)</label><input type="number" placeholder="0.00"></div>
+              <div class="field"><label>Staff Member (if applicable)</label><input type="text" placeholder="Name"></div>
+              <div class="field"><label>Description / वर्णन</label><textarea rows="2" placeholder="Details..."></textarea></div>
+              <div class="alert alert-warn">⚠️ Expense will auto-debit from cash register. Visible to Owner & Partner only.</div>
+              <button class="btn btn-red">- Record Expense</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Today's Expenses Summary</h3></div>
+            <div class="card-body">
+              <div class="soa-section">
+                <div class="soa-row"><span>Termination Voucher</span><span class="soa-amount">₹500</span></div>
+                <div class="soa-row"><span>Name Change</span><span class="soa-amount">₹200</span></div>
+                <div class="soa-row"><span>Stationery</span><span class="soa-amount">₹150</span></div>
+                <div class="soa-row"><span>Vehicle Fuel</span><span class="soa-amount">₹2,400</span></div>
+                <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;color:var(--red);font-size:14px;border-top:2px solid var(--red)"><span>Total Expenses</span><span class="mono">₹3,250</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Expense History / खर्चाचा इतिहास</h3></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Staff</th><th>Amount</th><th>Entered By</th></tr></thead><tbody>
+          <tr><td>23/02/2026</td><td>Vehicle Fuel</td><td>—</td><td class="mono deduction">-₹2,400</td><td>Office</td></tr>
+          <tr><td>23/02/2026</td><td>Stationery</td><td>—</td><td class="mono deduction">-₹150</td><td>Office</td></tr>
+          <tr><td>23/02/2026</td><td>Name Change</td><td>Mrs. Ghorpade</td><td class="mono deduction">-₹200</td><td>Office</td></tr>
+          <tr><td>22/02/2026</td><td>Termination Voucher</td><td>Patil R.R.</td><td class="mono deduction">-₹500</td><td>Office</td></tr>
+          </tbody></table></div></div>
+        </div>
+      </div><!-- end expenses -->
+
+      <!-- ====== CSV UPLOAD ====== -->
+      <div class="page" id="page-csvUpload">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📤 CSV Upload <span style="font-size:14px;color:var(--text3)">/ CSV अपलोड</span></h2>
+            <p>BPCL Cash Memo list — Append & Reconcile (multiple uploads/day)</p>
+          </div>
+        </div>
+        <div class="alert alert-info">ℹ️ CSV is delivery instruction only — not delivery truth. Already delivered customers will NEVER reappear. New customers are auto-created. Data is shared with ALL users.</div>
+        <div class="card">
+          <div class="card-header"><h3>Upload BPCL Cash Memo CSV</h3></div>
+          <div class="card-body">
+            <div style="border:2px dashed var(--border);border-radius:10px;padding:32px;text-align:center;background:var(--bg)" id="dropZone">
+              <div style="font-size:36px;margin-bottom:12px">📄</div>
+              <div style="font-weight:700;margin-bottom:6px">Drop CSV/PDF here or click to browse</div>
+              <div style="font-size:12px;color:var(--text3);margin-bottom:16px">CashMemoGeneratedList.csv, ListOfBlockedConsumers.csv supported</div>
+              <input type="file" id="csvFile" accept=".csv,.pdf" style="display:none" onchange="handleCSV(event)">
+              <button class="btn btn-blue" onclick="document.getElementById('csvFile').click()">Browse Files</button>
+            </div>
+            <div id="csvPreview" style="display:none;margin-top:16px"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h3>Loaded Deliveries from CSV</h3><p id="csvStats">Total: 132 customers loaded across 4 areas</p></div><button class="btn btn-blue btn-sm" onclick="showPage('deliveries')">View All →</button></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Area / क्षेत्र</th><th>Operator</th><th>Total</th><th>Delivered</th><th>Pending</th><th>Blocked</th></tr></thead><tbody>
+          <tr><td><strong>SHAHUNAGAR</strong></td><td>Vishwas Bhore</td><td class="mono">54</td><td class="mono">42</td><td class="mono">12</td><td class="mono">3</td></tr>
+          <tr><td><strong>JAMBHALI</strong></td><td>Harun Fakir</td><td class="mono">28</td><td class="mono">20</td><td class="mono">8</td><td class="mono">1</td></tr>
+          <tr><td><strong>NANDHNI ROAD</strong></td><td>Rajesh</td><td class="mono">32</td><td class="mono">30</td><td class="mono">2</td><td class="mono">0</td></tr>
+          <tr><td><strong>KAVATHESAR / DANOLI</strong></td><td>Mahesh Patil</td><td class="mono">18</td><td class="mono">4</td><td class="mono">14</td><td class="mono">0</td></tr>
+          </tbody></table></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h3>🚫 Blocked Consumers</h3><p>From ListOfBlockedConsumers.csv — Not to be delivered</p></div></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Consumer No.</th><th>Name</th><th>Area</th><th>Block Reason</th><th>Blocked By</th></tr></thead><tbody>
+          <tr><td class="mono">26688680</td><td>JADHAV BAJIRAO ANTU</td><td>JAMBHALI</td><td><span class="badge badge-red">Multiple Connection</span></td><td>SYSTEM</td></tr>
+          <tr><td class="mono">40968213</td><td>BAGWAN MAHEBUB SAHEBJI</td><td>SHAHUNAGAR</td><td><span class="badge badge-orange">Dormant</span></td><td>SYSTEM</td></tr>
+          <tr><td class="mono">40970346</td><td>KUMBHAR TUKARAM M.</td><td>SHAHUNAGAR</td><td><span class="badge badge-red">Aadhaar dedup</span></td><td>M11049</td></tr>
+          </tbody></table></div></div>
+        </div>
+      </div><!-- end csvUpload -->
+
+      <!-- ====== BDA ====== -->
+      <div class="page" id="page-bda">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>🏪 BDA Operations <span style="font-size:14px;color:var(--text3)">/ BDA व्यवस्थापन</span></h2>
+            <p>8 BDA agents — Area-wise stock & cash management</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue btn-sm" onclick="openModal('bdaModal')">+ Add BDA</button>
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ Print OTP Sheet</button>
+          </div>
+        </div>
+
+        <div class="alert alert-info">ℹ️ BDA can hold more than 7 cylinders as per market requirement. Area-wise OTP stored centrally and visible to Office & Delivery Man.</div>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('bdaTabs','bd-list',this)">BDA List</button>
+          <button class="tab-btn" onclick="switchTab('bdaTabs','bd-otp',this)">Area OTP</button>
+          <button class="tab-btn" onclick="switchTab('bdaTabs','bd-cash',this)">Cash & Payment</button>
+          <button class="tab-btn" onclick="switchTab('bdaTabs','bd-stock',this)">Stock</button>
+        </div>
+        <div id="bdaTabs">
+          <div id="bd-list">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Sarika Waghmode</div><div class="bda-area">📍 Kondigre &nbsp;|&nbsp; 9561242972</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>8</strong></div><div class="bda-stat"><div>Empty</div><strong>5</strong></div><div class="bda-stat"><div>Today Sales</div><strong>4</strong></div></div></div><span class="badge badge-green">Active</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Kumar Thomake</div><div class="bda-area">📍 Nimshirgav &nbsp;|&nbsp; 9673824646</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>12</strong></div><div class="bda-stat"><div>Empty</div><strong>8</strong></div><div class="bda-stat"><div>Today Sales</div><strong>6</strong></div></div></div><span class="badge badge-green">Active</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Manoj (Danoli)</div><div class="bda-area">📍 Danoli &nbsp;|&nbsp; 9970731436</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>6</strong></div><div class="bda-stat"><div>Empty</div><strong>4</strong></div><div class="bda-stat"><div>Today Sales</div><strong>3</strong></div></div></div><span class="badge badge-green">Active</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Sudhakar Patil</div><div class="bda-area">📍 Kavatesar &nbsp;|&nbsp; 9822180498</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>7</strong></div><div class="bda-stat"><div>Empty</div><strong>3</strong></div><div class="bda-stat"><div>Today Sales</div><strong>5</strong></div></div></div><span class="badge badge-green">Active</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Vikrant Kamble</div><div class="bda-area">📍 Shirol &nbsp;|&nbsp; 7028502299</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>9</strong></div><div class="bda-stat"><div>Empty</div><strong>6</strong></div><div class="bda-stat"><div>Today Sales</div><strong>4</strong></div></div></div><span class="badge badge-green">Active</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Rajesh Awale</div><div class="bda-area">📍 Chipri Beghar &nbsp;|&nbsp; 8007183197</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>5</strong></div><div class="bda-stat"><div>Empty</div><strong>2</strong></div><div class="bda-stat"><div>Today Sales</div><strong>2</strong></div></div></div><span class="badge badge-green">Active</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Lakhane (Nimshirgav)</div><div class="bda-area">📍 Nimshirgav &nbsp;|&nbsp; 7588262265</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>3</strong></div><div class="bda-stat"><div>Empty</div><strong>1</strong></div><div class="bda-stat"><div>Today Sales</div><strong>1</strong></div></div></div><span class="badge badge-yellow">Low Stock</span></div>
+              <div class="bda-card"><div class="bda-icon">🏪</div><div class="bda-info"><div class="bda-name">Yadav (Kothali)</div><div class="bda-area">📍 Kothali &nbsp;|&nbsp; 9405744020</div><div class="bda-stats"><div class="bda-stat"><div>Filled</div><strong>2</strong></div><div class="bda-stat"><div>Empty</div><strong>0</strong></div><div class="bda-stat"><div>Today Sales</div><strong>2</strong></div></div></div><span class="badge badge-red">Critical Stock</span></div>
+            </div>
+          </div>
+          <div id="bd-otp" style="display:none">
+            <div class="card">
+              <div class="card-header"><div><h3>Area-wise OTP Register</h3><p>Centrally stored — Visible to Office & Delivery Man</p></div><button class="btn btn-outline btn-sm" onclick="exportPage()">🖨️ Print OTP Sheet</button></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Area / क्षेत्र</th><th>Consumer</th><th>Name</th><th>OTP</th><th>Cash Memo</th><th>Status</th></tr></thead><tbody>
+              <tr><td>Kondigre</td><td class="mono">20722951</td><td>UTTAM SARVDE</td><td class="mono" style="color:var(--bpcl-blue);font-weight:700">482916</td><td class="mono">53354</td><td><span class="badge badge-yellow">Pending</span></td></tr>
+              <tr><td>Kondigre</td><td class="mono">24924853</td><td>SHAIKH B.A.</td><td class="mono" style="color:var(--bpcl-blue);font-weight:700">719284</td><td class="mono">53355</td><td><span class="badge badge-yellow">Pending</span></td></tr>
+              <tr><td>Nimshirgav</td><td class="mono">24755275</td><td>PAVANKUMAR JOSHI</td><td class="mono" style="color:var(--green);font-weight:700">834721</td><td class="mono">53289</td><td><span class="badge badge-green">Delivered</span></td></tr>
+              <tr><td>Jambhali</td><td class="mono">40978268</td><td>RAYGONDA PATIL</td><td class="mono" style="color:var(--bpcl-blue);font-weight:700">562801</td><td class="mono">53362</td><td><span class="badge badge-yellow">Pending</span></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="bd-cash" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>BDA Cash & Payment Collection</h3></div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="field"><label>BDA Name</label><select><option>Sarika Waghmode - Kondigre</option><option>Kumar Thomake - Nimshirgav</option><option>Manoj - Danoli</option></select></div>
+                  <div class="field"><label>Payment Mode</label><select><option>Cash</option><option>GPay</option><option>QR Code</option><option>Online Transfer (to OSBS)</option><option>Partial Cash + Online</option></select></div>
+                  <div class="field"><label>Cash Amount (₹)</label><input type="number" placeholder="0"></div>
+                  <div class="field"><label>Online Amount (₹)</label><input type="number" placeholder="0"></div>
+                </div>
+                <div class="alert alert-warn">⚠️ If BDA pays delivery man online, delivery man MUST transfer to OSBS current account. Unpaid online = auto advance added.</div>
+                <button class="btn btn-blue">Record BDA Payment</button>
+              </div>
+            </div>
+          </div>
+          <div id="bd-stock" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>BDA Stock Summary</h3></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>BDA / Area</th><th>Filled</th><th>Empty</th><th>Last Replenish</th><th>Action</th></tr></thead><tbody>
+              <tr><td>Kondigre - Waghmode</td><td class="mono">8</td><td class="mono">5</td><td>22/02/2026</td><td><button class="btn btn-outline btn-sm">Replenish</button></td></tr>
+              <tr><td>Nimshirgav - Thomake</td><td class="mono">12</td><td class="mono">8</td><td>22/02/2026</td><td><button class="btn btn-outline btn-sm">Replenish</button></td></tr>
+              <tr><td>Kothali - Yadav</td><td class="mono" style="color:var(--red)">2</td><td class="mono">0</td><td>20/02/2026</td><td><button class="btn btn-red btn-sm">⚠️ Urgent</button></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end bda -->
+
+      <!-- ====== DAY END ====== -->
+      <div class="page" id="page-dayEnd">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📅 Day End Report <span style="font-size:14px;color:var(--text3)">/ दिवसअखेर अहवाल</span></h2>
+            <p>Read-only reconciliation — 23/02/2026</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ PDF</button>
+            <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-gold" onclick="lockDay()">🔒 Lock Day</button>
+          </div>
+        </div>
+
+        <div class="bpcl-panel">
+          <h3>⚖️ BPCL Day-End Comparison — 21/02/2026</h3>
+          <table class="bpcl-table">
+            <thead><tr><th>Product</th><th>ERP Closing Full</th><th>BPCL Closing Full</th><th>ERP Closing Empty</th><th>BPCL Closing Empty</th><th>Diff</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>5350 — 14.2Kg Domestic</td><td>500</td><td>500</td><td>142</td><td>142</td><td class="match">0</td><td><span class="match">✅ MATCH</span></td></tr>
+              <tr><td>5370 — 14.2Kg Empty</td><td>6</td><td>6</td><td>177</td><td>177</td><td class="match">0</td><td><span class="match">✅ MATCH</span></td></tr>
+              <tr><td>5350 — Refills Delivered</td><td>132</td><td>132</td><td>—</td><td>—</td><td class="match">0</td><td><span class="match">✅ MATCH</span></td></tr>
+              <tr><td>5370 — Refills Delivered</td><td>28</td><td>28</td><td>—</td><td>—</td><td class="match">0</td><td><span class="match">✅ MATCH</span></td></tr>
+              <tr><td>BDA Filled Stock</td><td>19</td><td>19</td><td>—</td><td>—</td><td class="match">0</td><td><span class="match">✅ MATCH</span></td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;font-size:12px;opacity:0.7">Day End done at: 21/02/2026 06:37 PM &nbsp;|&nbsp; Dist: 187618</div>
+        </div>
+
+        <!-- Stock Summary Table -->
+        <div class="card">
+          <div class="card-header"><div><h3>📦 Final Stock Report / अंतिम साठा</h3><p>14.2 Kg Cylinders — Filled & Empty</p></div></div>
+          <div class="card-body">
+            <table>
+              <thead><tr><th>Location</th><th>14.2Kg Filled</th><th>14.2Kg Empty</th><th>5Kg Filled</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Godown / गोडाऊन</strong></td><td class="mono">358</td><td class="mono">588</td><td class="mono">86</td><td></td></tr>
+                <tr><td><strong>Office / कार्यालय</strong></td><td class="mono">5</td><td class="mono">8</td><td class="mono">0</td><td></td></tr>
+                <tr><td><strong>BDA / BDA</strong></td><td class="mono">52</td><td class="mono">0</td><td class="mono">0</td><td>8 agents</td></tr>
+                <tr><td><strong>Transit/Vehicle / वाहन</strong></td><td class="mono">35</td><td class="mono">0</td><td class="mono">0</td><td>Trip closing</td></tr>
+                <tr><td><strong>Defective / दोषपूर्ण</strong></td><td class="mono">4</td><td class="mono">0</td><td class="mono">0</td><td>Quarantine</td></tr>
+                <tr><td><strong>Manual Adjustment</strong></td><td class="mono">12</td><td class="mono">0</td><td class="mono">0</td><td>Office entry</td></tr>
+                <tr style="background:var(--bpcl-light)"><td><strong>CLOSING TOTAL / एकूण</strong></td><td class="mono" style="font-weight:700;color:var(--bpcl-blue)">466</td><td class="mono" style="font-weight:700;color:var(--bpcl-blue)">596</td><td class="mono" style="font-weight:700">86</td><td style="font-weight:700">Total 14.2Kg: 1062</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Cash Summary -->
+        <div class="card">
+          <div class="card-header"><h3>💰 Cash Summary / रोख सारांश</h3></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">BY SOURCE</div>
+                <div class="soa-row"><span>Delivery Cash</span><span class="soa-amount addition">₹1,12,960</span></div>
+                <div class="soa-row"><span>Office Counter</span><span class="soa-amount addition">₹5,992</span></div>
+                <div class="soa-row"><span>BDA Cash</span><span class="soa-amount addition">₹22,800</span></div>
+                <div class="soa-row"><span>Opening Balance</span><span class="soa-amount addition">₹8,500</span></div>
+                <div style="border-top:2px solid var(--bpcl-blue);padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;font-weight:700"><span>Total In</span><span class="mono addition">₹1,50,252</span></div>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">DEDUCTIONS</div>
+                <div class="soa-row"><span>Wages Paid</span><span class="soa-amount deduction">-₹4,800</span></div>
+                <div class="soa-row"><span>Expenses</span><span class="soa-amount deduction">-₹3,250</span></div>
+                <div class="soa-row"><span>Advances Given</span><span class="soa-amount deduction">-₹5,000</span></div>
+                <div class="soa-row"><span>Advance Recovery</span><span class="soa-amount addition">+₹2,800</span></div>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">ONLINE BREAKDOWN</div>
+                <div class="soa-row"><span>GPay</span><span class="soa-amount">₹8,400</span></div>
+                <div class="soa-row"><span>QR Code</span><span class="soa-amount">₹11,200</span></div>
+                <div class="soa-row"><span>Paytm</span><span class="soa-amount">₹4,480</span></div>
+                <div style="border-top:2px solid var(--green);padding-top:8px;margin-top:4px;display:flex;justify-content:space-between;font-weight:700;color:var(--green)"><span>Closing Cash</span><span class="mono">₹1,40,002</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end dayEnd -->
+
+      <!-- ====== PAYROLL ====== -->
+      <div class="page" id="page-payroll">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>💵 Payroll <span style="font-size:14px;color:var(--text3)">/ पगार</span></h2>
+            <p>Auto-calculated — Trip & attendance based</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ Export</button>
+            <button class="btn btn-gold btn-sm" onclick="openModal('advanceModal')">+ Staff Advance</button>
+          </div>
+        </div>
+        <div class="alert alert-info">ℹ️ Wages: Urban ₹8/cylinder, Rural ₹7/cylinder. Pair bonus ₹200/day. Stock transfer to Office = NO wages. Cash shortage auto-added to advance ledger.</div>
+        <div id="payrollList"></div>
+        <div class="card">
+          <div class="card-header"><h3>Advance Ledger / आगाऊ नोंदी</h3></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Staff</th><th>Opening Balance</th><th>Added Today</th><th>Recovered</th><th>Closing Balance</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>Vishwas Bhore</strong></td><td class="mono">₹20,000</td><td class="mono deduction">+₹0</td><td class="mono addition">-₹5,000</td><td class="mono" style="font-weight:700">₹15,000</td><td><span class="badge badge-yellow">Recovery Active</span></td></tr>
+          <tr><td><strong>Rajesh</strong></td><td class="mono">₹2,800</td><td class="mono deduction">+₹0</td><td class="mono addition">-₹0</td><td class="mono" style="font-weight:700">₹2,800</td><td><span class="badge badge-orange">Cash Shortage</span></td></tr>
+          <tr><td><strong>Harun Fakir</strong></td><td class="mono">₹0</td><td class="mono">+₹0</td><td class="mono">-₹0</td><td class="mono">₹0</td><td><span class="badge badge-green">Clear</span></td></tr>
+          <tr><td><strong>Mahesh Patil</strong></td><td class="mono">₹5,000</td><td class="mono">+₹0</td><td class="mono addition">-₹2,000</td><td class="mono" style="font-weight:700">₹3,000</td><td><span class="badge badge-yellow">Recovery Active</span></td></tr>
+          </tbody></table></div></div>
+        </div>
+      </div><!-- end payroll -->
+
+      <!-- ====== BPCL COMPARISON ====== -->
+      <div class="page" id="page-bpclCompare">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>⚖️ BPCL Comparison <span style="font-size:14px;color:var(--text3)">/ BPCL तुलना</span></h2>
+            <p>ERP vs BPCL SAP — Upload BPCL Day End PDF for auto-comparison</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue btn-sm" onclick="openModal('bpclUploadModal')">📤 Upload BPCL PDF</button>
+          </div>
+        </div>
+
+        <div class="alert alert-success">✅ BPCL Day End for 21/02/2026 loaded — Distributor: 187618</div>
+
+        <div class="card">
+          <div class="card-header"><h3>Transaction Summary Comparison</h3></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Product</th><th>ERP Refills</th><th>BPCL Refills</th><th>Opening Bookings</th><th>Closing Bookings</th><th>Status</th></tr></thead><tbody>
+          <tr><td><strong>5350 — 14.2Kg Domestic</strong></td><td class="mono">132</td><td class="mono">132</td><td class="mono">357</td><td class="mono">305</td><td><span class="badge badge-green">✅ Match</span></td></tr>
+          <tr><td><strong>5370 — 14.2Kg Empty</strong></td><td class="mono">28</td><td class="mono">28</td><td class="mono">96</td><td class="mono">78</td><td><span class="badge badge-green">✅ Match</span></td></tr>
+          <tr><td><strong>5300 — (Unknown)</strong></td><td class="mono">0</td><td class="mono">0</td><td class="mono">0</td><td class="mono">0</td><td><span class="badge badge-blue">N/A</span></td></tr>
+          </tbody></table></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Product Stock Comparison</h3></div>
+          <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Code</th><th>Product Name</th><th>ERP Full</th><th>BPCL Full</th><th>ERP Empty</th><th>BPCL Empty</th><th>BDA</th><th>Vehicle</th><th>Status</th></tr></thead><tbody>
+          <tr><td class="mono">5240</td><td>5Kg Commercial</td><td class="mono">66</td><td class="mono">66</td><td class="mono">0</td><td class="mono">0</td><td class="mono">—</td><td class="mono">—</td><td><span class="badge badge-green">✅</span></td></tr>
+          <tr><td class="mono">5250</td><td>5Kg Domestic</td><td class="mono">20</td><td class="mono">20</td><td class="mono">0</td><td class="mono">0</td><td class="mono">—</td><td class="mono">—</td><td><span class="badge badge-green">✅</span></td></tr>
+          <tr><td class="mono">5260</td><td>5Kg Commercial</td><td class="mono">23</td><td class="mono">23</td><td class="mono">0</td><td class="mono">0</td><td class="mono">—</td><td class="mono">—</td><td><span class="badge badge-green">✅</span></td></tr>
+          <tr><td class="mono">5350</td><td>14.2Kg Domestic</td><td class="mono">500</td><td class="mono">500</td><td class="mono">142</td><td class="mono">142</td><td class="mono">19</td><td class="mono">21</td><td><span class="badge badge-green">✅</span></td></tr>
+          <tr><td class="mono">5370</td><td>14.2Kg Domestic</td><td class="mono">6</td><td class="mono">6</td><td class="mono">177</td><td class="mono">177</td><td class="mono">—</td><td class="mono">—</td><td><span class="badge badge-green">✅</span></td></tr>
+          <tr><td class="mono">5400</td><td>19Kg Commercial</td><td class="mono">64</td><td class="mono">64</td><td class="mono">9</td><td class="mono">9</td><td class="mono">—</td><td class="mono">—</td><td><span class="badge badge-green">✅</span></td></tr>
+          <tr><td class="mono">BPCDPR</td><td>14.2Kg DPR</td><td class="mono">325</td><td class="mono">325</td><td class="mono">0</td><td class="mono">0</td><td class="mono">24</td><td class="mono">—</td><td><span class="badge badge-green">✅</span></td></tr>
+          </tbody></table></div></div>
+        </div>
+      </div><!-- end bpclCompare -->
+
+      <!-- ====== ACCOUNTING / GST ====== -->
+      <div class="page" id="page-accounting">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📒 Accounting & GST <span style="font-size:14px;color:var(--text3)">/ लेखा व GST</span></h2>
+            <p>Tally-like features — Full accounting for CA & Accountant</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ Export Tally</button>
+          </div>
+        </div>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('acctTabs','ac-dayview',this)">Day View</button>
+          <button class="tab-btn" onclick="switchTab('acctTabs','ac-gst',this)">GST Summary</button>
+          <button class="tab-btn" onclick="switchTab('acctTabs','ac-ledger',this)">Ledger</button>
+          <button class="tab-btn" onclick="switchTab('acctTabs','ac-balance',this)">Trial Balance</button>
+          <button class="tab-btn" onclick="switchTab('acctTabs','ac-pnl',this)">P&L</button>
+        </div>
+
+        <div id="acctTabs">
+          <div id="ac-dayview">
+            <div class="card">
+              <div class="card-header"><h3>Accounting Day View — 23/02/2026</h3></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                  <div class="soa-section">
+                    <h4>INCOME / उत्पन्न</h4>
+                    <div class="soa-row"><span>14.2Kg Sales (132 × ₹856)</span><span class="soa-amount addition">₹1,12,992</span></div>
+                    <div class="soa-row"><span>5Kg Sales (7 × ₹400)</span><span class="soa-amount addition">₹2,800</span></div>
+                    <div class="soa-row"><span>DPR Paid</span><span class="soa-amount addition">₹50</span></div>
+                    <div class="soa-row"><span>Suraksha Pipe</span><span class="soa-amount addition">₹200</span></div>
+                    <div class="soa-row"><span>BDA Sales</span><span class="soa-amount addition">₹22,800</span></div>
+                    <div style="font-weight:700;display:flex;justify-content:space-between;border-top:2px solid var(--green);padding-top:8px;color:var(--green)"><span>Total Income</span><span class="mono">₹1,38,842</span></div>
+                  </div>
+                  <div class="soa-section">
+                    <h4>EXPENSES / खर्च</h4>
+                    <div class="soa-row"><span>Wages (4 Delivery Men)</span><span class="soa-amount deduction">₹4,800</span></div>
+                    <div class="soa-row"><span>Vehicle Fuel</span><span class="soa-amount deduction">₹2,400</span></div>
+                    <div class="soa-row"><span>Stationery</span><span class="soa-amount deduction">₹150</span></div>
+                    <div class="soa-row"><span>Termination Voucher</span><span class="soa-amount deduction">₹500</span></div>
+                    <div class="soa-row"><span>Name Change</span><span class="soa-amount deduction">₹200</span></div>
+                    <div style="font-weight:700;display:flex;justify-content:space-between;border-top:2px solid var(--red);padding-top:8px;color:var(--red)"><span>Total Expenses</span><span class="mono">₹8,050</span></div>
+                  </div>
+                </div>
+                <div style="background:var(--bpcl-blue);color:white;border-radius:8px;padding:14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:16px;font-weight:700">Net Profit / निव्वळ नफा</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:700;color:#4ADE80">₹1,30,792</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="ac-gst" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>GST Monthly Summary — February 2026</h3></div>
+              <div class="card-body">
+                <div class="alert alert-info">ℹ️ LPG cylinders — CGST 9% + SGST 9% = 18% GST. DPR, Accessories separately applicable.</div>
+                <table><thead><tr><th>Product</th><th>Taxable Value</th><th>CGST 9%</th><th>SGST 9%</th><th>Total GST</th><th>Invoice Total</th></tr></thead><tbody>
+                <tr><td>14.2Kg (5350+5370)</td><td class="mono">₹16,84,320</td><td class="mono">₹1,51,589</td><td class="mono">₹1,51,589</td><td class="mono">₹3,03,178</td><td class="mono">₹19,87,498</td></tr>
+                <tr><td>5Kg Cylinder</td><td class="mono">₹1,26,000</td><td class="mono">₹11,340</td><td class="mono">₹11,340</td><td class="mono">₹22,680</td><td class="mono">₹1,48,680</td></tr>
+                <tr><td>DPR / Accessories</td><td class="mono">₹8,500</td><td class="mono">₹765</td><td class="mono">₹765</td><td class="mono">₹1,530</td><td class="mono">₹10,030</td></tr>
+                <tr style="background:var(--bpcl-light);font-weight:700"><td>TOTAL</td><td class="mono">₹18,18,820</td><td class="mono">₹1,63,694</td><td class="mono">₹1,63,694</td><td class="mono">₹3,27,388</td><td class="mono">₹21,46,208</td></tr>
+                </tbody></table>
+                <div style="margin-top:16px;display:flex;gap:10px">
+                  <button class="btn btn-blue">⬇ GSTR-1 Export</button>
+                  <button class="btn btn-outline">⬇ GSTR-3B</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="ac-ledger" style="display:none">
+            <div class="card">
+              <div class="card-header"><div><h3>General Ledger</h3><p>Append-only transaction ledger</p></div></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Account</th><th>Description</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>
+              <tr><td class="mono">23/02</td><td>Sales A/c</td><td>14.2Kg — 132 cylinders</td><td class="mono">—</td><td class="mono addition">₹1,12,992</td><td class="mono">₹1,12,992</td></tr>
+              <tr><td class="mono">23/02</td><td>Cash A/c</td><td>Cash received — Bhore</td><td class="mono addition">₹41,000</td><td class="mono">—</td><td class="mono">₹41,000</td></tr>
+              <tr><td class="mono">23/02</td><td>Wages A/c</td><td>Daily wages — 4 staff</td><td class="mono deduction">₹4,800</td><td class="mono">—</td><td class="mono">-₹4,800</td></tr>
+              <tr><td class="mono">23/02</td><td>Expense A/c</td><td>Vehicle fuel</td><td class="mono deduction">₹2,400</td><td class="mono">—</td><td class="mono">-₹2,400</td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="ac-balance" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>Trial Balance — Feb 2026</h3></div>
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Account</th><th>Debit (₹)</th><th>Credit (₹)</th></tr></thead><tbody>
+              <tr><td>Sales Account</td><td class="mono">—</td><td class="mono addition">₹21,46,208</td></tr>
+              <tr><td>Cash Account</td><td class="mono addition">₹18,40,002</td><td class="mono">—</td></tr>
+              <tr><td>Bank Account</td><td class="mono addition">₹2,41,080</td><td class="mono">—</td></tr>
+              <tr><td>Wages Account</td><td class="mono deduction">₹96,000</td><td class="mono">—</td></tr>
+              <tr><td>Expense Account</td><td class="mono deduction">₹38,500</td><td class="mono">—</td></tr>
+              <tr><td>BPCL Creditor A/c</td><td class="mono">—</td><td class="mono">₹18,00,000</td></tr>
+              <tr><td>GST Liability</td><td class="mono">—</td><td class="mono">₹3,27,388</td></tr>
+              <tr style="font-weight:700;background:var(--bpcl-light)"><td>TOTAL</td><td class="mono">₹21,15,502</td><td class="mono">₹21,15,502</td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="ac-pnl" style="display:none">
+            <div class="card">
+              <div class="card-header"><h3>Profit & Loss — February 2026</h3></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                  <div class="soa-section"><h4>INCOME</h4>
+                    <div class="soa-row"><span>Gross Sales</span><span class="soa-amount addition">₹21,46,208</span></div>
+                    <div class="soa-row"><span>Less: BPCL Cost</span><span class="soa-amount deduction">-₹18,00,000</span></div>
+                    <div class="soa-row"><span style="font-weight:700">Gross Profit</span><span class="soa-amount addition" style="font-weight:700">₹3,46,208</span></div>
+                  </div>
+                  <div class="soa-section"><h4>OPERATING EXPENSES</h4>
+                    <div class="soa-row"><span>Wages</span><span class="soa-amount deduction">₹96,000</span></div>
+                    <div class="soa-row"><span>Vehicle Fuel</span><span class="soa-amount deduction">₹48,000</span></div>
+                    <div class="soa-row"><span>Admin Expenses</span><span class="soa-amount deduction">₹12,500</span></div>
+                    <div class="soa-row"><span style="font-weight:700">Total OpEx</span><span class="soa-amount deduction" style="font-weight:700">₹1,56,500</span></div>
+                  </div>
+                </div>
+                <div style="background:var(--bpcl-blue);color:white;padding:16px;border-radius:8px;margin-top:12px;display:flex;justify-content:space-between">
+                  <span style="font-size:18px;font-weight:700">NET PROFIT (Feb)</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;color:#4ADE80">₹1,89,708</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end accounting -->
+
+      <!-- ====== SOA ====== -->
+      <div class="page" id="page-soa">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📈 Statement of Account <span style="font-size:14px;color:var(--text3)">/ खाते विवरण</span></h2>
+            <p>BPCL SOA — Distributor 187618 | Auto-reconciliation</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue btn-sm" onclick="openModal('soaUploadModal')">📤 Upload SOA Excel</button>
+            <button class="btn btn-outline btn-sm" onclick="exportPage()">⬇ Export</button>
+          </div>
+        </div>
+        <div class="alert alert-info">ℹ️ Upload Display_SOA.xls to auto-populate reconciliation. ERP vs BPCL SOA comparison for accounting.</div>
+        <div class="card">
+          <div class="card-header"><h3>SOA Summary — Upload Required</h3></div>
+          <div class="card-body">
+            <div style="text-align:center;padding:32px">
+              <div style="font-size:48px;margin-bottom:12px">📊</div>
+              <div style="font-weight:700;font-size:16px;margin-bottom:8px">Upload BPCL SOA Excel</div>
+              <div style="color:var(--text3);font-size:13px;margin-bottom:16px">Upload Display_SOA.xls to compare ERP transactions with BPCL Statement of Account</div>
+              <button class="btn btn-blue" onclick="openModal('soaUploadModal')">📤 Upload SOA File</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- end soa -->
+
+      <!-- ====== STAFF ====== -->
+      <div class="page" id="page-staff">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>👥 Staff Master <span style="font-size:14px;color:var(--text3)">/ कर्मचारी नोंदणी</span></h2>
+            <p>Delivery Men, BDA, Office Staff — Never deleted, only deactivated</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue" onclick="openModal('staffModal')">+ Add Staff</button>
+          </div>
+        </div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('staffTabs','st-delivery',this)">🚚 Delivery Men</button>
+          <button class="tab-btn" onclick="switchTab('staffTabs','st-office',this)">🏢 Office Staff</button>
+          <button class="tab-btn" onclick="switchTab('staffTabs','st-bda',this)">🏪 BDA</button>
+        </div>
+        <div id="staffTabs">
+          <div id="st-delivery">
+            <div class="card">
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Area Type</th><th>Employment</th><th>Rate (Urban)</th><th>Rate (Rural)</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+              <tr><td class="mono">DM-001</td><td><strong>Vishwas Bhore</strong></td><td class="mono">9975553776</td><td><span class="badge badge-blue">Urban</span></td><td>Permanent</td><td class="mono">₹8/cyl</td><td class="mono">₹7/cyl</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">DM-002</td><td><strong>Rajesh</strong></td><td class="mono">—</td><td><span class="badge badge-blue">Urban</span></td><td>Permanent</td><td class="mono">₹8/cyl</td><td class="mono">₹7/cyl</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">DM-003</td><td><strong>Harun Fakir</strong></td><td class="mono">—</td><td><span class="badge badge-orange">Rural</span></td><td>Permanent</td><td class="mono">₹8/cyl</td><td class="mono">₹7/cyl</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">DM-004</td><td><strong>Mahesh Patil</strong></td><td class="mono">—</td><td><span class="badge badge-orange">Rural</span></td><td>Permanent</td><td class="mono">₹8/cyl</td><td class="mono">₹7/cyl</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="st-office" style="display:none">
+            <div class="card">
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>Role</th><th>Name</th><th>Mobile</th><th>Status</th></tr></thead><tbody>
+              <tr><td><span class="badge badge-blue">OWNER</span></td><td>Vishal Patil</td><td class="mono">—</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td><span class="badge badge-purple">PARTNER</span></td><td>Dr. Mrinmayi Patil</td><td class="mono">—</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td><span class="badge badge-yellow">ACCOUNTANT</span></td><td>Pundalik Patil</td><td class="mono">—</td><td><span class="badge badge-green">Active</span></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+          <div id="st-bda" style="display:none">
+            <div class="card">
+              <div class="card-body"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Area</th><th>Mobile</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+              <tr><td class="mono">BDA-001</td><td>Sarika Waghmode</td><td>Kondigre</td><td class="mono">9561242972</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-002</td><td>Kumar Thomake</td><td>Nimshirgav</td><td class="mono">9673824646</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-003</td><td>Lakhane</td><td>Nimshirgav</td><td class="mono">7588262265</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-004</td><td>Manoj</td><td>Danoli</td><td class="mono">9970731436</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-005</td><td>Yadav</td><td>Kothali</td><td class="mono">9405744020</td><td><span class="badge badge-red">Low Stock</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-006</td><td>Sudhakar Patil</td><td>Kavatesar</td><td class="mono">9822180498</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-007</td><td>Vikrant Kamble</td><td>Shirol</td><td class="mono">7028502299</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              <tr><td class="mono">BDA-008</td><td>Rajesh Awale</td><td>Chipri Beghar</td><td class="mono">8007183197</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-outline btn-sm">Edit</button></td></tr>
+              </tbody></table></div></div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end staff -->
+
+      <!-- ====== NOTICES ====== -->
+      <div class="page" id="page-notices">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>📢 Notices <span style="font-size:14px;color:var(--text3)">/ सूचना</span></h2>
+            <p>Important announcements — Visible to all roles</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-blue" onclick="openModal('noticeModal')">+ New Notice</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Post New Notice / नवीन सूचना</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field"><label>Visible To / कुणासाठी</label><select><option>All Staff</option><option>Delivery Men Only</option><option>Office Only</option><option>BDA Only</option></select></div>
+              <div class="field"><label>Priority</label><select><option>Normal</option><option>Urgent / तातडी</option></select></div>
+            </div>
+            <div class="field"><label>English Message</label><textarea rows="2" placeholder="Type notice in English..." id="noticeEn"></textarea></div>
+            <div class="field"><label>मराठी संदेश (Marathi Message)</label><textarea rows="2" placeholder="मराठी मध्ये सूचना टाइप करा..." id="noticeMr"></textarea></div>
+            <div class="alert alert-info">ℹ️ Tip: Type in English above and click translate for Marathi auto-translation</div>
+            <div style="display:flex;gap:10px">
+              <button class="btn btn-outline" onclick="translateNotice()">🔄 Translate to Marathi</button>
+              <button class="btn btn-blue" onclick="postNotice()">📢 Post Notice</button>
+            </div>
+          </div>
+        </div>
+        <div id="noticeList">
+          <div class="notice-item"><div class="notice-dot"></div><div><div style="font-weight:700;font-size:14px">Gas delivery schedule — Friday</div><div style="font-size:12px;color:var(--text3)">शुक्रवारची डिलिव्हरी वेळापत्रक</div><div style="font-size:11px;color:var(--text3);margin-top:4px">23/02/2026 | All Staff</div></div></div>
+          <div class="notice-item"><div class="notice-dot" style="background:var(--red)"></div><div><div style="font-weight:700;font-size:14px;color:var(--red)">⚠️ URGENT: Low stock at Kothali BDA</div><div style="font-size:12px;color:var(--text3)">कोथाळी BDA मध्ये साठा कमी — तातडी भरणी करा</div><div style="font-size:11px;color:var(--text3);margin-top:4px">23/02/2026 | All Staff</div></div></div>
+        </div>
+      </div><!-- end notices -->
+
+      <!-- ====== SETTINGS ====== -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <div class="page-title">
+            <h2>⚙️ Settings <span style="font-size:14px;color:var(--text3)">/ सेटिंग्ज</span></h2>
+            <p>System configuration — Owner & Partner access only</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-header"><h3>🏢 Agency Details</h3></div>
+            <div class="card-body">
+              <div class="field"><label>Agency Name</label><input value="Shourya Gas Agency"></div>
+              <div class="field"><label>Distributor Code</label><input value="187618" readonly></div>
+              <div class="field"><label>Address</label><input value="Jaysingpur, Kolhapur, Maharashtra"></div>
+              <div class="field"><label>GSTIN</label><input placeholder="GST Number"></div>
+              <button class="btn btn-blue">Save</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>💰 Pricing & Rates</h3></div>
+            <div class="card-body">
+              <div class="field"><label>14.2 Kg Price (₹)</label><input value="856" type="number"></div>
+              <div class="field"><label>5 Kg Price (₹)</label><input value="400" type="number"></div>
+              <div class="field"><label>Urban Wage Rate (₹/cyl)</label><input value="8" type="number"></div>
+              <div class="field"><label>Rural Wage Rate (₹/cyl)</label><input value="7" type="number"></div>
+              <div class="field"><label>Pair Bonus (₹/day)</label><input value="200" type="number"></div>
+              <button class="btn btn-blue">Save Rates</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>👥 User Management</h3></div>
+            <div class="card-body">
+              <div class="field"><label>Change PIN</label><input type="password" placeholder="New 4-digit PIN"></div>
+              <div class="field"><label>Confirm PIN</label><input type="password" placeholder="Confirm PIN"></div>
+              <button class="btn btn-blue">Update PIN</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>🌐 Language / भाषा</h3></div>
+            <div class="card-body">
+              <div class="field"><label>Default Language</label><select><option>English + Marathi (Bilingual)</option><option>Marathi Only</option><option>English Only</option></select></div>
+              <div class="field"><label>Font Size</label><select><option>Normal (14px)</option><option>Large (16px)</option><option>Extra Large (18px)</option></select></div>
+              <button class="btn btn-blue">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h3>🗃️ Data Management</h3><p>Owner & Partner only</p></div></div>
+          <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-outline">⬇ Export All Data</button>
+            <button class="btn btn-outline">📊 Monthly Report PDF</button>
+            <button class="btn btn-outline">🔄 Sync BPCL Data</button>
+            <button class="btn btn-red btn-sm">⚠️ Close Day (Manual)</button>
+          </div>
+        </div>
+      </div><!-- end settings -->
+
+    </div><!-- end content -->
+  </div><!-- end app-body -->
+</div><!-- end mainApp -->
+
+<!-- ======================== MODALS ======================== -->
+<!-- Trip Modal -->
+<div class="modal-overlay" id="tripModal">
+  <div class="modal">
+    <div class="modal-header"><h3>🚚 Open New Trip / नवीन फेरी</h3><button class="modal-close" onclick="closeModal('tripModal')">×</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Delivery Man / डिलिव्हरी माणूस</label><select><option>Vishwas Bhore — Shahunagar</option><option>Rajesh — Nandani Road</option><option>Harun Fakir — Jambhali</option><option>Mahesh Patil — Kavathesar</option></select></div>
+      <div class="field"><label>Vehicle Number</label><input placeholder="MH-09-AB-1234"></div>
+      <div class="field"><label>14.2kg Filled — Loading</label><input type="number" placeholder="Cylinders being loaded"></div>
+      <div class="field"><label>5kg Loaded</label><input type="number" placeholder="0"></div>
+      <div class="alert alert-info">ℹ️ One open trip per delivery man per day. Trip closes only after all collections are complete.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('tripModal')">Cancel</button>
+      <button class="btn btn-green" onclick="openNewTrip()">✅ Open Trip</button>
+    </div>
+  </div>
+</div>
+
+<!-- Advance Modal -->
+<div class="modal-overlay" id="advanceModal">
+  <div class="modal">
+    <div class="modal-header"><h3>💰 Staff Advance / कर्मचारी आगाऊ</h3><button class="modal-close" onclick="closeModal('advanceModal')">×</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Staff Member</label><select><option>Vishwas Bhore</option><option>Rajesh</option><option>Harun Fakir</option><option>Mahesh Patil</option></select></div>
+      <div class="field"><label>Amount (₹)</label><input type="number" placeholder="Amount to advance"></div>
+      <div class="field"><label>Reason</label><input placeholder="Medical / Emergency etc."></div>
+      <div class="field"><label>Recovery Plan (₹/month)</label><input type="number" placeholder="e.g. 5000"></div>
+      <div class="alert alert-warn">⚠️ Amount deducted from wages as per recovery plan. Any cash shortage also auto-added here.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('advanceModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="saveAdvance()">Save Advance</button>
+    </div>
+  </div>
+</div>
+
+<!-- Godown Entry Modal -->
+<div class="modal-overlay" id="godownEntryModal">
+  <div class="modal">
+    <div class="modal-header"><h3>🏭 Physical Stock Entry / भौतिक साठा नोंद</h3><button class="modal-close" onclick="closeModal('godownEntryModal')">×</button></div>
+    <div class="modal-body">
+      <div class="alert alert-warn">⚠️ Blind entry — count without looking at system records</div>
+      <div class="form-grid">
+        <div class="field"><label>14.2 Kg Filled</label><input type="number" placeholder="Physical count"></div>
+        <div class="field"><label>14.2 Kg Empty</label><input type="number" placeholder="Physical count"></div>
+        <div class="field"><label>5 Kg Filled</label><input type="number" placeholder="Physical count"></div>
+        <div class="field"><label>5 Kg Empty</label><input type="number" placeholder="Physical count"></div>
+        <div class="field"><label>Defective 14.2Kg</label><input type="number" placeholder="Count"></div>
+        <div class="field"><label>Entry Time</label><input type="time"></div>
+      </div>
+      <div class="field"><label>Counted By</label><input placeholder="Name of person counting"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('godownEntryModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="closeModal('godownEntryModal')">💾 Save Count</button>
+    </div>
+  </div>
+</div>
+
+<!-- Staff Modal -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal">
+    <div class="modal-header"><h3>👤 Add Staff Member</h3><button class="modal-close" onclick="closeModal('staffModal')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Full Name</label><input placeholder="Full name"></div>
+        <div class="field"><label>Mobile</label><input placeholder="10-digit mobile"></div>
+        <div class="field"><label>Role</label><select><option>DELIVERY</option><option>OFFICE</option><option>BDA</option></select></div>
+        <div class="field"><label>Area Type</label><select><option>Urban</option><option>Rural</option></select></div>
+        <div class="field"><label>Employment</label><select><option>Permanent</option><option>Temporary</option></select></div>
+        <div class="field"><label>4-Digit PIN</label><input type="password" placeholder="Initial PIN"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('staffModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="closeModal('staffModal')">Add Staff</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notice Modal -->
+<div class="modal-overlay" id="noticeModal">
+  <div class="modal">
+    <div class="modal-header"><h3>📢 New Notice</h3><button class="modal-close" onclick="closeModal('noticeModal')">×</button></div>
+    <div class="modal-body"><div class="field"><label>Message</label><textarea rows="3"></textarea></div></div>
+    <div class="modal-footer"><button class="btn btn-blue" onclick="closeModal('noticeModal')">Post</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="bpclUploadModal">
+  <div class="modal">
+    <div class="modal-header"><h3>📤 Upload BPCL Day End PDF</h3><button class="modal-close" onclick="closeModal('bpclUploadModal')">×</button></div>
+    <div class="modal-body">
+      <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;background:var(--bg)">
+        <div style="font-size:32px;margin-bottom:8px">📄</div>
+        <input type="file" accept=".pdf" style="display:none" id="bpclFile">
+        <button class="btn btn-blue" onclick="document.getElementById('bpclFile').click()">Browse PDF</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('bpclUploadModal')">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="soaUploadModal">
+  <div class="modal">
+    <div class="modal-header"><h3>📊 Upload SOA File</h3><button class="modal-close" onclick="closeModal('soaUploadModal')">×</button></div>
+    <div class="modal-body">
+      <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;background:var(--bg)">
+        <div style="font-size:32px;margin-bottom:8px">📊</div>
+        <input type="file" accept=".xls,.xlsx,.csv" style="display:none" id="soaFile">
+        <button class="btn btn-blue" onclick="document.getElementById('soaFile').click()">Browse Display_SOA.xls</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('soaUploadModal')">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal">
+    <div class="modal-header"><h3>📦 Add BPCL Receipt</h3><button class="modal-close" onclick="closeModal('receiptModal')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Challan Number</label><input placeholder="BPC-2026-XXXX"></div>
+        <div class="field"><label>Product Code</label><select><option>5350 — 14.2Kg</option><option>5370 — 14.2Kg</option><option>5240 — 5Kg Commercial</option><option>5250 — 5Kg Domestic</option></select></div>
+        <div class="field"><label>Filled Received</label><input type="number" placeholder="0"></div>
+        <div class="field"><label>Empty Returned</label><input type="number" placeholder="0"></div>
+        <div class="field"><label>Receipt Date</label><input type="date"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('receiptModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="closeModal('receiptModal')">Post Receipt</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="defectiveModal">
+  <div class="modal">
+    <div class="modal-header"><h3>🔶 Log Defective Cylinder</h3><button class="modal-close" onclick="closeModal('defectiveModal')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Cylinder ID</label><input placeholder="LPG-XXXX"></div>
+        <div class="field"><label>Defect Type</label><select><option>Valve Leak</option><option>Body Dent</option><option>Cap Missing</option><option>Rust</option><option>Other</option></select></div>
+        <div class="field"><label>Found By</label><input placeholder="Name"></div>
+        <div class="field"><label>Action</label><select><option>Quarantine</option><option>Return to BPCL</option><option>Repair</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('defectiveModal')">Cancel</button>
+      <button class="btn btn-red" onclick="closeModal('defectiveModal')">Log Defective</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="openingStockModal">
+  <div class="modal">
+    <div class="modal-header"><h3>📦 Office Opening Stock</h3><button class="modal-close" onclick="closeModal('openingStockModal')">×</button></div>
+    <div class="modal-body">
+      <div class="alert alert-warn">⚠️ Must match last day's closing stock</div>
+      <div class="form-grid">
+        <div class="field"><label>14.2Kg Filled</label><input type="number" placeholder="Previous closing was: 5"></div>
+        <div class="field"><label>14.2Kg Empty</label><input type="number" placeholder="Previous closing was: 8"></div>
+        <div class="field"><label>5Kg Filled</label><input type="number" placeholder="0"></div>
+        <div class="field"><label>5Kg Empty</label><input type="number" placeholder="0"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('openingStockModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="closeModal('openingStockModal')">Save Opening Stock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== JAVASCRIPT ======================== -->
+<script>
+// ========= DATA =========
+const USERS={
+  OWNER:[{name:'Vishal Patil',pin:'1234'}],
+  PARTNER:[{name:'Dr. Mrinmayi Patil',pin:'1234'}],
+  OFFICE:[{name:'Priya (Office)',pin:'1111'},{name:'Anita (Office)',pin:'2222'}],
+  DELIVERY:[{name:'Vishwas Bhore',pin:'1111'},{name:'Rajesh',pin:'2222'},{name:'Harun Fakir',pin:'3333'},{name:'Mahesh Patil',pin:'4444'}],
+  BDA:[{name:'Sarika Waghmode',pin:'1111'},{name:'Kumar Thomake',pin:'2222'},{name:'Sudhakar Patil',pin:'3333'}],
+  ACCOUNTANT:[{name:'Pundalik (CA)',pin:'9999'}]
+};
+
+const ROLE_PAGES={
+  OWNER:['dashboard','deliveries','trips','tracking','godown','stockTransfer','office','expenses','csvUpload','bda','dayEnd','payroll','bpclCompare','accounting','soa','staff','notices','settings'],
+  PARTNER:['dashboard','deliveries','trips','tracking','godown','stockTransfer','office','expenses','csvUpload','bda','dayEnd','payroll','bpclCompare','accounting','soa','staff','notices','settings'],
+  OFFICE:['dashboard','deliveries','trips','tracking','godown','stockTransfer','office','expenses','csvUpload','bda','dayEnd','payroll','notices'],
+  DELIVERY:['dashboard','deliveries','trips','tracking','godown'],
+  BDA:['dashboard','deliveries','bda'],
+  ACCOUNTANT:['dashboard','accounting','soa','payroll','bpclCompare','dayEnd']
+};
+
+const DELIVERIES=[
+  {id:1,name:'BHENDAWADE MAHAMADHASAN A',area:'JAMBHALI',memo:'53354',consumer:'26687022',mobile:'9096539632',status:'DELIVERED',payment:'Cash',amount:856,op:'HARUN FAKIR'},
+  {id:2,name:'ARCHANA SUKUMAR KAMBLE',area:'NANDHNI ROAD',memo:'53284',consumer:'40966408',mobile:'9405263340',status:'DELIVERED',payment:'GPay',amount:856,op:'RAJESH'},
+  {id:3,name:'CHAVAN DHARMAPPA TEJU.',area:'SHAHUNAGAR',memo:'52858',consumer:'40967029',mobile:'9975553776',status:'DELIVERED',payment:'Cash',amount:856,op:'BHORE'},
+  {id:4,name:'PADMAKAR A. M.',area:'SHAHUNAGAR',memo:'53245',consumer:'40969027',mobile:'0',status:'SCHEDULED',payment:'',amount:856,op:'BHORE'},
+  {id:5,name:'Mr. AMAR B MINIYAR',area:'yash chidanad',memo:'53276',consumer:'40969512',mobile:'9423857991',status:'IN_TRIP',payment:'',amount:856,op:'BHORE'},
+  {id:6,name:'MRS FULABAI H KATKAR',area:'SHAHUNAGAR',memo:'53101',consumer:'40969842',mobile:'9130468279',status:'DELIVERED',payment:'QR Code',amount:856,op:'BHORE'},
+  {id:7,name:'AWATI SUSHMA M.',area:'SHAHUNAGAR',memo:'52786',consumer:'40969949',mobile:'9881085961',status:'NOT_AVAILABLE',payment:'',amount:0,op:'BHORE'},
+  {id:8,name:'MURDANDE SANTOSH D',area:'SHAHUNAGAR',memo:'52802',consumer:'40970134',mobile:'9850398099',status:'DELIVERED',payment:'Cash',amount:856,op:'BHORE'},
+  {id:9,name:'ELEGAR PRAMESHVAR PUTAPPA',area:'SUDHARSHAN CHOU',memo:'51623',consumer:'40970142',mobile:'8087212046',status:'DELIVERED',payment:'Paytm',amount:856,op:'BHORE'},
+  {id:10,name:'URUNKAR SHRINIVAS VASANT',area:'SHALA NO 9',memo:'53029',consumer:'40970261',mobile:'7020860129',status:'DELIVERED',payment:'Cash',amount:856,op:'BHORE'},
+  {id:11,name:'PATIL RAVINDRA RAGHUNATH.',area:'SHAHUNAGAR',memo:'53106',consumer:'40970335',mobile:'9011039788',status:'SCHEDULED',payment:'',amount:856,op:'BHORE'},
+  {id:12,name:'MORE RAVINDRA JOTIRAM',area:'JAMBHALI',memo:'53356',consumer:'40977095',mobile:'9767971551',status:'DELIVERED',payment:'Cash',amount:856,op:'HARUN'},
+  {id:13,name:'Mrs GEETA V GOSAVI',area:'NANDHNI ROAD',memo:'53289',consumer:'40977132',mobile:'9970595442',status:'DELIVERED',payment:'Cash',amount:856,op:'RAJESH'},
+  {id:14,name:'PATIL ARTI AJIT.',area:'KAVATHESAR',memo:'53236',consumer:'40979579',mobile:'8605126385',status:'IN_TRIP',payment:'',amount:856,op:'MAHESH'},
+  {id:15,name:'MR. NAVANATH S KARANDE',area:'DANOLI',memo:'52220',consumer:'41344824',mobile:'7083562626',status:'DELIVERED',payment:'Cash+Online',amount:856,op:'MAHESH'},
+];
+
+const STATUS_COLOR={SCHEDULED:'#3B82F6',IN_TRIP:'#EAB308',DELIVERED:'#22C55E',DELIVERED_EMERGENCY:'#F97316',NOT_AVAILABLE:'#EF4444'};
+const STATUS_LABEL={SCHEDULED:'Pending / प्रलंबित',IN_TRIP:'In Trip / सुरू',DELIVERED:'Delivered / वितरित',DELIVERED_EMERGENCY:'Emergency / तातडी',NOT_AVAILABLE:'N/A / अनुपलब्ध'};
+
+let currentRole='',currentUser='';
+
+// ========= LOGIN =========
+document.getElementById('loginRole').addEventListener('change',function(){
+  const role=this.value;
+  const sel=document.getElementById('loginUser');
+  sel.innerHTML='<option value="">-- Select User --</option>';
+  if(role&&USERS[role]){
+    USERS[role].forEach(u=>{
+      const o=document.createElement('option');
+      o.value=u.name;o.textContent=u.name;sel.appendChild(o);
+    });
+  }
+});
+
+function doLogin(){
+  const role=document.getElementById('loginRole').value;
+  const user=document.getElementById('loginUser').value;
+  const pin=document.getElementById('loginPin').value;
+  if(!role||!user||!pin){alert('कृपया सर्व माहिती भरा / Please fill all fields');return;}
+  const found=USERS[role]?.find(u=>u.name===user&&u.pin===pin);
+  if(!found){alert('चुकीचा PIN / Incorrect PIN');return;}
+  currentRole=role;currentUser=user;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('mainApp').style.display='flex';
+  document.getElementById('topUserName').textContent=user;
+  document.getElementById('topRoleChip').textContent=role;
+  document.getElementById('topDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  setupNavForRole();
+  initDeliveries();
+  initTrips();
+  initPayroll();
+  initDashTrips();
+  showPage('dashboard');
+  if(window.innerWidth<768)document.getElementById('menuBtn').style.display='block';
+}
+
+function doLogout(){
+  document.getElementById('mainApp').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginPin').value='';
+  currentRole='';currentUser='';
+}
+
+// ========= NAV SETUP =========
+function setupNavForRole(){
+  const allowed=ROLE_PAGES[currentRole]||[];
+  // Update dashboard title
+  const titles={OWNER:'Owner Dashboard',PARTNER:'Partner Dashboard',OFFICE:'Office Dashboard',DELIVERY:'Delivery Dashboard',BDA:'BDA Dashboard',ACCOUNTANT:'Accountant View'};
+  document.getElementById('dashTitle').textContent=titles[currentRole]||'Dashboard';
+  // Show/hide nav sections
+  if(currentRole==='DELIVERY'){
+    document.querySelectorAll('.nav-section').forEach(s=>{s.style.display='none'});
+    document.getElementById('navAuth').style.display='';
+    document.getElementById('navDelivery').style.display='';
+    document.getElementById('navStock').style.display='';
+  }else if(currentRole==='BDA'){
+    document.querySelectorAll('.nav-section').forEach(s=>{s.style.display='none'});
+    document.getElementById('navAuth').style.display='';
+    document.getElementById('navBDA').style.display='';
+  }else if(currentRole==='ACCOUNTANT'){
+    document.querySelectorAll('.nav-section').forEach(s=>{s.style.display='none'});
+    document.getElementById('navAuth').style.display='';
+    document.getElementById('navReports').style.display='';
+  }else{
+    document.querySelectorAll('.nav-section').forEach(s=>{s.style.display=''});
+  }
+}
+
+// ========= PAGE NAVIGATION =========
+function showPage(pid){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active')});
+  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active')});
+  const pg=document.getElementById('page-'+pid);
+  if(pg)pg.classList.add('active');
+  const nav=document.querySelector(`[data-page="${pid}"]`);
+  if(nav)nav.classList.add('active');
+  if(window.innerWidth<768)document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ========= TABS =========
+function switchTab(containerId,activeId,btn){
+  const container=document.getElementById(containerId);
+  container.querySelectorAll(':scope > div').forEach(d=>{d.style.display='none'});
+  document.getElementById(activeId).style.display='';
+  if(btn){
+    btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+// ========= MODALS =========
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open')});
+
+// ========= DELIVERIES =========
+function initDeliveries(){
+  filterDeliveries('ALL',null);
+}
+
+function filterDeliveries(status,btn){
+  if(btn){
+    btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const list=document.getElementById('deliveryList');
+  const data=status==='ALL'?DELIVERIES:DELIVERIES.filter(d=>d.status===status);
+  list.innerHTML=data.map(d=>`
+    <div class="delivery-row">
+      <div class="del-status-bar" style="background:${STATUS_COLOR[d.status]||'#94A3B8'}"></div>
+      <div class="del-info">
+        <div class="del-name">${d.name}</div>
+        <div class="del-area">📍 ${d.area} &nbsp;|&nbsp; ${d.consumer} &nbsp;|&nbsp; 📞 ${d.mobile||'—'}</div>
+        <div style="margin-top:3px"><span class="badge" style="background:${STATUS_COLOR[d.status]}20;color:${STATUS_COLOR[d.status]}">${STATUS_LABEL[d.status]||d.status}</span>&nbsp;<span style="font-size:11px;color:var(--text3)">Memo: ${d.memo} &nbsp;|&nbsp; ${d.op}</span></div>
+      </div>
+      <div style="text-align:right">
+        <div class="del-cash">${d.payment?d.payment+' — ₹'+d.amount.toLocaleString('en-IN'):''}</div>
+        ${d.status==='SCHEDULED'||d.status==='IN_TRIP'?`<div class="del-actions" style="margin-top:6px">
+          <button class="btn btn-green btn-sm" onclick="markDelivered(${d.id})">✅ Done</button>
+          <button class="btn btn-red btn-sm" onclick="markNA(${d.id})">❌ N/A</button>
+        </div>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function markDelivered(id){
+  const d=DELIVERIES.find(x=>x.id===id);
+  if(d){d.status='DELIVERED';d.payment='Cash';d.amount=856;filterDeliveries('ALL',null);}
+}
+function markNA(id){
+  const d=DELIVERIES.find(x=>x.id===id);
+  if(d){d.status='NOT_AVAILABLE';filterDeliveries('ALL',null);}
+}
+
+// ========= TRIPS =========
+const TRIPS=[
+  {id:'T-001',man:'Vishwas Bhore',area:'Shahunagar',vehicle:'MH-09-AB-1234',status:'OPEN',loaded:50,delivered:48,empty:42,cash:41000,online:7168},
+  {id:'T-002',man:'Rajesh',area:'Nandani Road',vehicle:'MH-09-CD-5678',status:'CLOSED',loaded:40,delivered:36,empty:36,cash:30780,online:0},
+  {id:'T-003',man:'Harun Fakir',area:'Jambhali',vehicle:'MH-09-EF-9012',status:'OPEN',loaded:35,delivered:28,empty:25,cash:24000,online:0},
+  {id:'T-004',man:'Mahesh Patil',area:'Kavathesar',vehicle:'MH-09-GH-3456',status:'OPEN',loaded:25,delivered:20,empty:18,cash:17180,online:0},
+];
+
+function initTrips(){
+  const list=document.getElementById('tripList');
+  list.innerHTML=TRIPS.map(t=>`
+    <div class="trip-card">
+      <div class="trip-header">
+        <div class="trip-man">
+          <div class="trip-avatar">${t.man.charAt(0)}</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">${t.man}</div>
+            <div style="font-size:12px;color:var(--text3)">📍 ${t.area} &nbsp;|&nbsp; 🚚 ${t.vehicle}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge ${t.status==='OPEN'?'badge-yellow':'badge-green'}">${t.status==='OPEN'?'🟡 Open':'✅ Closed'}</span>
+          <span class="badge badge-blue">${t.id}</span>
+          ${t.status==='OPEN'?`<button class="btn btn-red btn-sm" onclick="closeTrip('${t.id}')">🔒 Close Trip</button>`:''}
+        </div>
+      </div>
+      <div class="trip-stats">
+        <div class="trip-stat"><div class="trip-stat-val">${t.loaded}</div><div class="trip-stat-lbl">Loaded / भरलेले</div></div>
+        <div class="trip-stat"><div class="trip-stat-val" style="color:var(--green)">${t.delivered}</div><div class="trip-stat-lbl">Delivered / वितरित</div></div>
+        <div class="trip-stat"><div class="trip-stat-val">${t.empty}</div><div class="trip-stat-lbl">Empty Returned</div></div>
+        <div class="trip-stat"><div class="trip-stat-val" style="color:var(--bpcl-blue)">₹${(t.cash+t.online).toLocaleString('en-IN')}</div><div class="trip-stat-lbl">Total Collection</div></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:10px;font-size:12px;color:var(--text2)">
+        <span>💵 Cash: <strong class="mono">₹${t.cash.toLocaleString('en-IN')}</strong></span>
+        <span>📱 Online: <strong class="mono">₹${t.online.toLocaleString('en-IN')}</strong></span>
+        <span>📦 Pending: <strong>${t.loaded-t.delivered}</strong></span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function closeTrip(id){
+  const t=TRIPS.find(x=>x.id===id);
+  if(t&&confirm(`Close trip ${id} for ${t.man}?\nAll collections will be finalized.`)){t.status='CLOSED';initTrips();}
+}
+
+function openNewTrip(){
+  closeModal('tripModal');
+  alert('✅ Trip opened successfully! Delivery man can now start loading.');
+}
+
+// ========= PAYROLL =========
+const PAYROLL_DATA=[
+  {name:'Vishwas Bhore',area:'Urban',cylinders:48,days_present:23,helper_days:4,pair_bonus:200,gross:48*8*23,advance_recovery:5000,cash_shortage:0},
+  {name:'Rajesh',area:'Urban',cylinders:36,days_present:23,helper_days:0,pair_bonus:0,gross:36*8*23,advance_recovery:0,cash_shortage:2800},
+  {name:'Harun Fakir',area:'Rural',cylinders:28,days_present:22,helper_days:2,pair_bonus:200,gross:28*7*22,advance_recovery:0,cash_shortage:0},
+  {name:'Mahesh Patil',area:'Rural',cylinders:20,days_present:20,helper_days:0,pair_bonus:0,gross:20*7*20,advance_recovery:2000,cash_shortage:0},
+];
+
+function initPayroll(){
+  const list=document.getElementById('payrollList');
+  list.innerHTML=PAYROLL_DATA.map(p=>{
+    const rate=p.area==='Urban'?8:7;
+    const daily_wages=p.cylinders*rate;
+    const helper=p.helper_days*p.pair_bonus;
+    const total_gross=daily_wages*p.days_present+helper;
+    const net=total_gross-p.advance_recovery-p.cash_shortage;
+    return`<div class="payroll-row">
+      <div class="payroll-header" onclick="togglePayroll(this)">
+        <div>
+          <div class="payroll-name">${p.name}</div>
+          <div class="payroll-area">${p.area} | ${p.cylinders} cyl/day × ₹${rate} | ${p.days_present} days</div>
+        </div>
+        <div style="text-align:right">
+          <div class="payroll-net">₹${net.toLocaleString('en-IN')}</div>
+          <div style="font-size:11px;color:var(--text3)">Net Payable</div>
+        </div>
+      </div>
+      <div class="payroll-detail">
+        <div class="payroll-line"><span>Daily Wages (${p.cylinders} × ₹${rate} × ${p.days_present} days)</span><span class="addition">+₹${(daily_wages*p.days_present).toLocaleString('en-IN')}</span></div>
+        ${p.helper_days>0?`<div class="payroll-line"><span>Pair Bonus (${p.helper_days} days × ₹${p.pair_bonus})</span><span class="addition">+₹${helper.toLocaleString('en-IN')}</span></div>`:''}
+        ${p.advance_recovery>0?`<div class="payroll-line"><span>Advance Recovery (monthly)</span><span class="deduction">-₹${p.advance_recovery.toLocaleString('en-IN')}</span></div>`:''}
+        ${p.cash_shortage>0?`<div class="payroll-line"><span>Cash Shortage Adjustment</span><span class="deduction">-₹${p.cash_shortage.toLocaleString('en-IN')}</span></div>`:''}
+        <div class="payroll-line" style="font-weight:700"><span>NET PAYABLE / निव्वळ देणे</span><span style="color:var(--green)">₹${net.toLocaleString('en-IN')}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togglePayroll(el){
+  const detail=el.nextElementSibling;
+  detail.classList.toggle('open');
+}
+
+// ========= DASHBOARD TRIPS =========
+function initDashTrips(){
+  const el=document.getElementById('dashTrips');
+  el.innerHTML=TRIPS.map(t=>`
+    <div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--bpcl-blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:700">${t.man.charAt(0)}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:13px">${t.man} — ${t.area}</div>
+        <div style="font-size:11px;color:var(--text3)">${t.id} | Delivered: ${t.delivered}/${t.loaded}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="mono" style="font-weight:700;font-size:13px">₹${(t.cash+t.online).toLocaleString('en-IN')}</div>
+        <span class="badge ${t.status==='OPEN'?'badge-yellow':'badge-green'}">${t.status}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========= DENOMINATION =========
+function calcDenom(){
+  const vals={d500:500,d200:200,d100:100,d50:50,d20:20,d10:10,dcoins:1};
+  let total=0;
+  Object.entries(vals).forEach(([id,val])=>{
+    const qty=parseInt(document.getElementById(id).value)||0;
+    const amt=qty*val;
+    document.getElementById('t'+id.substring(1)).textContent='₹'+amt.toLocaleString('en-IN');
+    total+=amt;
+  });
+  document.getElementById('denomTotal').textContent='₹'+total.toLocaleString('en-IN');
+  const reg=136940;
+  const diff=total-reg;
+  const chk=document.getElementById('denomCheck');
+  if(diff===0)chk.innerHTML='<div class="alert alert-success">✅ Denomination matches cash register (₹1,36,940)</div>';
+  else if(diff>0)chk.innerHTML=`<div class="alert alert-warn">⚠️ Excess: ₹${diff.toLocaleString('en-IN')} over register balance</div>`;
+  else chk.innerHTML=`<div class="alert alert-danger">❌ Short: ₹${Math.abs(diff).toLocaleString('en-IN')} below register balance</div>`;
+}
+
+// ========= MISC =========
+function saveGodownCount(){alert('✅ Physical stock count saved successfully!\nVariance check complete.')}
+function saveTransfer(){alert('✅ Stock transfer recorded.')}
+function saveAdvance(){closeModal('advanceModal');alert('✅ Advance recorded and added to ledger.')}
+function lockDay(){if(confirm('Lock today? No more changes possible after locking.'))alert('🔒 Day Locked for 23/02/2026')}
+function exportPage(){window.print()}
+function openDeliveryFilter(){}
+function translateNotice(){
+  const en=document.getElementById('noticeEn').value;
+  if(en)document.getElementById('noticeMr').value='[मराठी अनुवाद: '+en+']';
+}
+function postNotice(){alert('✅ Notice posted to all staff')}
+
+function togglePartialPayment(){
+  const mode=document.getElementById('officePayMode').value;
+  document.getElementById('cashPartAmt').style.display=mode.includes('Partial')?'':'none';
+  document.getElementById('onlinePartAmt').style.display=mode.includes('Partial')?'':'none';
+}
+function toggleSvFields(){
+  const cat=document.getElementById('svCategory').value;
+  document.getElementById('svCashAlert').style.display=cat.includes('Cash Payment')?'':'none';
+  document.getElementById('svAmount').style.display=(cat.includes('Paid')||cat.includes('Pipe')||cat.includes('Blue')||cat.includes('Termination')||cat.includes('Change')||cat.includes('Cash'))?' ':'none';
+}
+
+function handleCSV(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const preview=document.getElementById('csvPreview');
+  preview.style.display='block';
+  preview.innerHTML=`<div class="alert alert-success">✅ File "${file.name}" loaded (${(file.size/1024).toFixed(1)} KB). Processing append & reconcile...</div>`;
+  setTimeout(()=>{
+    document.getElementById('csvStats').textContent='Total: 132 customers loaded across 4 areas (already delivered excluded)';
+    preview.innerHTML+=`<div class="alert alert-info">ℹ️ 96 already delivered — excluded. 36 pending added. 3 blocked consumers flagged.</div>`;
+  },1000);
+}
+
+// Set today's date in transfer form
+document.addEventListener('DOMContentLoaded',function(){
+  const el=document.getElementById('tDate');
+  if(el)el.value=new Date().toISOString().split('T')[0];
+});
+</script>
+</body>
+</html>

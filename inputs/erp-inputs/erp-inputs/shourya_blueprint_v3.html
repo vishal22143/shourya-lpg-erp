@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shourya Bharatgas ERP — Final Blueprint v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2B4B; --red:#C8102E; --gold:#E8960A; --blue:#0057A8;
+  --green:#0A8A5C; --orange:#D97706; --bg:#F5F7FA; --card:#FFFFFF;
+  --dark:#1a1a2e; --text:#1E293B; --muted:#64748B; --border:#E2E8F0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Noto Sans',sans-serif;color:var(--text);font-size:14px;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--navy) 0%,#2D4A7A 100%);color:white;padding:2rem;border-bottom:4px solid var(--gold);}
+.logo-area{display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;}
+.logo-cyl{font-size:2.5rem;}
+.logo-text h1{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--gold);letter-spacing:0.05em;line-height:1;}
+.logo-text p{font-size:0.8rem;color:rgba(255,255,255,0.6);letter-spacing:0.07em;text-transform:uppercase;margin-top:0.2rem;}
+.header-sub{font-size:0.85rem;color:rgba(255,255,255,0.7);margin-top:0.3rem;}
+.content{max-width:960px;margin:0 auto;padding:2rem 1.5rem;}
+h2{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin:2rem 0 0.8rem;padding:0.4rem 0;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:0.5rem;}
+h3{font-family:'Rajdhani',sans-serif;font-size:1.1rem;color:var(--blue);margin:1rem 0 0.4rem;}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.section.red{border-left:4px solid var(--red);}
+.section.green{border-left:4px solid var(--green);}
+.section.blue{border-left:4px solid var(--blue);}
+.section.gold{border-left:4px solid var(--gold);}
+.section.orange{border-left:4px solid var(--orange);}
+table{width:100%;border-collapse:collapse;margin:0.5rem 0;font-size:0.85rem;}
+th{background:var(--navy);color:var(--gold);padding:0.5rem 0.75rem;text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;}
+td{padding:0.45rem 0.75rem;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even) td{background:#F8FAFC;}
+ul{list-style:none;padding:0;}
+ul li{padding:0.22rem 0;padding-left:1.2rem;position:relative;font-size:0.88rem;}
+ul li::before{content:'›';position:absolute;left:0;color:var(--gold);font-weight:700;}
+.tag{display:inline-block;padding:0.1rem 0.4rem;border-radius:4px;font-size:0.68rem;font-weight:700;margin-left:0.3rem;vertical-align:middle;}
+.tag.new{background:#DCFCE7;color:#166534;}
+.tag.fix{background:#FEE2E2;color:#991B1B;}
+.tag.kept{background:#DBEAFE;color:#1E40AF;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr;}}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.9rem;border-top:3px solid var(--blue);}
+.login-card.owner{border-top-color:var(--gold);}
+.login-card.dm{border-top-color:var(--green);}
+.login-card.bda{border-top-color:var(--orange);}
+.login-card.temp{border-top-color:var(--muted);}
+.lc-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.3rem;}
+.lc-user{font-size:0.78rem;color:var(--muted);font-family:monospace;}
+.screen-box{background:#1a1a2e;border-radius:10px;padding:1rem;color:white;font-size:0.82rem;}
+.screen-box h4{color:var(--gold);font-family:'Rajdhani',sans-serif;font-size:1rem;margin-bottom:0.5rem;}
+.tab-row{display:flex;gap:0.3rem;margin-bottom:0.6rem;flex-wrap:wrap;}
+.tab-pill{background:rgba(255,255,255,0.1);border-radius:20px;padding:0.2rem 0.6rem;font-size:0.72rem;border:1px solid rgba(255,255,255,0.2);}
+.tab-pill.active{background:var(--red);border-color:var(--red);}
+.status-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin:0.5rem 0;}
+.s-dot{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.78rem;background:rgba(255,255,255,0.05);border-radius:6px;padding:0.2rem 0.5rem;}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.note{background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.82rem;color:#92400E;margin:0.5rem 0;}
+.confirm{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.82rem;color:#14532D;margin:0.5rem 0;}
+.phase{display:flex;align-items:flex-start;gap:0.8rem;padding:0.8rem;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:0.6rem;}
+.phase-num{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.phase-content h4{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:0.3rem;}
+.phase-content p{font-size:0.82rem;color:var(--muted);}
+.marathi{font-size:0.75rem;color:var(--muted);margin-left:0.4rem;}
+.formula-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:0.7rem 1rem;font-family:monospace;font-size:0.85rem;color:#1E40AF;margin:0.5rem 0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-cyl">🛢️</div>
+    <div class="logo-text">
+      <h1>SHOURYA BHARATGAS SERVICES</h1>
+      <p>BPCL Distributor · Jaysingpur · Dist. Code: 187618</p>
+    </div>
+  </div>
+  <div class="header-sub">ERP v3 — Final Blueprint · Confirmed before build · February 2026</div>
+</div>
+
+<div class="content">
+
+<!-- ═══ CONFIRMED FACTS ═══ -->
+<h2>✅ Confirmed Facts — Building On These</h2>
+
+<div class="section blue">
+<h3>Business Identity</h3>
+<ul>
+  <li>Name: <strong>Shourya Bharatgas Services</strong> (Bharat Gas / BPCL Distributor)</li>
+  <li>Office: Gat No. 96, Kolhapur Road, Jaysingpur – 416101</li>
+  <li>Godown: Gat No. 15, Kondigre – 416146</li>
+  <li>Distributor Code: 187618 · Partners: Vishal Patil (50%) + Dr. Mrinmayi Patil (50%)</li>
+  <li>Current cylinder price: <strong>variable</strong> (set by BPCL, editable by owner in ERP settings)</li>
+  <li>Partial payment: allowed at any split (e.g. ₹500 cash + ₹356 GPay = ₹856 total)</li>
+</ul>
+</div>
+
+<div class="section blue">
+<h3>Vehicles + Regular Drivers</h3>
+<table>
+  <tr><th>Vehicle</th><th>Regular Capacity</th><th>Extra (Adjustable)</th><th>Regular Driver</th></tr>
+  <tr><td>Tata 407</td><td>55 cylinders</td><td>+10</td><td>Vishwas Bhore</td></tr>
+  <tr><td>Mega XL</td><td>35 cylinders</td><td>+8</td><td>Mahesh Patil (= Swapnil)</td></tr>
+  <tr><td>Hatti</td><td>20 cylinders</td><td>+8</td><td>Vishal Magdum</td></tr>
+  <tr><td>Appe</td><td>20 cylinders</td><td>+8</td><td>Haroon Fakir</td></tr>
+  <tr><td>New Hatti</td><td>40 cylinders</td><td>+5</td><td>Flexible / As available</td></tr>
+</table>
+<div class="note">⚠ Mahesh Patil in CSV = Swapnil Patil (pet name). One login: mahesh/swapnil — both work.</div>
+</div>
+
+<div class="section blue">
+<h3>All Staff — Complete Details</h3>
+<table>
+  <tr><th>Name</th><th>Role / Login</th><th>Mobile</th><th>Alt Mobile</th><th>Wages</th></tr>
+  <tr><td><strong>Vishal Patil</strong></td><td>Owner (vishal)</td><td>7887456789</td><td>9869234868</td><td>—</td></tr>
+  <tr><td><strong>Dr. Mrinmayi Patil</strong></td><td>Owner (mrinmayi)</td><td>8080802880</td><td>—</td><td>—</td></tr>
+  <tr><td>Pundalik Patil (Baba)</td><td>Owner's Father — can receive cash</td><td>9665036191</td><td>7276884888</td><td>—</td></tr>
+  <tr><td>Rajesh Awale</td><td>Manager (manager)</td><td>8007183197</td><td>—</td><td>₹15,000/mo</td></tr>
+  <tr><td>Vishwas Bhore</td><td>Delivery Man (bhore)</td><td>7643982982</td><td>9975464383</td><td>₹8 urban / ₹7 rural</td></tr>
+  <tr><td>Mahesh Patil (=Swapnil)</td><td>Delivery Man (mahesh)</td><td>8830669611</td><td>—</td><td>₹8 urban / ₹7 rural</td></tr>
+  <tr><td>Haroon Fakir</td><td>Delivery Man (haroon)</td><td>9970660901</td><td>—</td><td>₹8 urban / ₹7 rural</td></tr>
+  <tr><td>Vishal Magdum</td><td>Delivery Man (magdum)</td><td>9096853954</td><td>7643987987</td><td>₹8 urban / ₹7 rural</td></tr>
+  <tr><td>Ajinath</td><td>Truck Driver (ajinath)</td><td>8669164977</td><td>—</td><td>₹18,000/mo</td></tr>
+  <tr><td>Sandeep</td><td>Unloading Crew (sandeep)</td><td>8788076864</td><td>—</td><td>₹400/unloading</td></tr>
+  <tr><td>Sager</td><td>Unloading Crew (sager)</td><td>8605444617</td><td>—</td><td>₹400/unloading</td></tr>
+  <tr><td>Mrs. Awale</td><td>BDA — Chipri Beghar (mrsawale)</td><td>8007183197</td><td>—</td><td>BDA role</td></tr>
+</table>
+</div>
+
+<div class="section blue">
+<h3>BDA List — All 8 Locations (Correct)</h3>
+<table>
+  <tr><th>Area</th><th>Owner Name</th><th>Mobile</th><th>Login ID</th></tr>
+  <tr><td>Kondigre</td><td>Sarika Waghmode</td><td>9561242972</td><td>kondigre</td></tr>
+  <tr><td>Nimshirgav</td><td>Kumar Thomake</td><td>9673824646</td><td>nimshirgav1</td></tr>
+  <tr><td>Nimshirgav</td><td>Lakhane</td><td>7588262265</td><td>nimshirgav2</td></tr>
+  <tr><td>Danoli</td><td>Manoj</td><td>9970731436</td><td>danoli</td></tr>
+  <tr><td>Kothali</td><td>Yadav</td><td>9405744020</td><td>kothali</td></tr>
+  <tr><td>Kavatesar</td><td>Sudhakar Patil</td><td>9822180498</td><td>kavatesar</td></tr>
+  <tr><td>Shirol</td><td>Vikrant Kamble</td><td>7028502299</td><td>shirol</td></tr>
+  <tr><td>Chipri Beghar</td><td>Mrs. Awale</td><td>8007183197</td><td>mrsawale</td></tr>
+</table>
+</div>
+
+<!-- ═══ GODOWN FORMULA ═══ -->
+<h2>📦 Godown Stock Entry — Marathi Grid Formula (Confirmed)</h2>
+<div class="section gold">
+<h3>14.2 kg भरलेले (Filled) — Simple Grid</h3>
+<div class="formula-box">उभी ओळ (Vertical) × आडवी ओळ (Horizontal) + अधिक ओळ (Extra) = एकूण (Total)<br>Example: 10 × 12 + 8 = 128 ✅</div>
+
+<h3>14.2 kg रिकामे (Empty) — Double Stack, 3 Sections</h3>
+<div class="formula-box">Formula per section: (दुहेरी उभी × दुहेरी आडवी + दुहेरी अधिक) × 2 + एकेरी अधिक = Total<br><br>फुडून उजवीकडे (Front Right): (12 × 15 + 7) × 2 + 10 = 384 ✅<br>दरवाज्याच्या उजवीकडे (Door Right): (6 × 5 + 3) × 2 + 4 = 70 ✅<br>दरवाज्याच्या डावीकडे (Door Left): (4 × 7 + 2) × 2 + 4 = 64 ✅<br><br>एकूण रिकामे (Total Empty): 384 + 70 + 64 = 518 ✅</div>
+<div class="confirm">✅ Formula confirmed. ERP will show input boxes for each section with live calculation.</div>
+</div>
+
+<!-- ═══ LOGINS ═══ -->
+<h2>🔐 Login System — 7 Role Types</h2>
+<div class="grid2">
+  <div class="login-card owner">
+    <div class="lc-title">👑 Owner</div>
+    <div class="lc-user">vishal / mrinmayi</div>
+    <ul style="margin-top:0.4rem">
+      <li>Full access to everything</li>
+      <li>Can override any entry</li>
+      <li>Can create/delete temp logins</li>
+      <li>See all financial data</li>
+      <li>Change cylinder price</li>
+    </ul>
+  </div>
+  <div class="login-card">
+    <div class="lc-title">🏢 Manager</div>
+    <div class="lc-user">manager (Rajesh Awale)</div>
+    <ul style="margin-top:0.4rem">
+      <li>Office operations</li>
+      <li>Upload CSV delivery list</li>
+      <li>Record office sales, expenses</li>
+      <li>Day-end report (view only)</li>
+      <li>Cannot see payroll/wages</li>
+    </ul>
+  </div>
+  <div class="login-card dm">
+    <div class="lc-title">🛵 Delivery Man</div>
+    <div class="lc-user">bhore / mahesh / haroon / magdum</div>
+    <ul style="margin-top:0.4rem">
+      <li>4-tab Marathi interface</li>
+      <li>Tab 1: Godown stock entry</li>
+      <li>Tab 2: Today's deliveries (Uber)</li>
+      <li>Tab 3: Stock transfer</li>
+      <li>Tab 4: Cash / denomination</li>
+      <li>Cannot see others' data</li>
+    </ul>
+  </div>
+  <div class="login-card dm" style="border-top-color:#8B5CF6">
+    <div class="lc-title">🚛 Godown Staff</div>
+    <div class="lc-user">sandeep / sager / ajinath</div>
+    <ul style="margin-top:0.4rem">
+      <li>Godown stock entry only</li>
+      <li>BPCL truck receipt</li>
+      <li>No delivery list access</li>
+      <li>No financial data</li>
+    </ul>
+  </div>
+  <div class="login-card bda">
+    <div class="lc-title">🏘 BDA Owner</div>
+    <div class="lc-user">kondigre / shirol / danoli etc.</div>
+    <ul style="margin-top:0.4rem">
+      <li>Own stock entry (filled/empty)</li>
+      <li>Record sales (all payment modes)</li>
+      <li>Capture customer OTPs</li>
+      <li>Spot booking + delivery</li>
+      <li>Cash handover to delivery man</li>
+    </ul>
+  </div>
+  <div class="login-card" style="border-top-color:#8007183197">
+    <div class="lc-title">🏘 BDA — Chipri Beghar</div>
+    <div class="lc-user">mrsawale (Mrs. Awale)</div>
+    <ul style="margin-top:0.4rem">
+      <li>Same as BDA but separate login</li>
+      <li>No manager access</li>
+      <li>No office cash access</li>
+    </ul>
+  </div>
+  <div class="login-card temp">
+    <div class="lc-title">⏱ Temp Helper</div>
+    <div class="lc-user">Created by Owner — expires auto</div>
+    <ul style="margin-top:0.4rem">
+      <li>Can see delivery map</li>
+      <li>Can see today's delivery list</li>
+      <li>Cannot record any entry</li>
+      <li>Set expiry: 1 day or 2 days</li>
+      <li>Owner creates from Settings</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ DELIVERY MAN INTERFACE ═══ -->
+<h2>🛵 Delivery Man — 4-Tab Interface</h2>
+<div class="section green">
+<div class="tab-row">
+  <span class="tab-pill active">Tab 1: गोडाऊन</span>
+  <span class="tab-pill">Tab 2: आजची डिलिव्हरी</span>
+  <span class="tab-pill">Tab 3: स्टॉक हस्तांतरण</span>
+  <span class="tab-pill">Tab 4: रक्कम विवरण</span>
+</div>
+
+<h3>Tab 2 — Delivery Status Colors</h3>
+<div class="status-row">
+  <span class="s-dot"><span class="dot" style="background:#3B82F6"></span>🔵 Scheduled</span>
+  <span class="s-dot"><span class="dot" style="background:#F59E0B"></span>🟡 In Trip</span>
+  <span class="s-dot"><span class="dot" style="background:#10B981"></span>🟢 Delivered (OTP)</span>
+  <span class="s-dot"><span class="dot" style="background:#F97316"></span>🟠 Emergency (No OTP)</span>
+  <span class="s-dot"><span class="dot" style="background:#EF4444"></span>🔴 Not Delivered</span>
+</div>
+
+<h3>Tab 4 — Payment Modes (all 6)</h3>
+<ul>
+  <li>Cash — goes to physical denomination count</li>
+  <li>QR Code / UPI Scan</li>
+  <li>GPay</li>
+  <li>Paytm</li>
+  <li>Advance Payment (pre-paid)</li>
+  <li>Partial (Cash + any digital) — cash amount added to denomination count only</li>
+</ul>
+
+<h3>Tab 4 — Denomination Count</h3>
+<div class="formula-box">₹500 × ___ = ___<br>₹200 × ___ = ___<br>₹100 × ___ = ___<br>₹ 50 × ___ = ___<br>₹ 20 × ___ = ___<br>₹ 10 × ___ = ___<br>Coins = ___<br>────────────<br>Total = ___ (must match total cash collected)</div>
+</div>
+
+<!-- ═══ OFFICE SUMMARY ═══ -->
+<h2>🏪 Office — Complete Summary Structure</h2>
+<div class="section orange">
+<h3>Sales Section</h3>
+<ul>
+  <li>Refills to customers: Cash, QR, GPay, Paytm, Advance, Partial (all 6 modes)</li>
+  <li>SV — Subscription Vouchers: Suraksha Pipe, Blue Book, DPR Free, DPR Paid, 5 kg</li>
+  <li>Termination Voucher → DEBITED from cash</li>
+  <li>Name Change → DEBITED from cash</li>
+</ul>
+<h3>Stock Transfer (from Office)</h3>
+<ul>
+  <li>To/from each delivery man: Bhore, Mahesh, Haroon, Magdum — filled given / empty taken</li>
+</ul>
+<h3>Expenses</h3>
+<ul>
+  <li>Termination Voucher, Name Change, Salary/Wages, Stationery/Courier, Other (free text)</li>
+</ul>
+<h3>Close Day</h3>
+<ul>
+  <li>Cash given to: Vishal Patil / Mrinmayi Patil / Pundalik Patil (Baba)</li>
+  <li>Denomination count (same format as delivery man)</li>
+  <li>Total must match sum of all cash sources</li>
+</ul>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<h2>📊 Dashboard — What Owner Sees</h2>
+<div class="section blue">
+<h3>Top Stats Row</h3>
+<ul>
+  <li>Total cylinders sold today · Total cash · Godown filled stock · Pending OTPs</li>
+</ul>
+<h3>Delivery Man Table (clickable rows)</h3>
+<ul>
+  <li>Each row = one delivery man · shows 1st/2nd/3rd trip columns</li>
+  <li>Click row → expands to show full trip: qty by payment mode, stock transfer, denomination</li>
+  <li>"On Route" / "Absent" / "At Godown" status per person</li>
+  <li>Only shows today's active delivery men</li>
+</ul>
+<h3>Office Summary (clickable)</h3>
+<ul>
+  <li>Click → expands to: refills by mode, SV vouchers, deductions, expenses, denomination</li>
+</ul>
+<h3>BDA Summary (clickable)</h3>
+<ul>
+  <li>Each BDA row → expands to: stock, sales, cash handover status</li>
+</ul>
+<div class="note">⚠ Live GPS locations removed from Dashboard — already on Live Tracking page.</div>
+</div>
+
+<!-- ═══ DAY END ═══ -->
+<h2>📋 Day End Report — BPCL Comparison</h2>
+<div class="section red">
+<h3>Stock Table (Opening → Sales → Closing)</h3>
+<table>
+  <tr><th>Location</th><th>Opening Full</th><th>Opening Empty</th><th>Sales</th><th>Closing Full</th><th>Closing Empty</th><th>Defective</th></tr>
+  <tr><td>Godown</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>Office</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>BDA Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>Transit (Vehicles)</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>Manual Adjustment</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td><strong>Total 14.2 kg</strong></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<h3>BPCL Comparison Logic</h3>
+<ul>
+  <li>Status 1: Day End Pending at BPCL → show "Pending — check later"</li>
+  <li>Status 2: Day End done at BPCL → compare each field → ✅ Match or ❌ Difference</li>
+  <li>Status 3: Can check previous day differences too (stored daily)</li>
+</ul>
+
+<h3>BPCL Product Codes (for reference in system)</h3>
+<table>
+  <tr><th>Code</th><th>Plain Name</th></tr>
+  <tr><td>5240</td><td>5 kg Commercial Cylinder</td></tr>
+  <tr><td>5250</td><td>5 kg Domestic Cylinder</td></tr>
+  <tr><td>5260</td><td>5 kg Commercial Cylinder (variant)</td></tr>
+  <tr><td>5270</td><td>Unknown (tracked only)</td></tr>
+  <tr><td>5300</td><td>Unknown (tracked only)</td></tr>
+  <tr><td><strong>5350</strong></td><td><strong>14.2 kg Domestic Cylinder (MAIN)</strong></td></tr>
+  <tr><td><strong>5370</strong></td><td><strong>14.2 kg Empty Return</strong></td></tr>
+  <tr><td>5400</td><td>19 kg Commercial Cylinder</td></tr>
+  <tr><td>5450</td><td>19 kg Cutting Cylinder</td></tr>
+  <tr><td>BPCDPR</td><td>14.2 kg DPR (De-Pressure Regulator)</td></tr>
+  <tr><td>BPCDPRF</td><td>5 kg DPR</td></tr>
+</table>
+</div>
+
+<!-- ═══ CSV SYSTEM ═══ -->
+<h2>🚚 CSV / Delivery System Logic</h2>
+<div class="section green">
+<ul>
+  <li>Upload every 2–3 hours → <strong>append only</strong>, never reset</li>
+  <li>Already delivered customers never re-appear</li>
+  <li>ERP maintains delivery truth — CSV is instruction only</li>
+  <li>OTP delivery → affects SAP + stock + cash + wages</li>
+  <li>Emergency delivery (no OTP) → affects stock + cash + wages only</li>
+  <li>Grouped by area for delivery man (area-wise list)</li>
+  <li>First delivery → save GPS + landmark</li>
+  <li>Future deliveries → show nearest known location to nearest available driver</li>
+  <li>Spot booking at BDA → stored separately, shown in BDA panel</li>
+</ul>
+</div>
+
+<!-- ═══ CHAT ═══ -->
+<h2>💬 Chat System — Decision</h2>
+<div class="section gold">
+<div class="confirm">
+  <strong>Approach chosen: Built-in simple notice board (works without server)</strong><br><br>
+  For v3 (this single HTML file): Each user can post a short message visible to all others on their next login — like a shared notice board. No images yet. Works completely offline.<br><br>
+  <strong>For real WhatsApp-style chat (with your 32GB RAM PC as server):</strong><br>
+  This is Phase 2 — we install a simple Node.js server on your PC, connect all devices on your home WiFi/internet, and get real-time chat with photo sharing. I will guide you step by step when ready.
+</div>
+</div>
+
+<!-- ═══ PAYROLL ═══ -->
+<h2>💰 Payroll — Wage Calculation Logic</h2>
+<div class="section blue">
+<div class="formula-box">Delivery Man Monthly Wages:<br><br>Urban deliveries × ₹8 per cylinder<br>+ Rural deliveries × ₹7 per cylinder<br>+ Pair bonus: ₹200 per trip (if 2 men together)<br>− Advance deductions<br>− Short cash deductions<br>────────────<br>= Net Pay<br><br>Sandeep / Sager: ₹400 × number of truck unloadings<br>Ajinath: ₹18,000 fixed monthly<br>Manager Rajesh: ₹15,000 fixed monthly</div>
+<ul style="margin-top:0.5rem">
+  <li>Any cash/online received FROM staff → auto-added as advance, deducted at salary time</li>
+  <li>Short cash by delivery man → deducted from salary</li>
+</ul>
+</div>
+
+<!-- ═══ BUILD PHASES ═══ -->
+<h2>🏗 Build Phases</h2>
+
+<div class="phase">
+  <div class="phase-num">1</div>
+  <div class="phase-content">
+    <h4>v3 — This File (What We Build Now)</h4>
+    <p>New design + logo · All real names · Correct BDA list · Dashboard with expandable tables · Complete delivery man 4-tab Marathi interface · All 6 payment modes · Denomination count · Office full summary · Godown Marathi grid formula · Defective sub-tab · Full day-end BPCL comparison · Payroll with per-cylinder wages · Temp login system · BDA full panel · CSV upload with append logic · 5-color delivery status</p>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-num">2</div>
+  <div class="phase-content">
+    <h4>Server Phase — Your 32GB PC</h4>
+    <p>Install Node.js on PC · All devices connect on same network · Real-time GPS tracking · WhatsApp-style chat with photos · Data saves permanently · Google Drive backup · Works offline too</p>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-num">3</div>
+  <div class="phase-content">
+    <h4>Future — GST + Accounting + SOA</h4>
+    <p>Monthly GST calculations · SOA reconciliation · CA reports · Full accounting ledger</p>
+  </div>
+</div>
+
+<div style="background:linear-gradient(135deg,var(--navy),#2D4A7A);color:white;border-radius:12px;padding:1.5rem;text-align:center;margin-top:2rem;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:0.4rem;">Ready to Build v3?</div>
+  <div style="font-size:0.85rem;color:rgba(255,255,255,0.7)">Please review this blueprint, confirm it is correct, and say "Build v3" — I will then build the complete ERP.</div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+git config --global user.name "shouryabharatgas"
+git config --global user.email "shouryabharatgas@gmail.com"
+
+
+git config --global user.name
+git config --global user.email
+
+
+git status
+
+git add .gitignore
+git commit -m "Clean repo: ignore cache files and local artifacts"
+git push origin main
+
+
+https://github.com/shouryabharatgas

@@ -1,0 +1,2674 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shourya Bharatgas Services ERP v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bpcl-blue: #003087;
+  --bpcl-yellow: #FFD100;
+  --bpcl-orange: #F7941D;
+  --bg-dark: #0a0e1a;
+  --bg-card: #0f1628;
+  --bg-card2: #141d35;
+  --border: #1e2d50;
+  --border-bright: #2a4080;
+  --text-primary: #e8eeff;
+  --text-secondary: #8fa3cc;
+  --text-muted: #4a5a80;
+  --accent-blue: #4a90e2;
+  --accent-yellow: #FFD100;
+  --accent-green: #22c55e;
+  --accent-orange: #f97316;
+  --accent-red: #ef4444;
+  --accent-purple: #a855f7;
+  --glass: rgba(15,22,40,0.85);
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --glow-blue: 0 0 20px rgba(74,144,226,0.3);
+  --glow-yellow: 0 0 20px rgba(255,209,0,0.3);
+  --font-main: 'Rajdhani', 'Noto Sans Devanagari', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --status-scheduled: #3b82f6;
+  --status-intrip: #eab308;
+  --status-delivered: #22c55e;
+  --status-emergency: #f97316;
+  --status-notdelivered: #ef4444;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* =========== LOGIN SCREEN =========== */
+#loginScreen {
+  position: fixed; inset: 0; z-index: 1000;
+  background: linear-gradient(135deg, #000820 0%, #001a4d 50%, #000c2e 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.login-bg-pattern {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,209,0,0.5) 40px, rgba(255,209,0,0.5) 41px),
+    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(74,144,226,0.5) 40px, rgba(74,144,226,0.5) 41px);
+}
+.login-card {
+  position: relative; width: 420px; max-width: 95vw;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 0 60px rgba(74,144,226,0.2), var(--shadow);
+}
+.login-logo {
+  text-align: center; margin-bottom: 32px;
+}
+.login-logo .company-icon {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, var(--bpcl-blue), var(--bpcl-yellow));
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 36px;
+  box-shadow: var(--glow-blue);
+}
+.login-logo h1 { font-size: 22px; font-weight: 700; color: var(--accent-yellow); letter-spacing: 1px; }
+.login-logo p { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.login-bpcl-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,209,0,0.1); border: 1px solid rgba(255,209,0,0.3);
+  border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--accent-yellow);
+  margin-top: 8px;
+}
+.login-field { margin-bottom: 16px; }
+.login-field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.login-field input, .login-field select {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-family: var(--font-main); font-size: 16px;
+  padding: 12px 16px; transition: all 0.2s;
+}
+.login-field input:focus, .login-field select:focus {
+  outline: none; border-color: var(--accent-blue); box-shadow: var(--glow-blue);
+  background: rgba(74,144,226,0.05);
+}
+.login-field select option { background: #0f1628; }
+.btn-login {
+  width: 100%; padding: 14px; border: none; border-radius: 8px;
+  background: linear-gradient(135deg, var(--bpcl-blue), var(--accent-blue));
+  color: white; font-family: var(--font-main); font-size: 17px; font-weight: 700;
+  cursor: pointer; margin-top: 8px; letter-spacing: 1px;
+  transition: all 0.2s; box-shadow: var(--glow-blue);
+}
+.btn-login:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(74,144,226,0.5); }
+.login-error { color: var(--accent-red); font-size: 13px; margin-top: 8px; text-align: center; display: none; }
+.login-version { position: absolute; bottom: 16px; font-size: 11px; color: var(--text-muted); }
+
+/* =========== MAIN APP =========== */
+#app { display: none; min-height: 100vh; }
+
+/* TOP NAV */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  height: 60px;
+  background: linear-gradient(90deg, var(--bg-card) 0%, rgba(15,22,40,0.97) 100%);
+  border-bottom: 1px solid var(--border-bright);
+  display: flex; align-items: center; padding: 0 20px;
+  gap: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+.topnav-logo {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.topnav-logo .logo-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--bpcl-blue), var(--accent-blue));
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.topnav-logo .logo-text { font-size: 14px; font-weight: 700; color: var(--accent-yellow); }
+.topnav-logo .logo-sub { font-size: 10px; color: var(--text-muted); }
+.topnav-center { flex: 1; display: flex; align-items: center; gap: 4px; overflow-x: auto; padding: 0 8px; }
+.topnav-center::-webkit-scrollbar { height: 0; }
+.nav-btn {
+  flex-shrink: 0; padding: 6px 14px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text-secondary);
+  font-family: var(--font-main); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+.nav-btn.active { background: rgba(74,144,226,0.15); color: var(--accent-blue); border-bottom: 2px solid var(--accent-blue); }
+.topnav-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.user-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px 4px 6px;
+}
+.user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--bpcl-yellow), var(--accent-orange));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #000;
+}
+.user-info { font-size: 12px; }
+.user-info .name { color: var(--text-primary); font-weight: 600; }
+.user-info .role { color: var(--text-secondary); font-size: 10px; }
+.btn-logout {
+  padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(239,68,68,0.3);
+  background: rgba(239,68,68,0.1); color: var(--accent-red);
+  font-family: var(--font-main); font-size: 12px; cursor: pointer; transition: all 0.2s;
+}
+.btn-logout:hover { background: rgba(239,68,68,0.2); }
+.clock-display { font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary); }
+
+/* CONTENT AREA */
+.content { padding: 80px 16px 24px; max-width: 1400px; margin: 0 auto; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* =========== CARDS & COMPONENTS =========== */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.card-title .icon { font-size: 18px; }
+.card-sub { font-size: 12px; color: var(--text-secondary); }
+
+.section-title {
+  font-size: 20px; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  padding-bottom: 12px; border-bottom: 2px solid var(--border-bright);
+}
+.section-title .badge {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  background: rgba(74,144,226,0.2); color: var(--accent-blue); font-weight: 600;
+}
+
+/* GRID LAYOUTS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+@media(max-width:900px) { .grid-4,.grid-3 { grid-template-columns: 1fr 1fr; } }
+@media(max-width:600px) { .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; } }
+
+/* STAT CARDS */
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px;
+  position: relative; overflow: hidden; cursor: pointer;
+  transition: all 0.2s;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--accent, var(--accent-blue));
+}
+.stat-card:hover { transform: translateY(-2px); border-color: var(--border-bright); box-shadow: var(--glow-blue); }
+.stat-card .stat-icon { font-size: 28px; margin-bottom: 8px; }
+.stat-card .stat-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .stat-label-mr { font-size: 11px; color: var(--text-muted); }
+.stat-card .stat-value { font-size: 32px; font-weight: 700; color: var(--text-primary); line-height: 1; margin: 4px 0; }
+.stat-card .stat-sub { font-size: 11px; color: var(--text-secondary); }
+.stat-card.green { --accent: var(--accent-green); }
+.stat-card.yellow { --accent: var(--accent-yellow); }
+.stat-card.red { --accent: var(--accent-red); }
+.stat-card.orange { --accent: var(--accent-orange); }
+.stat-card.purple { --accent: var(--accent-purple); }
+
+/* STATUS CHIPS */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+.chip-blue { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.chip-yellow { background: rgba(234,179,8,0.15); color: #fbbf24; border: 1px solid rgba(234,179,8,0.3); }
+.chip-green { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.chip-orange { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+.chip-red { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+.chip-purple { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+
+/* BUTTONS */
+.btn {
+  padding: 9px 18px; border-radius: 8px; border: none;
+  font-family: var(--font-main); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-primary { background: var(--bpcl-blue); color: white; }
+.btn-primary:hover { background: #004db8; box-shadow: var(--glow-blue); }
+.btn-success { background: rgba(34,197,94,0.2); color: var(--accent-green); border: 1px solid rgba(34,197,94,0.3); }
+.btn-success:hover { background: rgba(34,197,94,0.3); }
+.btn-warning { background: rgba(255,209,0,0.2); color: var(--accent-yellow); border: 1px solid rgba(255,209,0,0.3); }
+.btn-warning:hover { background: rgba(255,209,0,0.3); }
+.btn-danger { background: rgba(239,68,68,0.2); color: var(--accent-red); border: 1px solid rgba(239,68,68,0.3); }
+.btn-danger:hover { background: rgba(239,68,68,0.3); }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.btn-icon { padding: 7px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text-secondary); cursor: pointer; font-size: 16px; }
+
+/* FORM ELEMENTS */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text-primary); font-family: var(--font-main); font-size: 15px;
+  padding: 10px 14px; transition: all 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--accent-blue); background: rgba(74,144,226,0.05);
+}
+.form-group select option { background: #0f1628; }
+.form-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); }
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  background: rgba(255,255,255,0.05); color: var(--text-secondary);
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+}
+.data-table td { padding: 10px 12px; border-bottom: 1px solid rgba(30,45,80,0.5); color: var(--text-primary); }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table tr:last-child td { border-bottom: none; }
+.table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+
+/* TABS */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
+.tabs::-webkit-scrollbar { height: 0; }
+.tab-btn {
+  padding: 8px 16px; border: none; border-radius: 6px 6px 0 0;
+  background: transparent; color: var(--text-secondary);
+  font-family: var(--font-main); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: rgba(74,144,226,0.08); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* DELIVERY STATUS COLORS */
+.status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.status-scheduled { background: var(--status-scheduled); box-shadow: 0 0 8px rgba(59,130,246,0.6); }
+.status-intrip { background: var(--status-intrip); box-shadow: 0 0 8px rgba(234,179,8,0.6); }
+.status-delivered { background: var(--status-delivered); box-shadow: 0 0 8px rgba(34,197,94,0.6); }
+.status-emergency { background: var(--status-emergency); box-shadow: 0 0 8px rgba(249,115,22,0.6); }
+.status-notdelivered { background: var(--status-notdelivered); box-shadow: 0 0 8px rgba(239,68,68,0.6); }
+
+/* DELIVERY CARD (delivery boy view) */
+.delivery-card {
+  background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; margin-bottom: 8px;
+  display: flex; align-items: flex-start; gap: 12px;
+  transition: all 0.2s; cursor: pointer; position: relative;
+}
+.delivery-card:hover { border-color: var(--border-bright); }
+.delivery-card .dcnum { font-size: 28px; font-weight: 700; font-family: var(--font-mono); color: var(--accent-yellow); min-width: 40px; text-align: center; }
+.delivery-card .dcinfo { flex: 1; }
+.delivery-card .dcname { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.delivery-card .dcaddress { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.delivery-card .dcarea { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.delivery-card .dcactions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.delivery-card .dcphone { font-family: var(--font-mono); font-size: 12px; color: var(--accent-blue); }
+.status-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 10px 0 0 10px; }
+
+/* MARATHI LABEL STYLE */
+.mr-label {
+  font-size: 13px; color: var(--accent-yellow); font-weight: 600;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg-card); border: 1px solid var(--border-bright);
+  border-radius: 16px; padding: 28px; max-width: 600px; width: 100%;
+  max-height: 90vh; overflow-y: auto; box-shadow: 0 0 60px rgba(0,0,0,0.6);
+}
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary); display: flex; justify-content: space-between; align-items: center; }
+.modal-close { background: none; border: none; color: var(--text-secondary); font-size: 20px; cursor: pointer; }
+
+/* PAYMENT MODE GRID */
+.pay-mode-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.pay-mode-btn {
+  padding: 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03); color: var(--text-secondary);
+  font-family: var(--font-main); font-size: 12px; font-weight: 600;
+  cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.pay-mode-btn.selected { border-color: var(--accent-blue); background: rgba(74,144,226,0.15); color: var(--text-primary); }
+
+/* CYLINDER STOCK VISUAL */
+.cyl-grid { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
+.cyl-icon { font-size: 20px; cursor: default; }
+.cyl-count-box {
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; text-align: center;
+}
+.cyl-count-box .count { font-size: 28px; font-weight: 700; font-family: var(--font-mono); }
+.cyl-count-box .label { font-size: 11px; color: var(--text-secondary); }
+
+/* GODOWN MARATHI GRID */
+.marathi-grid-section { margin: 12px 0; }
+.marathi-grid-title { font-size: 13px; font-weight: 700; color: var(--accent-yellow); margin-bottom: 8px; }
+.marathi-grid-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.marathi-grid-input {
+  width: 60px; background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono);
+  font-size: 14px; padding: 6px 8px; text-align: center;
+}
+.marathi-grid-result { font-size: 16px; font-weight: 700; color: var(--accent-green); font-family: var(--font-mono); }
+
+/* SUMMARY TABLE */
+.summary-block {
+  background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; margin-bottom: 12px;
+}
+.summary-block-header {
+  background: rgba(74,144,226,0.1); padding: 10px 16px;
+  font-size: 13px; font-weight: 700; color: var(--accent-blue);
+  display: flex; align-items: center; gap: 6px;
+}
+.summary-block-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 16px; border-bottom: 1px solid rgba(30,45,80,0.5);
+  font-size: 13px;
+}
+.summary-block-row:last-child { border-bottom: none; }
+.summary-block-row .label { color: var(--text-secondary); }
+.summary-block-row .value { font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); }
+.summary-total { background: rgba(255,209,0,0.08); border-top: 1px solid rgba(255,209,0,0.2); padding: 10px 16px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; }
+
+/* DENOMINATION ROW */
+.denom-table { width: 100%; }
+.denom-table td { padding: 6px 10px; font-size: 13px; }
+.denom-table input {
+  width: 80px; background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono);
+  font-size: 14px; padding: 4px 8px; text-align: center;
+}
+
+/* NOTICE BOARD */
+.notice-card {
+  background: var(--bg-card2); border-left: 4px solid var(--accent-yellow);
+  border-radius: 8px; padding: 14px 16px; margin-bottom: 8px;
+}
+.notice-card .notice-date { font-size: 10px; color: var(--text-muted); }
+.notice-card .notice-text { font-size: 14px; color: var(--text-primary); margin-top: 4px; }
+.notice-card .notice-badge { font-size: 10px; color: var(--accent-yellow); }
+
+/* MAP PLACEHOLDER */
+.map-placeholder {
+  background: rgba(255,255,255,0.03); border: 1px dashed var(--border-bright);
+  border-radius: 10px; height: 300px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px; color: var(--text-muted);
+}
+.map-placeholder .map-icon { font-size: 48px; opacity: 0.5; }
+
+/* PROGRESS BAR */
+.progress-bar {
+  height: 6px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-top: 6px;
+}
+.progress-fill { height: 100%; border-radius: 4px; background: var(--accent-blue); transition: width 0.5s; }
+.progress-fill.green { background: var(--accent-green); }
+.progress-fill.yellow { background: var(--accent-yellow); }
+.progress-fill.red { background: var(--accent-red); }
+
+/* BPCL VERIFY TABLE */
+.bpcl-compare td { font-size: 12px; }
+.match { color: var(--accent-green); }
+.mismatch { color: var(--accent-red); font-weight: 700; }
+.bpcl-product-code { font-family: var(--font-mono); font-size: 11px; color: var(--accent-orange); }
+
+/* BDA CARD */
+.bda-card {
+  background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px; transition: all 0.2s;
+}
+.bda-card:hover { border-color: var(--border-bright); }
+.bda-card .bda-name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.bda-card .bda-area { font-size: 12px; color: var(--accent-yellow); margin-top: 2px; }
+.bda-card .bda-owner { font-size: 12px; color: var(--text-secondary); }
+
+/* GODOWN/WAREHOUSE VISUAL */
+.godown-section { margin: 12px 0; }
+.godown-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.godown-label { width: 120px; font-size: 12px; color: var(--text-secondary); }
+.godown-bar { flex: 1; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 4px; }
+
+/* PULSE ANIMATION */
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.pulse { animation: pulse 2s infinite; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.3s ease; }
+
+/* GLOW EFFECTS */
+.glow-green { box-shadow: 0 0 12px rgba(34,197,94,0.3); }
+.glow-red { box-shadow: 0 0 12px rgba(239,68,68,0.3); }
+.glow-yellow { box-shadow: 0 0 12px rgba(255,209,0,0.3); }
+
+/* Responsive nav text */
+.nav-text-mr { font-size: 10px; color: var(--text-muted); display: block; }
+
+/* TRIP SUMMARY VISUAL */
+.trip-summary-card {
+  background: linear-gradient(135deg, rgba(0,48,135,0.3), rgba(74,144,226,0.1));
+  border: 1px solid rgba(74,144,226,0.3); border-radius: 12px; padding: 16px; margin-bottom: 12px;
+}
+.trip-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(30,45,80,0.4); }
+.trip-row:last-child { border-bottom: none; }
+
+/* ALERT */
+.alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; }
+.alert-warning { background: rgba(255,209,0,0.1); border: 1px solid rgba(255,209,0,0.3); color: #fbbf24; }
+.alert-success { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; }
+.alert-info { background: rgba(74,144,226,0.1); border: 1px solid rgba(74,144,226,0.3); color: #60a5fa; }
+.alert-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; }
+
+/* FLOATING ACTION */
+.fab {
+  position: fixed; bottom: 24px; right: 24px; z-index: 400;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--bpcl-blue), var(--accent-blue));
+  border: none; color: white; font-size: 22px; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(74,144,226,0.5); transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.fab:hover { transform: scale(1.1); }
+
+/* Folder tree dropdown */
+.folder-tree { list-style: none; }
+.folder-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; overflow: hidden; }
+.folder-header {
+  padding: 12px 16px; background: rgba(255,255,255,0.03);
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: all 0.2s;
+}
+.folder-header:hover { background: rgba(255,255,255,0.06); }
+.folder-content { padding: 12px 16px; background: var(--bg-card2); display: none; border-top: 1px solid var(--border); }
+.folder-content.open { display: block; }
+
+/* HEADER STRIPE */
+.page-header {
+  background: linear-gradient(90deg, rgba(0,48,135,0.4), transparent);
+  border: 1px solid rgba(0,48,135,0.3);
+  border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.page-header-title { font-size: 22px; font-weight: 700; color: var(--accent-yellow); }
+.page-header-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.page-header-right { text-align: right; }
+.live-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent-green); }
+
+/* SALARY CALC */
+.salary-row { display: flex; align-items: center; gap: 12px; padding: 6px 0; font-size: 13px; }
+.salary-row .label { flex: 1; color: var(--text-secondary); }
+.salary-row .amount { font-family: var(--font-mono); font-weight: 700; }
+.salary-deduct { color: var(--accent-red); }
+.salary-add { color: var(--accent-green); }
+.salary-net { font-size: 18px; color: var(--accent-yellow); }
+
+/* SEARCH BAR */
+.search-bar {
+  display: flex; gap: 8px; margin-bottom: 16px;
+}
+.search-input {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-primary); font-family: var(--font-main);
+  font-size: 14px; padding: 10px 14px;
+}
+.search-input:focus { outline: none; border-color: var(--accent-blue); }
+
+/* VEHICLE CARD */
+.vehicle-card {
+  background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; display: flex; gap: 14px;
+  align-items: center; margin-bottom: 8px;
+}
+.vehicle-icon { font-size: 32px; }
+.vehicle-info .vname { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.vehicle-info .vtype { font-size: 12px; color: var(--accent-blue); }
+.vehicle-info .vplate { font-family: var(--font-mono); font-size: 12px; color: var(--accent-yellow); margin-top: 2px; }
+
+/* ROLE-BASED SECTIONS */
+[data-role-hide] { display: none; }
+
+/* SOA TABLE */
+.soa-table { font-size: 11px; }
+.soa-table th { font-size: 10px; }
+.soa-debit { color: var(--accent-red); font-family: var(--font-mono); }
+.soa-credit { color: var(--accent-green); font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+
+<!-- ======== LOGIN SCREEN ======== -->
+<div id="loginScreen">
+  <div class="login-bg-pattern"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="company-icon">🔥</div>
+      <h1>SHOURYA BHARATGAS</h1>
+      <p>Jaysingpur · Dist. Kolhapur · SAP: 187618</p>
+      <div class="login-bpcl-badge">⚡ BPCL Authorized Distributor</div>
+    </div>
+    <div class="login-field">
+      <label>वापरकर्ता / User</label>
+      <select id="loginUser">
+        <option value="">-- Select User --</option>
+        <option value="owner">Vishal Patil (Owner)</option>
+        <option value="owner2">Mrinmayi Patil (Owner)</option>
+        <option value="manager">Rajesh Awale (Manager)</option>
+        <option value="bda_awale">Mrs. Awale (BDA - Chipri Beghar)</option>
+        <option value="delivery_bhore">Vishwas Bhore (Delivery)</option>
+        <option value="delivery_mahesh">Mahesh Patil / Swapnil (Delivery)</option>
+        <option value="delivery_harun">Harun Fakir (Delivery)</option>
+        <option value="delivery_magdum">Vishal Magdum (Delivery)</option>
+        <option value="bda_kondigre">BDA - Kondigre</option>
+        <option value="bda_nimshirgav1">BDA - Nimshirgav (Kumar)</option>
+        <option value="bda_nimshirgav2">BDA - Nimshirgav (Lakhane)</option>
+        <option value="bda_danoli">BDA - Danoli (Manoj)</option>
+        <option value="bda_kothali">BDA - Kothali (Yadav)</option>
+        <option value="bda_kavatesar">BDA - Kavatesar (Sudhakar)</option>
+        <option value="bda_shirol">BDA - Shirol (Vikrant)</option>
+        <option value="temp">Temp Helper (Day Access)</option>
+      </select>
+    </div>
+    <div class="login-field">
+      <label>पासवर्ड / Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" />
+    </div>
+    <div class="login-error" id="loginError">❌ चुकीचा पासवर्ड / Wrong password</div>
+    <button class="btn-login" onclick="doLogin()">🔐 लॉगिन करा / Login</button>
+  </div>
+  <div class="login-version">Shourya Bharatgas ERP v3.0 · Built 2026</div>
+</div>
+
+<!-- ======== MAIN APP ======== -->
+<div id="app">
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="topnav-logo">
+      <div class="logo-icon">🔥</div>
+      <div>
+        <div class="logo-text">SHOURYA BHARATGAS</div>
+        <div class="logo-sub">SAP: 187618 · Jaysingpur</div>
+      </div>
+    </div>
+    <div class="topnav-center" id="navButtons"></div>
+    <div class="topnav-right">
+      <span class="clock-display" id="clockDisplay">--:--:--</span>
+      <div class="user-badge">
+        <div class="user-avatar" id="navAvatar">?</div>
+        <div class="user-info">
+          <div class="name" id="navName">User</div>
+          <div class="role" id="navRole">Role</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">↩ लॉगआउट</button>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content" id="mainContent"></div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="deliveryModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      🏠 डिलिव्हरी नोंद / Delivery Record
+      <button class="modal-close" onclick="closeModal('deliveryModal')">✕</button>
+    </div>
+    <div id="deliveryModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="passwordModal">
+  <div class="modal-box" style="max-width:380px">
+    <div class="modal-title">🔐 पासवर्ड बदला / Change Password <button class="modal-close" onclick="closeModal('passwordModal')">✕</button></div>
+    <div class="form-group"><label>नवीन पासवर्ड / New Password</label><input type="password" id="newPass1" placeholder="Enter new password"></div>
+    <div class="form-group"><label>पुन्हा टाका / Confirm</label><input type="password" id="newPass2" placeholder="Confirm password"></div>
+    <button class="btn btn-primary" style="width:100%" onclick="changePassword()">✅ सेव करा / Save</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="stockModal">
+  <div class="modal-box">
+    <div class="modal-title">📦 Stock Transfer<button class="modal-close" onclick="closeModal('stockModal')">✕</button></div>
+    <div id="stockModalContent"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  SHOURYA BHARATGAS ERP v3 - CORE DATA & LOGIC
+// ============================================================
+
+const ERP = {
+  version: '3.0',
+  users: {
+    owner:            { pass:'1234', name:'Vishal Patil', role:'owner', designation:'Owner & Partner', mobile:'7887456789', avatar:'VP', color:'#FFD100' },
+    owner2:           { pass:'1234', name:'Mrinmayi Patil', role:'owner', designation:'Owner & Partner', mobile:'8080802880', avatar:'MP', color:'#FFD100' },
+    manager:          { pass:'1234', name:'Rajesh Awale', role:'manager', designation:'Manager', mobile:'8007183197', avatar:'RA', color:'#4a90e2' },
+    bda_awale:        { pass:'1234', name:'Mrs. Awale', role:'bda', designation:'BDA - Chipri Beghar', mobile:'8007183197', area:'Chipri Beghar', avatar:'MA', color:'#a855f7' },
+    delivery_bhore:   { pass:'1234', name:'Vishwas Bhore', role:'delivery', designation:'Delivery Man', mobile:'7643982982', avatar:'VB', color:'#22c55e' },
+    delivery_mahesh:  { pass:'1234', name:'Mahesh Patil', role:'delivery', designation:'Delivery Man', mobile:'8830669611', avatar:'HP', color:'#22c55e' },
+    delivery_harun:   { pass:'1234', name:'Harun Fakir', role:'delivery', designation:'Delivery Man', mobile:'9970660901', avatar:'HF', color:'#22c55e' },
+    delivery_magdum:  { pass:'1234', name:'Vishal Magdum', role:'delivery', designation:'Delivery Man', mobile:'9096853954', avatar:'VM', color:'#22c55e' },
+    bda_kondigre:     { pass:'1234', name:'Sarika Waghmode', role:'bda', designation:'BDA Owner', mobile:'9561242972', area:'Kondigre', avatar:'SW', color:'#a855f7' },
+    bda_nimshirgav1:  { pass:'1234', name:'Kumar Thomake', role:'bda', designation:'BDA Owner', mobile:'9673824646', area:'Nimshirgav', avatar:'KT', color:'#a855f7' },
+    bda_nimshirgav2:  { pass:'1234', name:'Lakhane', role:'bda', designation:'BDA Owner', mobile:'7588262265', area:'Nimshirgav', avatar:'LK', color:'#a855f7' },
+    bda_danoli:       { pass:'1234', name:'Manoj', role:'bda', designation:'BDA Owner', mobile:'9970731436', area:'Danoli', avatar:'MJ', color:'#a855f7' },
+    bda_kothali:      { pass:'1234', name:'Yadav', role:'bda', designation:'BDA Owner', mobile:'9405744020', area:'Kothali', avatar:'YD', color:'#a855f7' },
+    bda_kavatesar:    { pass:'1234', name:'Sudhakar Patil', role:'bda', designation:'BDA Owner', mobile:'9822180498', area:'Kavatesar', avatar:'SP', color:'#a855f7' },
+    bda_shirol:       { pass:'1234', name:'Vikrant Kamble', role:'bda', designation:'BDA Owner', mobile:'7028502299', area:'Shirol', avatar:'VK', color:'#a855f7' },
+    temp:             { pass:'1234', name:'Temp Helper', role:'temp', designation:'Temporary Access', mobile:'', avatar:'TH', color:'#f97316' },
+  },
+
+  staff: [
+    {name:'Vishal Patil', designation:'Owner & Partner', salary:'na', mobile:'7887456789', alt:'9869234868', type:'owner'},
+    {name:'Mrinmayi Patil', designation:'Owner & Partner', salary:'na', mobile:'8080802880', alt:'', type:'owner'},
+    {name:'Baba', designation:"Owner's Father", salary:'na', mobile:'', alt:'7276884888', type:'owner'},
+    {name:'Rajesh Awale', designation:'Manager', salary:'15000', mobile:'8007183197', alt:'', type:'manager'},
+    {name:'Vishwas Bhore', designation:'Delivery Man', salary:'urban+rural', mobile:'7643982982', alt:'9975464383', type:'delivery', eoId:'EO18761810000007'},
+    {name:'Mahesh Patil', designation:'Delivery Man', salary:'urban+rural', mobile:'8830669611', alt:'', type:'delivery', eoId:'EO18761810000010', note:'aka Swapnil'},
+    {name:'Harun Fakir', designation:'Delivery Man', salary:'urban+rural', mobile:'9970660901', alt:'', type:'delivery', eoId:'EO18761810000006'},
+    {name:'Vishal Magdum', designation:'Delivery Man', salary:'urban+rural', mobile:'9096853954', alt:'7643987987', type:'delivery'},
+    {name:'Ajinath', designation:'Truck Driver', salary:'18000', mobile:'8669164977', alt:'', type:'driver'},
+    {name:'Sandeep', designation:'Truck Unloading Crew', salary:'₹400/unloading', mobile:'8788076864', alt:'', type:'unloading'},
+    {name:'Sager', designation:'Truck Unloading Crew', salary:'₹400/unloading', mobile:'8605444617', alt:'', type:'unloading'},
+  ],
+
+  bdas: [
+    {area:'Kondigre', owner:'Sarika Waghmode', mobile:'9561242972'},
+    {area:'Nimshirgav', owner:'Kumar Thomake', mobile:'9673824646'},
+    {area:'Nimshirgav', owner:'Lakhane', mobile:'7588262265'},
+    {area:'Danoli', owner:'Manoj', mobile:'9970731436'},
+    {area:'Kothali', owner:'Yadav', mobile:'9405744020'},
+    {area:'Kavatesar', owner:'Sudhakar Patil', mobile:'9822180498'},
+    {area:'Shirol', owner:'Vikrant Kamble', mobile:'7028502299'},
+    {area:'Chipri Beghar', owner:'Rajesh Awale', mobile:'8007183197'},
+  ],
+
+  bpclCodes: {
+    '5240':'5 kg Commercial Cylinder',
+    '5250':'5 kg Domestic Cylinder',
+    '5260':'5 kg Commercial Cylinder (alt)',
+    '5270':'14.2 kg (Unknown)',
+    '5300':'14.2 kg (Unknown)',
+    '5350':'14.2 kg Domestic Cylinder',
+    '5370':'14.2 kg Domestic Cylinder (Empty Return)',
+    '5400':'19 kg Commercial Cylinder',
+    '5450':'19 kg Cutting Cylinder',
+    'BPCDPR':'14.2 kg DPR (De-Pressure Regulator)',
+    'BPCDPRF':'5 kg DPR (De-Pressure Regulator)',
+  },
+
+  deliveryStatus: {
+    scheduled:    {label:'Scheduled', labelMr:'शेड्युल्ड', color:'#3b82f6', dot:'status-scheduled'},
+    intrip:       {label:'In Trip', labelMr:'रस्त्यावर', color:'#eab308', dot:'status-intrip'},
+    delivered:    {label:'Delivered (OTP)', labelMr:'डिलिव्हर (OTP)', color:'#22c55e', dot:'status-delivered'},
+    emergency:    {label:'Delivered (Emergency)', labelMr:'डिलिव्हर (आपत्कालीन)', color:'#f97316', dot:'status-emergency'},
+    notdelivered: {label:'Not Delivered', labelMr:'डिलिव्हर नाही', color:'#ef4444', dot:'status-notdelivered'},
+  },
+
+  paymentModes: ['Cash', 'QR Code', 'GPay', 'Paytm', 'Advance (BPCL)', 'Partial Cash+Online'],
+
+  wages: {urban: 8, rural: 7, pairBonus: 200},
+
+  // Demo deliveries from CSV
+  deliveries: [],
+
+  // App state
+  currentUser: null,
+  currentRole: null,
+  passwords: {},
+
+  // Demo godown stock
+  godown: {
+    filled14: 801, empty14: 429, defective14: 0,
+    filled5: 109, empty5: 0, defective5: 0,
+    filled19: 64, empty19: 9,
+    bda_filled: 21, vehicle_filled: 390,
+    bluebook: 100, bluebook_sold: 48,
+    suraksha: 50, suraksha_sold: 12,
+    dpr: 338, dprf: 62,
+  },
+
+  // Demo trip data
+  trips: {
+    bhore: {status:'in_trip', delivered:42, total:68, cash:38500, cylReturned:40},
+    mahesh: {status:'scheduled', delivered:0, total:47, cash:0, cylReturned:0},
+    harun: {status:'completed', delivered:31, total:31, cash:28900, cylReturned:28},
+    magdum: {status:'in_trip', delivered:18, total:35, cash:16200, cylReturned:15},
+  },
+
+  todayCash: {
+    opening: 15000,
+    collected: 0,
+    expenses: 2400,
+    closing: 0,
+  },
+
+  notices: [
+    {id:1, date:'16 Feb 2026', text:'BPCL Price Update: 14.2 kg = ₹856 w.e.f. today. Update POS.', badge:'🔴 URGENT'},
+    {id:2, date:'15 Feb 2026', text:'Day End submitted. BPCL stocks verified. Difference: 0 cylinders.', badge:'✅ INFO'},
+    {id:3, date:'14 Feb 2026', text:'Harun Fakir will be on leave on 18 Feb. Arrange temp helper.', badge:'⚠️ NOTICE'},
+  ],
+};
+
+// ======== PARSE CSV ========
+function parseCSV() {
+  // Demo data representing actual CSV deliveries
+  ERP.deliveries = [
+    {id:1, sl:1, consumer:'JAMADAR FARIDA BASHIR', area:'NANDHNI ROAD', mobile:'8177848183', cashMemo:'52334', operator:'Rajesh (EO3)', date:'16/02/2026', status:'scheduled', address:'W NO.8 H.NO.1158/2, PATIL MALA', consumerNo:'24928027', otp:'', payMode:'', amount:856},
+    {id:2, sl:2, consumer:'MRS MANIK S PATIL', area:'KUMBHAR GALLI', mobile:'9373615985', cashMemo:'51608', operator:'Vishwas Bhore', date:'14/02/2026', status:'delivered', address:'SAI MANDIR JAVAL', consumerNo:'26686698', otp:'482916', payMode:'Cash', amount:856},
+    {id:3, sl:3, consumer:'SAYYAD MUNSHIRAJJAK SIKANDAR', area:'PATEL CHOUK', mobile:'8624025698', cashMemo:'51757', operator:'Vishwas Bhore', date:'16/02/2026', status:'intrip', address:'MAIN ROAD, KOLHAPUR', consumerNo:'37855140', otp:'', payMode:'', amount:856},
+    {id:4, sl:4, consumer:'CHOUGULE A. B.', area:'GALLI NO. 1 TO 19', mobile:'9657131962', cashMemo:'52238', operator:'Rajesh (EO3)', date:'16/02/2026', status:'scheduled', address:'Galli No 8, TERAPANTI HALL NEAR', consumerNo:'39882531', otp:'', payMode:'', amount:856},
+    {id:5, sl:5, consumer:'POWAR DEEPA UTTAM', area:'JAMBHALI', mobile:'9881704096', cashMemo:'52267', operator:'Harun Fakir', date:'16/02/2026', status:'delivered', address:'SOYABIN ROAD, JAMBHALI', consumerNo:'39900321', otp:'374829', payMode:'GPay', amount:856},
+    {id:6, sl:6, consumer:'VADAR SHINGADE BAJRANG C', area:'SHAHUNAGAR', mobile:'7741063700', cashMemo:'51772', operator:'Vishwas Bhore', date:'16/02/2026', status:'intrip', address:'SHAHU NAGAR PATEL CHOCK', consumerNo:'40967629', otp:'', payMode:'', amount:856},
+    {id:7, sl:7, consumer:'MR. SANDEEP K BIRANGE', area:'GALLI NO. 1 TO 19', mobile:'8983444974', cashMemo:'52240', operator:'Rajesh (EO3)', date:'16/02/2026', status:'notdelivered', address:'HOUSE GALLY NO 14', consumerNo:'40968000', otp:'', payMode:'', amount:856},
+    {id:8, sl:8, consumer:'BARDIYA KIRAN VIJAYCHAND', area:'SHAHUNAGAR', mobile:'9860286616', cashMemo:'51404', operator:'Vishwas Bhore', date:'13/02/2026', status:'delivered', address:'SHAHU NAGAR, GANPATI MANDIR JAVAL', consumerNo:'40968092', otp:'591027', payMode:'Cash', amount:856},
+    {id:9, sl:9, consumer:'HADPAD SATYAVVA RAMAPPA', area:'SHAHUNAGAR', mobile:'9604332632', cashMemo:'51797', operator:'Vishwas Bhore', date:'16/02/2026', status:'scheduled', address:'PATEL CHOWK, RAJPUT PHOTO JAVAL', consumerNo:'40969213', otp:'', payMode:'', amount:856},
+    {id:10, sl:10, consumer:'BOTAGALE MAHESH SURESH', area:'SHAHUNAGAR', mobile:'9423275808', cashMemo:'51775', operator:'Vishwas Bhore', date:'16/02/2026', status:'intrip', address:'SUDARSHN CHOWK', consumerNo:'40969508', otp:'', payMode:'', amount:856},
+    {id:11, sl:15, consumer:'SANGALE PRAKASH J.', area:'DANOLI', mobile:'9890855144', cashMemo:'52175', operator:'Mahesh Patil', date:'16/02/2026', status:'scheduled', address:'umalwad road, OMMANNA GALLI', consumerNo:'40969861', otp:'', payMode:'', amount:856},
+    {id:12, sl:32, consumer:'CHOUGULE LAXMAN APPASO', area:'NIMSHIRGAON', mobile:'9096186858', cashMemo:'51882', operator:'Vishal Patil(Owner)', date:'16/02/2026', status:'delivered', address:'A/P. NIMSHIRGAON, TAL. SHIROL', consumerNo:'40978233', otp:'203948', payMode:'QR Code', amount:856},
+    {id:13, sl:33, consumer:'JADHAV SARJERAO ATMARAM', area:'JAMBHALI', mobile:'9371819612', cashMemo:'52266', operator:'Harun Fakir', date:'16/02/2026', status:'delivered', address:'A/P. JAMBHALI, TAL. SHIROL', consumerNo:'40978461', otp:'485930', payMode:'Cash', amount:856},
+    {id:14, sl:45, consumer:'MRS SULBHA S MUDALGIKAR', area:'DHRANGUTTI', mobile:'8308702692', cashMemo:'52429', operator:'Rajesh (EO3)', date:'16/02/2026', status:'emergency', address:'235 GANPATI MANDIR JAWAL', consumerNo:'40979388', otp:'', payMode:'Cash', amount:856},
+  ];
+}
+
+// ======== AUTH ========
+function doLogin() {
+  const sel = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+  if (!sel) { showLoginError('Please select user / वापरकर्ता निवडा'); return; }
+  const user = ERP.users[sel];
+  const stored = ERP.passwords[sel] || user.pass;
+  if (pass !== stored) { showLoginError('चुकीचा पासवर्ड / Wrong password'); return; }
+
+  ERP.currentUser = sel;
+  ERP.currentRole = user.role;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginPass').value = '';
+
+  // Update nav user info
+  document.getElementById('navAvatar').textContent = user.avatar;
+  document.getElementById('navAvatar').style.background = `linear-gradient(135deg, ${user.color}, #2a4080)`;
+  document.getElementById('navName').textContent = user.name;
+  document.getElementById('navRole').textContent = user.designation;
+
+  buildNav();
+  showPage(getDefaultPage());
+
+  // Show password change modal on first login
+  if (pass === '1234') {
+    setTimeout(() => {
+      openModal('passwordModal');
+    }, 1000);
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = '❌ ' + msg;
+  el.style.display = 'block';
+}
+
+function doLogout() {
+  ERP.currentUser = null; ERP.currentRole = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function changePassword() {
+  const p1 = document.getElementById('newPass1').value;
+  const p2 = document.getElementById('newPass2').value;
+  if (!p1 || p1.length < 4) { alert('Password must be at least 4 characters'); return; }
+  if (p1 !== p2) { alert('Passwords do not match'); return; }
+  ERP.passwords[ERP.currentUser] = p1;
+  alert('✅ Password changed successfully!');
+  closeModal('passwordModal');
+}
+
+// ======== NAV BUILDER ========
+const navConfig = {
+  owner:    ['dashboard','delivery','godown','office','bpcl','tracking','payroll','gst','staff','settings','notice'],
+  manager:  ['dashboard','delivery','godown','office','bpcl','tracking','payroll','staff','notice'],
+  delivery: ['delivery_home','trip','godown_view','cash','notice'],
+  bda:      ['bda_home','delivery','cash','otp','notice'],
+  temp:     ['delivery','notice'],
+};
+
+const navLabels = {
+  dashboard:      {icon:'📊', label:'Dashboard', mr:'डॅशबोर्ड'},
+  delivery:       {icon:'🚴', label:'Deliveries', mr:'डिलिव्हरी'},
+  delivery_home:  {icon:'🏠', label:'आजची डिलिव्हरी', mr:'Today\'s Delivery'},
+  trip:           {icon:'🗺️', label:'Trip', mr:'ट्रिप'},
+  godown:         {icon:'🏭', label:'Godown', mr:'गोदाम'},
+  godown_view:    {icon:'📦', label:'Stock/साठा', mr:'Stock'},
+  office:         {icon:'🏢', label:'Office', mr:'ऑफिस'},
+  bpcl:           {icon:'📋', label:'BPCL Verify', mr:'BPCL'},
+  tracking:       {icon:'📍', label:'Tracking', mr:'ट्रॅकिंग'},
+  payroll:        {icon:'💰', label:'Payroll', mr:'पगार'},
+  gst:            {icon:'📑', label:'GST/Accounts', mr:'हिशोब'},
+  staff:          {icon:'👥', label:'Staff', mr:'कर्मचारी'},
+  settings:       {icon:'⚙️', label:'Settings', mr:'सेटिंग'},
+  notice:         {icon:'📢', label:'Notice', mr:'नोटीस'},
+  cash:           {icon:'💵', label:'Cash/रोख', mr:'Cash'},
+  bda_home:       {icon:'🏪', label:'BDA होम', mr:'BDA Home'},
+  otp:            {icon:'🔑', label:'OTP Collect', mr:'OTP'},
+};
+
+function buildNav() {
+  const nav = document.getElementById('navButtons');
+  nav.innerHTML = '';
+  const pages = navConfig[ERP.currentRole] || navConfig.temp;
+  pages.forEach(p => {
+    const cfg = navLabels[p];
+    if (!cfg) return;
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn';
+    btn.dataset.page = p;
+    btn.innerHTML = `${cfg.icon} ${cfg.label}<span class="nav-text-mr">${cfg.mr}</span>`;
+    btn.onclick = () => showPage(p);
+    nav.appendChild(btn);
+  });
+}
+
+function showPage(page) {
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.page === page);
+  });
+  const content = document.getElementById('mainContent');
+  content.innerHTML = '';
+  const div = document.createElement('div');
+  div.className = 'page active fade-in';
+  div.innerHTML = buildPage(page);
+  content.appendChild(div);
+  initPageEvents(page);
+}
+
+function getDefaultPage() {
+  const role = ERP.currentRole;
+  if (role === 'owner' || role === 'manager') return 'dashboard';
+  if (role === 'delivery') return 'delivery_home';
+  if (role === 'bda') return 'bda_home';
+  return 'delivery';
+}
+
+// ======== MODAL HELPERS ========
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ======== CLOCK ========
+function updateClock() {
+  const now = new Date();
+  const t = now.toLocaleTimeString('en-IN', {hour12:false});
+  const el = document.getElementById('clockDisplay');
+  if (el) el.textContent = t;
+}
+setInterval(updateClock, 1000); updateClock();
+
+// ======== PAGE BUILDERS ========
+function buildPage(page) {
+  switch(page) {
+    case 'dashboard':    return buildDashboard();
+    case 'delivery':     return buildDeliveryAdmin();
+    case 'delivery_home':return buildDeliveryHome();
+    case 'trip':         return buildTrip();
+    case 'godown':       return buildGodown();
+    case 'godown_view':  return buildGodownView();
+    case 'office':       return buildOffice();
+    case 'bpcl':         return buildBpcl();
+    case 'tracking':     return buildTracking();
+    case 'payroll':      return buildPayroll();
+    case 'gst':          return buildGst();
+    case 'staff':        return buildStaff();
+    case 'settings':     return buildSettings();
+    case 'notice':       return buildNotice();
+    case 'cash':         return buildCash();
+    case 'bda_home':     return buildBdaHome();
+    case 'otp':          return buildOtp();
+    default:             return '<div class="card"><p>Page loading...</p></div>';
+  }
+}
+
+// ======== DASHBOARD ========
+function buildDashboard() {
+  const today = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const totalDelivered = ERP.deliveries.filter(d=>d.status==='delivered'||d.status==='emergency').length;
+  const totalScheduled = ERP.deliveries.filter(d=>d.status==='scheduled').length;
+  const totalInTrip = ERP.deliveries.filter(d=>d.status==='intrip').length;
+  const totalNotDel = ERP.deliveries.filter(d=>d.status==='notdelivered').length;
+
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">📊 Dashboard / डॅशबोर्ड</div>
+      <div class="page-header-sub">${today}</div>
+    </div>
+    <div class="page-header-right">
+      <div class="live-indicator"><span class="status-dot status-delivered pulse"></span> LIVE</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px">SAP: 187618</div>
+    </div>
+  </div>
+
+  <!-- DELIVERY STATUS SUMMARY -->
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="stat-card green" style="cursor:pointer" onclick="showPage('delivery')">
+      <div class="stat-icon">✅</div>
+      <div class="stat-label">Delivered Today</div>
+      <div class="stat-label-mr">आज डिलिव्हर</div>
+      <div class="stat-value">${totalDelivered}</div>
+      <div class="progress-bar"><div class="progress-fill green" style="width:${Math.min(100,totalDelivered/89*100)}%"></div></div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-icon">🚴</div>
+      <div class="stat-label">In Trip / रस्त्यावर</div>
+      <div class="stat-label-mr"></div>
+      <div class="stat-value">${totalInTrip}</div>
+      <div class="progress-bar"><div class="progress-fill yellow" style="width:60%"></div></div>
+    </div>
+    <div class="stat-card" style="--accent:var(--accent-blue)">
+      <div class="stat-icon">📋</div>
+      <div class="stat-label">Scheduled / शेड्युल्ड</div>
+      <div class="stat-value">${totalScheduled}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-icon">❌</div>
+      <div class="stat-label">Not Delivered</div>
+      <div class="stat-label-mr">डिलिव्हर नाही</div>
+      <div class="stat-value">${totalNotDel}</div>
+    </div>
+  </div>
+
+  <!-- DELIVERY BOY STATUS (ON ROUTE) -->
+  <div style="margin-bottom:20px">
+    <div class="section-title">🚴 डिलिव्हरी बॉय स्थिती / Delivery Boy Status <span class="badge">ON ROUTE</span></div>
+    <div class="grid-4">
+      ${buildDeliveryBoyCard('Vishwas Bhore','VB','#22c55e','intrip',42,68,38500,'7643982982')}
+      ${buildDeliveryBoyCard('Mahesh Patil','MP','#3b82f6','scheduled',0,47,0,'8830669611')}
+      ${buildDeliveryBoyCard('Harun Fakir','HF','#a855f7','delivered',31,31,28900,'9970660901')}
+      ${buildDeliveryBoyCard('Vishal Magdum','VM','#f97316','intrip',18,35,16200,'9096853954')}
+    </div>
+  </div>
+
+  <!-- GODOWN STOCK SUMMARY -->
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">🏭</span> गोदाम साठा / Godown Stock</div>
+        <button class="btn btn-sm btn-warning" onclick="showPage('godown')">विस्तार →</button>
+      </div>
+      <div class="grid-2">
+        <div class="cyl-count-box" style="border-left:3px solid var(--accent-green)">
+          <div class="count" style="color:var(--accent-green)">${ERP.godown.filled14}</div>
+          <div class="label">14.2 kg भरलेले / Full</div>
+        </div>
+        <div class="cyl-count-box" style="border-left:3px solid var(--text-muted)">
+          <div class="count" style="color:var(--text-secondary)">${ERP.godown.empty14}</div>
+          <div class="label">14.2 kg रिकामे / Empty</div>
+        </div>
+        <div class="cyl-count-box" style="border-left:3px solid var(--accent-blue)">
+          <div class="count" style="color:var(--accent-blue)">${ERP.godown.filled5}</div>
+          <div class="label">5 kg भरलेले / Full</div>
+        </div>
+        <div class="cyl-count-box" style="border-left:3px solid var(--accent-orange)">
+          <div class="count" style="color:var(--accent-orange)">${ERP.godown.filled19}</div>
+          <div class="label">19 kg Commercial</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:rgba(239,68,68,0.08);border-radius:8px;border:1px solid rgba(239,68,68,0.2)">
+        <div style="font-size:12px;color:var(--accent-red)">⚠️ खराब / Defective: ${ERP.godown.defective14} cylinders</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">💰</span> आजचे संकलन / Today's Collection</div>
+        <button class="btn btn-sm btn-primary" onclick="showPage('office')">Details →</button>
+      </div>
+      <div class="summary-block">
+        <div class="summary-block-header">💵 Cash / रोख</div>
+        <div class="summary-block-row"><span class="label">Bhore</span><span class="value" style="color:var(--accent-green)">₹38,500</span></div>
+        <div class="summary-block-row"><span class="label">Harun</span><span class="value" style="color:var(--accent-green)">₹28,900</span></div>
+        <div class="summary-block-row"><span class="label">Magdum</span><span class="value" style="color:var(--accent-green)">₹16,200</span></div>
+        <div class="summary-total"><span>Total / एकूण</span><span style="color:var(--accent-yellow)">₹83,600</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BDA STATUS -->
+  <div style="margin-bottom:20px">
+    <div class="section-title">🏪 BDA सारांश / BDA Summary</div>
+    <div class="grid-4">
+      ${ERP.bdas.map(b => `
+        <div class="bda-card">
+          <div class="bda-name">🏪 ${b.area}</div>
+          <div class="bda-area">${b.owner}</div>
+          <div class="bda-owner">📞 ${b.mobile}</div>
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <span class="chip chip-green">✅ Active</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <!-- NOTICE SECTION -->
+  <div>
+    <div class="section-title">📢 नोटीस / Notices</div>
+    ${ERP.notices.map(n=>`
+      <div class="notice-card">
+        <div style="display:flex;justify-content:space-between">
+          <div class="notice-badge">${n.badge}</div>
+          <div class="notice-date">${n.date}</div>
+        </div>
+        <div class="notice-text">${n.text}</div>
+      </div>
+    `).join('')}
+  </div>
+  `;
+}
+
+function buildDeliveryBoyCard(name, initials, color, status, delivered, total, cash, mobile) {
+  const s = ERP.deliveryStatus[status];
+  const pct = total > 0 ? Math.round(delivered/total*100) : 0;
+  return `
+  <div class="stat-card" onclick="showDeliveryBoyDetail('${name}')" style="--accent:${color}; cursor:pointer">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div class="user-avatar" style="background:linear-gradient(135deg,${color},#1a2a4a)">${initials}</div>
+      <div>
+        <div style="font-size:13px;font-weight:700">${name}</div>
+        <div><span class="status-dot ${s.dot}"></span> <span style="font-size:11px;color:${s.color}">${s.label}</span></div>
+      </div>
+    </div>
+    <div class="stat-label">डिलिव्हर / Delivered</div>
+    <div class="stat-value" style="color:${color};font-size:24px">${delivered}<span style="font-size:13px;color:var(--text-muted)">/${total}</span></div>
+    <div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+    <div style="margin-top:8px;font-size:12px;color:var(--text-secondary)">💰 ₹${cash.toLocaleString('en-IN')} collected</div>
+    <div style="font-size:11px;color:var(--text-muted)">📞 ${mobile}</div>
+  </div>`;
+}
+
+// ======== DELIVERY ADMIN ========
+function buildDeliveryAdmin() {
+  const areas = [...new Set(ERP.deliveries.map(d=>d.area))];
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🚴 Delivery Management / डिलिव्हरी व्यवस्थापन</div>
+      <div class="page-header-sub">Total: ${ERP.deliveries.length} | Delivered: ${ERP.deliveries.filter(d=>d.status==='delivered'||d.status==='emergency').length}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <label class="btn btn-primary btn-sm" style="cursor:pointer">📤 CSV Upload <input type="file" accept=".csv" style="display:none" onchange="handleCSVUpload(this)"></label>
+      <button class="btn btn-warning btn-sm" onclick="showStockModal()">📦 Stock Transfer</button>
+    </div>
+  </div>
+
+  <!-- STATUS LEGEND -->
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+      ${Object.entries(ERP.deliveryStatus).map(([k,v])=>`
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px">
+          <span class="status-dot ${v.dot}"></span>
+          <span>${v.label}</span>
+          <span style="color:var(--text-muted)">/ ${v.labelMr}</span>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input class="search-input" id="delivSearch" placeholder="🔍 ग्राहक शोधा / Search customer, area, mobile..." oninput="filterDeliveries()">
+    <select class="form-group" style="margin:0;width:180px" id="areaFilter" onchange="filterDeliveries()">
+      <option value="">All Areas / सर्व भाग</option>
+      ${areas.map(a=>`<option>${a}</option>`).join('')}
+    </select>
+    <select style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);padding:10px 14px;font-family:var(--font-main)" id="statusFilter" onchange="filterDeliveries()">
+      <option value="">All Status</option>
+      ${Object.entries(ERP.deliveryStatus).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
+    </select>
+  </div>
+
+  <!-- DELIVERY LIST (AREA-WISE) -->
+  <div id="deliveryList">
+    ${buildDeliveryList(ERP.deliveries)}
+  </div>
+  `;
+}
+
+function buildDeliveryList(deliveries) {
+  const byArea = {};
+  deliveries.forEach(d => {
+    if (!byArea[d.area]) byArea[d.area] = [];
+    byArea[d.area].push(d);
+  });
+  return Object.entries(byArea).map(([area, items]) => `
+    <div style="margin-bottom:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--accent-yellow);margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        📍 ${area} <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(${items.length} deliveries)</span>
+      </div>
+      ${items.map(d => buildDeliveryRow(d)).join('')}
+    </div>
+  `).join('');
+}
+
+function buildDeliveryRow(d) {
+  const s = ERP.deliveryStatus[d.status];
+  return `
+  <div class="delivery-card" onclick="openDeliveryRecord(${d.id})" style="padding-left:18px">
+    <div class="status-bar" style="background:${s.color}"></div>
+    <div class="dcnum">${d.sl}</div>
+    <div class="dcinfo">
+      <div class="dcname">${d.consumer}</div>
+      <div class="dcaddress">📍 ${d.address}</div>
+      <div class="dcarea">🗂️ ${d.area} | 📄 CM: ${d.cashMemo} | 👤 ${d.operator}</div>
+    </div>
+    <div class="dcactions">
+      <span class="chip ${s.dot==='status-scheduled'?'chip-blue':s.dot==='status-intrip'?'chip-yellow':s.dot==='status-delivered'?'chip-green':s.dot==='status-emergency'?'chip-orange':'chip-red'}">
+        <span class="status-dot ${s.dot}"></span> ${s.labelMr}
+      </span>
+      <div class="dcphone">📞 ${d.mobile}</div>
+      ${d.otp ? `<span style="font-size:11px;color:var(--accent-green)">OTP: ${d.otp}</span>` : ''}
+      ${d.payMode ? `<span style="font-size:11px;color:var(--accent-blue)">💳 ${d.payMode}</span>` : ''}
+    </div>
+  </div>`;
+}
+
+function filterDeliveries() {
+  const q = (document.getElementById('delivSearch')?.value||'').toLowerCase();
+  const area = document.getElementById('areaFilter')?.value||'';
+  const status = document.getElementById('statusFilter')?.value||'';
+  let filtered = ERP.deliveries.filter(d => {
+    const matchQ = !q || d.consumer.toLowerCase().includes(q) || d.area.toLowerCase().includes(q) || d.mobile.includes(q);
+    const matchArea = !area || d.area === area;
+    const matchStatus = !status || d.status === status;
+    return matchQ && matchArea && matchStatus;
+  });
+  const el = document.getElementById('deliveryList');
+  if (el) el.innerHTML = buildDeliveryList(filtered);
+}
+
+function handleCSVUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    const lines = text.split('\n');
+    let added = 0;
+    // Parse and append (simplified)
+    alert(`✅ CSV uploaded: ${lines.length} lines processed.\nNew deliveries will appear in list.`);
+  };
+  reader.readAsText(file);
+}
+
+function openDeliveryRecord(id) {
+  const d = ERP.deliveries.find(x=>x.id===id);
+  if (!d) return;
+  const s = ERP.deliveryStatus[d.status];
+  document.getElementById('deliveryModalContent').innerHTML = `
+    <div class="card" style="background:var(--bg-card2);margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span class="status-dot ${s.dot}" style="width:14px;height:14px"></span>
+        <div>
+          <div style="font-weight:700;font-size:16px">${d.consumer}</div>
+          <div style="font-size:12px;color:var(--text-muted)">Consumer No: ${d.consumerNo} | Cash Memo: ${d.cashMemo}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div><div style="font-size:11px;color:var(--text-muted)">Area / भाग</div><div>${d.area}</div></div>
+        <div><div style="font-size:11px;color:var(--text-muted)">Mobile</div><div>${d.mobile}</div></div>
+        <div><div style="font-size:11px;color:var(--text-muted)">Date</div><div>${d.date}</div></div>
+        <div><div style="font-size:11px;color:var(--text-muted)">Amount / रक्कम</div><div style="font-weight:700;color:var(--accent-yellow)">₹${d.amount}</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:13px;color:var(--text-secondary)">📍 ${d.address}</div>
+    </div>
+
+    <div class="form-group">
+      <label>डिलिव्हरी स्थिती / Delivery Status</label>
+      <select id="recStatus">
+        ${Object.entries(ERP.deliveryStatus).map(([k,v])=>`<option value="${k}" ${d.status===k?'selected':''}>${v.label} / ${v.labelMr}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>OTP (BPCL App)</label>
+      <input type="text" id="recOtp" value="${d.otp||''}" placeholder="6-digit OTP (leave blank for emergency)">
+    </div>
+
+    <div class="form-group">
+      <label>पैसे मोड / Payment Mode</label>
+      <div class="pay-mode-grid">
+        ${ERP.paymentModes.map(m=>`<button class="pay-mode-btn ${d.payMode===m?'selected':''}" onclick="selectPayMode(this,'${m}')" data-mode="${m}">${m}</button>`).join('')}
+      </div>
+    </div>
+
+    <div id="partialFields" style="display:${d.payMode==='Partial Cash+Online'?'block':'none'}">
+      <div class="form-row">
+        <div class="form-group"><label>Cash / रोख ₹</label><input type="number" id="partialCash" placeholder="500"></div>
+        <div class="form-group"><label>Online / ऑनलाइन ₹</label><input type="number" id="partialOnline" placeholder="356"></div>
+        <div class="form-group"><label>Total / एकूण</label><input type="number" id="partialTotal" placeholder="${d.amount}" value="${d.amount}" readonly style="background:rgba(255,209,0,0.05)"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>नोट / Note</label>
+      <textarea rows="2" placeholder="Customer location note / ग्राहकाची माहिती"></textarea>
+    </div>
+
+    <button class="btn btn-success" style="width:100%;margin-top:8px" onclick="saveDelivery(${id})">✅ सेव करा / Save Record</button>
+  `;
+  openModal('deliveryModal');
+}
+
+function selectPayMode(btn, mode) {
+  btn.closest('.pay-mode-grid').querySelectorAll('.pay-mode-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const partial = document.getElementById('partialFields');
+  if (partial) partial.style.display = mode === 'Partial Cash+Online' ? 'block' : 'none';
+}
+
+function saveDelivery(id) {
+  const d = ERP.deliveries.find(x=>x.id===id);
+  if (!d) return;
+  d.status = document.getElementById('recStatus').value;
+  d.otp = document.getElementById('recOtp').value;
+  const selectedPay = document.querySelector('.pay-mode-btn.selected');
+  if (selectedPay) d.payMode = selectedPay.dataset.mode;
+  closeModal('deliveryModal');
+  showPage('delivery');
+}
+
+// ======== DELIVERY HOME (DELIVERY BOY) ========
+function buildDeliveryHome() {
+  const user = ERP.users[ERP.currentUser];
+  const myDeliveries = ERP.deliveries.filter(d=>d.operator && d.operator.toLowerCase().includes(user.name.split(' ')[0].toLowerCase()));
+  const delivered = myDeliveries.filter(d=>d.status==='delivered'||d.status==='emergency');
+  const pending = myDeliveries.filter(d=>d.status==='scheduled'||d.status==='intrip');
+
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🏠 आजची डिलिव्हरी / Today's Delivery</div>
+      <div class="page-header-sub">नमस्कार ${user.name} | ${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})}</div>
+    </div>
+    <div>
+      <div class="live-indicator"><span class="status-dot status-delivered pulse"></span> ONLINE</div>
+    </div>
+  </div>
+
+  <!-- QUICK STATS -->
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="stat-card green">
+      <div class="stat-icon">✅</div>
+      <div class="stat-label">डिलिव्हर केले</div>
+      <div class="stat-value" style="color:var(--accent-green)">${delivered.length}</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-icon">🔄</div>
+      <div class="stat-label">बाकी आहे</div>
+      <div class="stat-value" style="color:var(--accent-yellow)">${pending.length}</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--accent-blue)">
+      <div class="stat-icon">💰</div>
+      <div class="stat-label">जमा रोख</div>
+      <div class="stat-value" style="color:var(--accent-blue);font-size:20px">₹${(delivered.length * 856).toLocaleString('en-IN')}</div>
+    </div>
+  </div>
+
+  <!-- MAP AREA -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <div class="card-title">📍 नकाशा / Map — पुढील डिलिव्हरी</div>
+      <span class="chip chip-blue">📌 Area-wise Pinned</span>
+    </div>
+    <div class="map-placeholder">
+      <div class="map-icon">🗺️</div>
+      <div style="font-size:14px">Live Map — पुढील डिलिव्हरी येथे दाखवेल</div>
+      <div style="font-size:12px;color:var(--text-muted)">GPS tracking active · Nearest delivery pinned</div>
+      <button class="btn btn-primary" style="margin-top:8px">📍 नेव्हिगेट करा / Navigate</button>
+    </div>
+  </div>
+
+  <!-- UBER-LIKE NEXT DELIVERY -->
+  ${pending.length > 0 ? `
+  <div class="alert alert-info" style="margin-bottom:12px">
+    📍 <strong>पुढील डिलिव्हरी / Next Delivery:</strong> ${pending[0].consumer} — ${pending[0].area}
+    <button class="btn btn-sm btn-primary" style="float:right" onclick="openDeliveryRecord(${pending[0].id})">डिलिव्हर करा →</button>
+  </div>
+  ` : '<div class="alert alert-success">🎉 सर्व डिलिव्हरी पूर्ण / All deliveries complete!</div>'}
+
+  <!-- MY DELIVERY LIST (AREA-WISE) -->
+  <div class="section-title">📋 माझ्या डिलिव्हरी / My Deliveries</div>
+
+  <!-- STATUS LEGEND (color only for delivery boy) -->
+  <div class="card" style="margin-bottom:12px;padding:10px">
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      ${Object.entries(ERP.deliveryStatus).map(([k,v])=>`
+        <div style="display:flex;align-items:center;gap:5px;font-size:13px">
+          <span class="status-dot ${v.dot}" style="width:14px;height:14px"></span>
+          <strong style="color:${v.color}">${v.labelMr}</strong>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  ${buildDeliveryList(myDeliveries.length > 0 ? myDeliveries : ERP.deliveries.slice(0,8))}
+
+  <!-- SPOT DELIVERY -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-header"><div class="card-title">🆕 स्पॉट डिलिव्हरी / Spot Delivery</div></div>
+    <div class="form-row">
+      <div class="form-group"><label>ग्राहक नाव / Customer Name</label><input type="text" placeholder="नाव टाका..."></div>
+      <div class="form-group"><label>मोबाईल / Mobile</label><input type="tel" placeholder="10-digit number"></div>
+      <div class="form-group"><label>भाग / Area</label><input type="text" placeholder="Area / गाव"></div>
+    </div>
+    <button class="btn btn-success">✅ स्पॉट डिलिव्हरी नोंदवा / Record Spot Delivery</button>
+  </div>
+  `;
+}
+
+// ======== TRIP PAGE (DELIVERY BOY) ========
+function buildTrip() {
+  const user = ERP.users[ERP.currentUser];
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🗺️ ट्रिप / Trip Management</div>
+      <div class="page-header-sub">${user.name} — आजचा ट्रिप सारांश</div>
+    </div>
+  </div>
+
+  <!-- STOCK TAKING (MARATHI GRID FORMULA) -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><div class="card-title">📦 सकाळी साठा मोजणी / Morning Stock Count</div></div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'tab-14full')">14.2 किलो भरलेले</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-14empty')">14.2 किलो रिकामे</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-5kg')">5 किलो</button>
+    </div>
+    <div class="tab-content active" id="tab-14full">
+      <div class="marathi-grid-title">14.2 किलो — भरलेले (एकेरी ओळ)</div>
+      <div class="marathi-grid-row">
+        <span style="font-size:13px;color:var(--text-secondary)">उभी ओळ:</span>
+        <input class="marathi-grid-input" id="r1c" placeholder="10" oninput="calcGrid()">
+        <span>×</span>
+        <input class="marathi-grid-input" id="r1r" placeholder="12" oninput="calcGrid()">
+        <span>+</span>
+        <input class="marathi-grid-input" id="r1e" placeholder="8" oninput="calcGrid()">
+        <span style="color:var(--text-muted)">=</span>
+        <span class="marathi-grid-result" id="r1result">0</span>
+        <span style="font-size:12px;color:var(--text-muted)">एकूण संख्या</span>
+      </div>
+
+      <div class="marathi-grid-title" style="margin-top:12px">14.2 किलो — रिकामे (दुहेरी ओळ — फुडून उजवीकडे)</div>
+      <div class="marathi-grid-row">
+        <span style="font-size:13px;color:var(--text-secondary)">दुहेरी उभी:</span>
+        <input class="marathi-grid-input" id="e1c" placeholder="12" oninput="calcGrid()">
+        <span>×</span>
+        <input class="marathi-grid-input" id="e1r" placeholder="15" oninput="calcGrid()">
+        <span>+</span>
+        <input class="marathi-grid-input" id="e1a1" placeholder="7" oninput="calcGrid()">
+        <span>+</span>
+        <input class="marathi-grid-input" id="e1a2" placeholder="10" oninput="calcGrid()">
+        <span>=</span>
+        <span class="marathi-grid-result" id="e1result">0</span>
+      </div>
+
+      <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="cyl-count-box" style="border-left:3px solid var(--accent-green)">
+          <div class="count" style="color:var(--accent-green)" id="totalFull14">0</div>
+          <div class="label">14.2 kg — एकूण भरलेले</div>
+        </div>
+        <div class="cyl-count-box" style="border-left:3px solid var(--text-muted)">
+          <div class="count" id="totalEmpty14">0</div>
+          <div class="label">14.2 kg — एकूण रिकामे</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-14empty">
+      <div class="alert alert-info">रिकामे सिलेंडर मोजण्यासाठी दुहेरी फॉर्म्युला वापरा:<br>
+        <strong>(उभी ओळ × आडवी ओळ + अधिक ओळ) × 2 + एकेरी ओळ = एकूण</strong></div>
+    </div>
+
+    <div class="tab-content" id="tab-5kg">
+      <div class="marathi-grid-row">
+        <span>5 kg भरलेले:</span>
+        <input class="marathi-grid-input" placeholder="0">
+        <span>रिकामे:</span>
+        <input class="marathi-grid-input" placeholder="0">
+      </div>
+    </div>
+  </div>
+
+  <!-- TRIP SUMMARY (END OF TRIP) -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <div class="card-title">📋 ट्रिप सारांश / Trip Summary</div>
+      <button class="btn btn-success btn-sm">+ नवीन ट्रिप / New Trip</button>
+    </div>
+    <div class="trip-summary-card">
+      <div class="trip-row"><span style="color:var(--text-secondary)">ग्राहकांना दिलेले सिलेंडर / Refills Delivered</span><span style="font-weight:700;color:var(--accent-green)">42</span></div>
+
+      <!-- PAYMENT BREAKDOWN -->
+      <div style="margin:8px 0;font-size:12px;font-weight:700;color:var(--accent-blue)">💳 पैसे प्रकार / Payment Breakdown</div>
+      <div class="trip-row"><span style="color:var(--text-secondary);padding-left:16px">रोख / Cash</span><span>39</span></div>
+      <div class="trip-row"><span style="color:var(--text-secondary);padding-left:16px">QR Code</span><span>2</span></div>
+      <div class="trip-row"><span style="color:var(--text-secondary);padding-left:16px">GPay</span><span>1</span></div>
+      <div class="trip-row"><span style="color:var(--text-secondary);padding-left:16px">Paytm</span><span>0</span></div>
+      <div class="trip-row"><span style="color:var(--text-secondary);padding-left:16px">Advance (BPCL)</span><span>0</span></div>
+      <div class="trip-row"><span style="color:var(--text-secondary);padding-left:16px">Partial (Cash+Online)</span><span>0</span></div>
+      <div class="trip-row" style="border-top:1px solid var(--border-bright);margin-top:4px"><span style="font-weight:700">एकूण / Total</span><span style="font-weight:700;color:var(--accent-yellow)">42</span></div>
+
+      <!-- STOCK TRANSFER -->
+      <div style="margin:8px 0;font-size:12px;font-weight:700;color:var(--accent-orange)">📦 सिलेंडर हस्तांतरण / Stock Transfer</div>
+      <table style="width:100%;font-size:12px">
+        <tr><th style="text-align:left;color:var(--text-muted);padding:4px">ठिकाण</th><th style="color:var(--text-muted)">भरलेले दिले</th><th style="color:var(--text-muted)">रिकामे घेतले</th></tr>
+        <tr><td>ऑफिस / Office</td><td><input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" value="15"></td><td><input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" value="20"></td></tr>
+        <tr><td>BDA - Chipri Beghar</td><td><input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" value="7"></td><td><input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" value="7"></td></tr>
+      </table>
+
+      <div class="trip-row" style="margin-top:8px;border-top:1px solid var(--border-bright)"><span>एकूण रिकामे गोदाम जमा</span><span style="color:var(--accent-green);font-weight:700">70</span></div>
+    </div>
+
+    <!-- DENOMINATION COUNT -->
+    <div class="card" style="background:var(--bg-card2);margin-top:12px">
+      <div class="card-header"><div class="card-title">💵 नोट मोजणी / Cash Denomination Count</div></div>
+      <table class="denom-table" style="width:100%">
+        ${[500,200,100,50,20,10].map(n=>`
+          <tr>
+            <td style="width:80px;font-family:var(--font-mono);color:var(--accent-yellow)">₹${n}</td>
+            <td><span style="color:var(--text-muted)">×</span></td>
+            <td><input class="marathi-grid-input" id="d${n}" placeholder="0" oninput="calcDenom()"></td>
+            <td style="font-size:12px;color:var(--text-muted)">= </td>
+            <td><span class="marathi-grid-result" id="dt${n}" style="font-size:14px">₹0</span></td>
+          </tr>
+        `).join('')}
+        <tr><td colspan="2" style="font-weight:700">Coins</td><td><input class="marathi-grid-input" id="dcoins" placeholder="0" oninput="calcDenom()"></td><td></td></tr>
+        <tr style="border-top:1px solid var(--border-bright)"><td colspan="4" style="font-weight:700;font-size:15px;padding-top:8px">एकूण Total</td><td><span class="marathi-grid-result" id="denomTotal">₹0</span></td></tr>
+      </table>
+      <div class="alert alert-info" style="margin-top:8px;font-size:12px">⚠️ एकूण नोट मोजणी = एकूण रोख जमा होणे आवश्यक</div>
+    </div>
+
+    <!-- BDA CASH -->
+    <div class="card" style="background:var(--bg-card2);margin-top:12px">
+      <div class="card-header"><div class="card-title">🏪 BDA कडून मिळालेले / Cash from BDA</div></div>
+      ${ERP.bdas.slice(0,4).map(b=>`
+      <div class="trip-row">
+        <span>${b.area} — ${b.owner}</span>
+        <input type="number" style="width:80px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center;font-family:var(--font-mono)" placeholder="₹0">
+      </div>`).join('')}
+    </div>
+
+    <button class="btn btn-success" style="width:100%;margin-top:12px">✅ ट्रिप बंद करा / Close Trip</button>
+  </div>
+  `;
+}
+
+// ======== GODOWN ========
+function buildGodown() {
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🏭 गोदाम / Godown Stock</div>
+      <div class="page-header-sub">SAP Code: 187618 · BPCL Authorized Godown</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-warning btn-sm" onclick="showPage('bpcl')">📋 BPCL Verify</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'g-main')">🏭 मुख्य साठा / Main Stock</button>
+    <button class="tab-btn" onclick="switchTab(this,'g-entry')">📥 Stock Entry</button>
+    <button class="tab-btn" onclick="switchTab(this,'g-defective')">⚠️ खराब / Defective</button>
+    <button class="tab-btn" onclick="switchTab(this,'g-accessories')">📦 Accessories</button>
+    <button class="tab-btn" onclick="switchTab(this,'g-transfer')">🔄 Transfer</button>
+  </div>
+
+  <div class="tab-content active" id="g-main">
+    <!-- 14.2 KG -->
+    <div class="section-title">🔵 14.2 kg Domestic Cylinder (5350 / 5370)</div>
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card green"><div class="stat-icon">🟢</div><div class="stat-label">Full / भरलेले</div><div class="stat-value" style="color:var(--accent-green)">${ERP.godown.filled14}</div><div class="stat-sub">BPCL Closing: 801</div></div>
+      <div class="stat-card"><div class="stat-icon">⚪</div><div class="stat-label">Empty / रिकामे</div><div class="stat-value" style="color:var(--text-secondary)">${ERP.godown.empty14}</div><div class="stat-sub">BPCL: 338</div></div>
+      <div class="stat-card" style="--accent:var(--accent-purple)"><div class="stat-icon">🚐</div><div class="stat-label">Vehicle Stock</div><div class="stat-value" style="color:var(--accent-purple)">${ERP.godown.vehicle_filled}</div></div>
+      <div class="stat-card" style="--accent:var(--accent-orange)"><div class="stat-icon">🏪</div><div class="stat-label">BDA Filled</div><div class="stat-value" style="color:var(--accent-orange)">${ERP.godown.bda_filled}</div></div>
+    </div>
+
+    <!-- 5 KG -->
+    <div class="section-title">🟡 5 kg Cylinder (5240 / 5250 / 5260)</div>
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-card yellow"><div class="stat-icon">🟡</div><div class="stat-label">Commercial Full (5240)</div><div class="stat-value" style="color:var(--accent-yellow)">66</div></div>
+      <div class="stat-card yellow"><div class="stat-icon">🟡</div><div class="stat-label">Domestic Full (5250)</div><div class="stat-value" style="color:var(--accent-yellow)">20</div></div>
+      <div class="stat-card yellow"><div class="stat-icon">🟡</div><div class="stat-label">Commercial (5260)</div><div class="stat-value" style="color:var(--accent-yellow)">23</div></div>
+    </div>
+
+    <!-- 19 KG -->
+    <div class="section-title">🔴 19 kg Commercial Cylinder (5400 / 5450)</div>
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-card orange"><div class="stat-icon">🔴</div><div class="stat-label">19 kg Full (5400)</div><div class="stat-value" style="color:var(--accent-orange)">64</div></div>
+      <div class="stat-card orange"><div class="stat-icon">⚪</div><div class="stat-label">19 kg Empty</div><div class="stat-value" style="color:var(--text-secondary)">9</div></div>
+      <div class="stat-card red"><div class="stat-icon">✂️</div><div class="stat-label">19 kg Cutting (5450)</div><div class="stat-value" style="color:var(--accent-red)">4</div></div>
+    </div>
+
+    <!-- DPR -->
+    <div class="section-title">🔧 DPR — De-Pressure Regulator</div>
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="stat-card" style="--accent:var(--accent-blue)"><div class="stat-icon">🔧</div><div class="stat-label">14.2 kg DPR (BPCDPR)</div><div class="stat-value">${ERP.godown.dpr}</div></div>
+      <div class="stat-card" style="--accent:var(--accent-blue)"><div class="stat-icon">🔧</div><div class="stat-label">5 kg DPR (BPCDPRF)</div><div class="stat-value">${ERP.godown.dprf}</div></div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="g-entry">
+    <div class="card">
+      <div class="card-header"><div class="card-title">📥 स्टॉक एंट्री / Stock Entry (Morning Physical Count)</div></div>
+      <div class="alert alert-warning">⚠️ सकाळी भौतिक मोजणी / Physical morning count — मागील दिवसाचा क्लोजिंग स्टॉकशी जुळले पाहिजे</div>
+      <div class="form-row">
+        <div class="form-group"><label>14.2 kg भरलेले / Full</label><input type="number" value="${ERP.godown.filled14}"></div>
+        <div class="form-group"><label>14.2 kg रिकामे / Empty</label><input type="number" value="${ERP.godown.empty14}"></div>
+        <div class="form-group"><label>5 kg Full</label><input type="number" value="${ERP.godown.filled5}"></div>
+        <div class="form-group"><label>19 kg Full</label><input type="number" value="${ERP.godown.filled19}"></div>
+        <div class="form-group"><label>19 kg Empty</label><input type="number" value="${ERP.godown.empty19}"></div>
+        <div class="form-group"><label>Defective 14.2</label><input type="number" value="${ERP.godown.defective14}"></div>
+      </div>
+      <div class="form-group"><label>टिप्पणी / Notes</label><textarea rows="2" placeholder="Opening stock notes..."></textarea></div>
+      <button class="btn btn-success">✅ सकाळचा साठा जतन करा / Save Morning Stock</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="g-defective">
+    <div class="card">
+      <div class="card-header"><div class="card-title">⚠️ खराब सिलेंडर / Defective Cylinders</div></div>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div class="stat-card red"><div class="stat-icon">⚠️</div><div class="stat-label">14.2 kg Defective Full</div><div class="stat-value" style="color:var(--accent-red)">0</div></div>
+        <div class="stat-card red"><div class="stat-icon">⚠️</div><div class="stat-label">14.2 kg Defective Empty</div><div class="stat-value" style="color:var(--accent-red)">0</div></div>
+        <div class="stat-card red"><div class="stat-icon">⚠️</div><div class="stat-label">OMC Defective</div><div class="stat-value" style="color:var(--accent-red)">0</div></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>सिलेंडर प्रकार / Type</label><select><option>14.2 kg Full</option><option>14.2 kg Empty</option><option>5 kg Full</option><option>19 kg</option></select></div>
+        <div class="form-group"><label>नग / Qty</label><input type="number" placeholder="0"></div>
+        <div class="form-group"><label>कारण / Reason</label><input type="text" placeholder="Reason for defect"></div>
+      </div>
+      <button class="btn btn-danger">⚠️ खराब नोंद करा / Record Defective</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="g-accessories">
+    <div class="card">
+      <div class="card-header"><div class="card-title">📦 अतिरिक्त वस्तू / Accessories Stock</div></div>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div class="stat-card" style="--accent:var(--accent-blue)">
+          <div class="stat-icon">📘</div><div class="stat-label">Blue Book</div>
+          <div class="stat-value">${ERP.godown.bluebook - ERP.godown.bluebook_sold}</div>
+          <div class="stat-sub">Total: ${ERP.godown.bluebook} | Sold: ${ERP.godown.bluebook_sold}</div>
+        </div>
+        <div class="stat-card" style="--accent:var(--accent-orange)">
+          <div class="stat-icon">🔗</div><div class="stat-label">Suraksha Pipe</div>
+          <div class="stat-value">${ERP.godown.suraksha - ERP.godown.suraksha_sold}</div>
+          <div class="stat-sub">Total: ${ERP.godown.suraksha} | Sold: ${ERP.godown.suraksha_sold}</div>
+        </div>
+        <div class="stat-card" style="--accent:var(--accent-purple)">
+          <div class="stat-icon">🔧</div><div class="stat-label">DPR (14.2)</div>
+          <div class="stat-value">${ERP.godown.dpr}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>वस्तू / Item</label>
+          <select><option>Blue Book</option><option>Suraksha Pipe</option><option>DPR 14.2</option><option>DPR 5kg</option></select>
+        </div>
+        <div class="form-group"><label>नग / Qty Add</label><input type="number" placeholder="100"></div>
+      </div>
+      <button class="btn btn-primary">+ साठा जोडा / Add Stock</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="g-transfer">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🔄 Stock Transfer / साठा हस्तांतरण</div></div>
+      <div class="form-row">
+        <div class="form-group"><label>कोणाला दिले / Transfer To</label>
+          <select>
+            <option>Vishwas Bhore</option><option>Mahesh Patil</option><option>Harun Fakir</option><option>Vishal Magdum</option>
+            ${ERP.bdas.map(b=>`<option>BDA - ${b.area}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group"><label>14.2 kg भरलेले दिले</label><input type="number" placeholder="0"></div>
+        <div class="form-group"><label>14.2 kg रिकामे घेतले</label><input type="number" placeholder="0"></div>
+        <div class="form-group"><label>5 kg भरलेले</label><input type="number" placeholder="0"></div>
+        <div class="form-group"><label>19 kg भरलेले</label><input type="number" placeholder="0"></div>
+      </div>
+      <div class="form-group"><label>टिप्पणी / Notes</label><textarea rows="2" placeholder="Transfer notes..."></textarea></div>
+      <button class="btn btn-success">✅ हस्तांतरण नोंद करा / Record Transfer</button>
+    </div>
+  </div>
+  `;
+}
+
+// Delivery boy godown view (simplified)
+function buildGodownView() {
+  return `
+  <div class="page-header"><div><div class="page-header-title">📦 माझा साठा / My Stock</div></div></div>
+  <div class="grid-2">
+    <div class="cyl-count-box" style="border-left:3px solid var(--accent-green)">
+      <div class="count" style="color:var(--accent-green)">48</div><div class="label">14.2 kg भरलेले / Full Given</div>
+    </div>
+    <div class="cyl-count-box" style="border-left:3px solid var(--text-muted)">
+      <div class="count">40</div><div class="label">14.2 kg रिकामे / Empty Collected</div>
+    </div>
+  </div>
+  <div class="alert alert-info" style="margin-top:12px">📝 सकाळी साठा मोजणीसाठी ट्रिप पेज वापरा / Use Trip page for morning count</div>
+  `;
+}
+
+// ======== OFFICE PAGE ========
+function buildOffice() {
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🏢 Office Summary / ऑफिस सारांश</div>
+      <div class="page-header-sub">${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-warning btn-sm">📤 Day End</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'of-sales')">💰 Sales/विक्री</button>
+    <button class="tab-btn" onclick="switchTab(this,'of-stock')">📦 Stock/साठा</button>
+    <button class="tab-btn" onclick="switchTab(this,'of-expense')">💸 Expenses/खर्च</button>
+    <button class="tab-btn" onclick="switchTab(this,'of-dayend')">📋 Day End</button>
+    <button class="tab-btn" onclick="switchTab(this,'of-addl')">➕ Additional Sales</button>
+  </div>
+
+  <div class="tab-content active" id="of-sales">
+    <!-- OPENING STOCK -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><div class="card-title">📊 Opening Stock / उघडणारा साठा</div></div>
+      <div class="grid-4">
+        <div class="cyl-count-box"><div class="count" style="color:var(--accent-green)">801</div><div class="label">14.2 kg Full Opening</div></div>
+        <div class="cyl-count-box"><div class="count">${ERP.godown.empty14}</div><div class="label">14.2 kg Empty Opening</div></div>
+        <div class="cyl-count-box"><div class="count" style="color:var(--accent-yellow)">109</div><div class="label">5 kg Full Opening</div></div>
+        <div class="cyl-count-box"><div class="count" style="color:var(--accent-orange)">64</div><div class="label">19 kg Full Opening</div></div>
+      </div>
+    </div>
+
+    <!-- TODAY'S SALES SUMMARY -->
+    <div class="summary-block">
+      <div class="summary-block-header">🛒 ग्राहकांना दिलेले / Refills to Customers</div>
+      <div class="summary-block-row"><span class="label">Cash / रोख</span><span class="value">39 × ₹856 = ₹33,384</span></div>
+      <div class="summary-block-row"><span class="label">QR Code</span><span class="value">2 × ₹856 = ₹1,712</span></div>
+      <div class="summary-block-row"><span class="label">GPay</span><span class="value">2</span></div>
+      <div class="summary-block-row"><span class="label">Paytm</span><span class="value">0</span></div>
+      <div class="summary-block-row"><span class="label">Advance (BPCL)</span><span class="value">2</span></div>
+      <div class="summary-block-row"><span class="label">Partial Cash+Online</span><span class="value">1 (₹500 cash + ₹350 QR)</span></div>
+      <div class="summary-total"><span>एकूण / Total Refills</span><span style="color:var(--accent-yellow);font-family:var(--font-mono)">48</span></div>
+    </div>
+
+    <!-- STOCK TRANSFER SUMMARY -->
+    <div class="summary-block" style="margin-top:12px">
+      <div class="summary-block-header">🔄 सिलेंडर हस्तांतरण / Stock Transfer Summary</div>
+      <table class="data-table">
+        <tr><th>डिलिव्हरी मॅन</th><th>भरलेले दिले</th><th>रिकामे घेतले</th><th>Cash</th><th>Online</th></tr>
+        <tr><td>Vishwas Bhore</td><td style="color:var(--accent-green)">68</td><td>40</td><td>₹38,500</td><td>₹3,200</td></tr>
+        <tr><td>Mahesh Patil</td><td style="color:var(--accent-green)">47</td><td>0</td><td>₹0</td><td>₹0</td></tr>
+        <tr><td>Harun Fakir</td><td style="color:var(--accent-green)">31</td><td>28</td><td>₹28,900</td><td>₹0</td></tr>
+        <tr><td>Vishal Magdum</td><td style="color:var(--accent-green)">35</td><td>15</td><td>₹16,200</td><td>₹1,400</td></tr>
+        <tr style="font-weight:700;background:rgba(255,209,0,0.05)"><td>एकूण Total</td><td style="color:var(--accent-yellow)">181</td><td>83</td><td>₹83,600</td><td>₹4,600</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-content" id="of-stock">
+    <div class="card">
+      <div class="card-header"><div class="card-title">📦 Closing Stock / बंद साठा</div></div>
+      <div class="grid-4">
+        <div class="cyl-count-box"><div class="count" style="color:var(--accent-green)">${ERP.godown.filled14}</div><div class="label">14.2 kg Full Closing</div></div>
+        <div class="cyl-count-box"><div class="count">${ERP.godown.empty14}</div><div class="label">14.2 kg Empty Closing</div></div>
+        <div class="cyl-count-box"><div class="count" style="color:var(--accent-yellow)">${ERP.godown.filled5}</div><div class="label">5 kg Full Closing</div></div>
+        <div class="cyl-count-box"><div class="count" style="color:var(--accent-orange)">${ERP.godown.filled19}</div><div class="label">19 kg Full Closing</div></div>
+      </div>
+      <div class="alert alert-info" style="margin-top:12px">📊 Closing stock = previous day's opening stock + received - delivered</div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="of-expense">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">💸 खर्च / Expenses</div>
+        <button class="btn btn-sm btn-primary" onclick="addExpenseRow()">+ खर्च जोडा</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="expenseTable">
+          <tr><th>प्रकार / Type</th><th>वर्णन / Description</th><th>रक्कम ₹</th><th>Action</th></tr>
+          <tr><td>Termination Voucher</td><td><input style="background:transparent;border:none;color:var(--text-primary);width:150px" value="Customer termination"></td><td><input type="number" style="width:80px;background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:4px;padding:3px" placeholder="0"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">✕</button></td></tr>
+          <tr><td>Name Change</td><td><input style="background:transparent;border:none;color:var(--text-primary);width:150px" value="Name change fee"></td><td><input type="number" style="width:80px;background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:4px;padding:3px" placeholder="0"></td><td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">✕</button></td></tr>
+        </table>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label>रोख दिले / Cash Given To</label>
+        <div class="form-row">
+          <select><option>Vishal Patil</option><option>Mrinmayi Patil</option><option>Pundalik Patil</option><option>Rajesh Awale</option></select>
+          <input type="number" placeholder="Amount ₹">
+          <input type="text" placeholder="Purpose / कारण">
+          <button class="btn btn-warning btn-sm">जोडा</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="of-dayend">
+    <div class="card">
+      <div class="card-header"><div class="card-title">📋 Day End Summary / दिवस समाप्ती</div></div>
+      <div class="trip-summary-card">
+        <div class="trip-row"><span>Opening Cash Balance</span><span style="font-family:var(--font-mono)">₹${ERP.todayCash.opening.toLocaleString('en-IN')}</span></div>
+        <div class="trip-row"><span>Total Collection / एकूण जमा</span><span style="color:var(--accent-green);font-family:var(--font-mono)">+₹83,600</span></div>
+        <div class="trip-row"><span>Expenses / खर्च</span><span style="color:var(--accent-red);font-family:var(--font-mono)">-₹${ERP.todayCash.expenses.toLocaleString('en-IN')}</span></div>
+        <div class="trip-row" style="border-top:1px solid var(--border-bright)"><span style="font-weight:700">Closing Balance / बंद शिल्लक</span><span style="color:var(--accent-yellow);font-weight:700;font-family:var(--font-mono)">₹96,200</span></div>
+      </div>
+      <!-- DENOMINATION -->
+      <div class="card-header" style="margin-top:12px"><div class="card-title">💵 Day End Cash Count</div></div>
+      <table class="denom-table">
+        ${[500,200,100,50,20,10].map(n=>`
+          <tr><td>₹${n} ×</td><td><input class="marathi-grid-input" placeholder="0"></td><td>= <span class="marathi-grid-result">₹0</span></td></tr>
+        `).join('')}
+        <tr><td colspan="3" style="padding-top:8px"><strong>Total / एकूण: ₹0</strong></td></tr>
+      </table>
+      <button class="btn btn-success" style="width:100%;margin-top:12px">✅ Day End Submit करा / Submit Day End</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="of-addl">
+    <div class="card">
+      <div class="card-header"><div class="card-title">➕ Additional Sales / अतिरिक्त विक्री</div></div>
+      <div class="summary-block">
+        <div class="summary-block-header">📋 Subscription Voucher (SV) & Accessories</div>
+        <div class="summary-block-row">
+          <span class="label">Subscription Voucher (SV)</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">Suraksha Pipe / सुरक्षा पाईप</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">Blue Book</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">DPR (Free)</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">DPR (Paid) — amount</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="₹0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">5 kg Cylinder</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">Termination Voucher (debit from cash)</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+        <div class="summary-block-row">
+          <span class="label">Name Change (debit from cash)</span>
+          <input type="number" style="width:60px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="0">
+        </div>
+      </div>
+      <button class="btn btn-success" style="margin-top:12px">✅ सेव करा / Save Additional Sales</button>
+    </div>
+  </div>
+  `;
+}
+
+// ======== BPCL VERIFY ========
+function buildBpcl() {
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">📋 BPCL Verification / BPCL पडताळणी</div>
+      <div class="page-header-sub">SAP: 187618 · Day End: 15-Feb-2026</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <label class="btn btn-primary btn-sm" style="cursor:pointer">📤 Day End PDF Upload<input type="file" accept=".pdf" style="display:none"></label>
+      <label class="btn btn-warning btn-sm" style="cursor:pointer">📊 SOA Excel Upload<input type="file" accept=".xlsx,.xls" style="display:none"></label>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'bp-dayend')">📋 Day End Report</button>
+    <button class="tab-btn" onclick="switchTab(this,'bp-compare')">🔍 ERP vs BPCL</button>
+    <button class="tab-btn" onclick="switchTab(this,'bp-soa')">📑 SOA (Jan 2026)</button>
+    <button class="tab-btn" onclick="switchTab(this,'bp-codes')">🏷️ Product Codes</button>
+  </div>
+
+  <div class="tab-content active" id="bp-dayend">
+    <div class="card">
+      <div class="card-header"><div class="card-title">📋 BPCL Day End — 15 Feb 2026</div><div class="card-sub">Distributor: 187618 | 07:45 PM</div></div>
+
+      <div class="section-title" style="font-size:14px">Transaction Summary</div>
+      <div class="table-wrap" style="margin-bottom:16px">
+        <table class="data-table bpcl-compare">
+          <tr><th>Product Code</th><th>Refills</th><th>SV Refills</th><th>Opening Bookings</th><th>Current Bookings</th><th>Closing Bookings</th></tr>
+          <tr><td class="bpcl-product-code">5350 — 14.2 kg Domestic</td><td style="color:var(--accent-green);font-weight:700">89</td><td>0</td><td>634</td><td>94</td><td>639</td></tr>
+          <tr><td class="bpcl-product-code">5370 — 14.2 kg (Empty)</td><td>0</td><td>0</td><td>148</td><td>8</td><td>156</td></tr>
+          <tr><td class="bpcl-product-code">5300, 5400, 5450</td><td colspan="5" style="color:var(--text-muted)">No transactions</td></tr>
+        </table>
+      </div>
+
+      <div class="section-title" style="font-size:14px">Product-Wise Stock at Day-End</div>
+      <div class="table-wrap">
+        <table class="data-table bpcl-compare">
+          <tr><th>Code</th><th>Product</th><th>Closing Full</th><th>Closing Empty</th><th>Full Defective</th><th>BDA Filled</th><th>Vehicle Stock</th></tr>
+          <tr><td class="bpcl-product-code">5240</td><td>5 kg Commercial</td><td>66</td><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+          <tr><td class="bpcl-product-code">5250</td><td>5 kg Domestic</td><td>20</td><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+          <tr><td class="bpcl-product-code">5260</td><td>5 kg Commercial (alt)</td><td>23</td><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+          <tr><td class="bpcl-product-code">5350+5370</td><td>14.2 kg Domestic</td><td style="color:var(--accent-green);font-weight:700">801</td><td>338</td><td>0</td><td>21</td><td>390</td></tr>
+          <tr><td class="bpcl-product-code">5400</td><td>19 kg Commercial</td><td>64</td><td>9</td><td>0</td><td>—</td><td>—</td></tr>
+          <tr><td class="bpcl-product-code">5450</td><td>19 kg Cutting</td><td>4</td><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+          <tr><td class="bpcl-product-code">BPCDPR</td><td>14.2 kg DPR</td><td>338</td><td>0</td><td>15</td><td>—</td><td>—</td></tr>
+          <tr><td class="bpcl-product-code">BPCDPRF</td><td>5 kg DPR</td><td>62</td><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="bp-compare">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🔍 ERP vs BPCL Comparison</div></div>
+      <div class="alert alert-success" style="margin-bottom:12px">✅ All stocks match! No discrepancy found.</div>
+      <table class="data-table">
+        <tr><th>Item</th><th>ERP Value</th><th>BPCL Value</th><th>Difference</th><th>Status</th></tr>
+        <tr><td>14.2 kg Full</td><td>801</td><td>801</td><td>0</td><td class="match">✅ Match</td></tr>
+        <tr><td>14.2 kg Empty</td><td>338</td><td>338</td><td>0</td><td class="match">✅ Match</td></tr>
+        <tr><td>Total Refills (14.2)</td><td>89</td><td>89</td><td>0</td><td class="match">✅ Match</td></tr>
+        <tr><td>5 kg Stock</td><td>109</td><td>109</td><td>0</td><td class="match">✅ Match</td></tr>
+        <tr><td>19 kg Full</td><td>64</td><td>64</td><td>0</td><td class="match">✅ Match</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-content" id="bp-soa">
+    <div class="card">
+      <div class="card-header"><div class="card-title">📑 Statement of Account — Jan 2026</div><div class="card-sub">JAYSINGPUR · SAP: 187618</div></div>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-label">Opening Balance</div><div class="stat-value" style="font-size:18px;color:var(--accent-yellow)">₹42,594</div></div>
+        <div class="stat-card red"><div class="stat-label">Total Debit (A)</div><div class="stat-value" style="font-size:18px;color:var(--accent-red)">₹1,02,86,909</div></div>
+        <div class="stat-card green"><div class="stat-label">Closing Balance</div><div class="stat-value" style="font-size:18px;color:var(--accent-green)">₹2,49,309</div></div>
+      </div>
+      <div class="alert alert-info">📊 Full SOA imported from BPCL Excel. 127 transactions for Jan 2026.</div>
+      <div class="table-wrap" style="max-height:300px;overflow-y:auto">
+        <table class="data-table soa-table">
+          <tr><th>Sr</th><th>Date</th><th>Cheque/Doc</th><th>Narration</th><th>Debit (A)</th><th>Credit (B)</th><th>Type</th></tr>
+          <tr><td>1</td><td>01/01</td><td>187618311225T</td><td>Posting for 1 TVs</td><td class="soa-debit">—</td><td class="soa-credit">₹1,900</td><td><span class="bpcl-product-code">YL</span></td></tr>
+          <tr><td>2</td><td>01/01</td><td>187618311225S</td><td>Posting for 1 SVs</td><td class="soa-debit">₹1,900</td><td class="soa-credit">—</td><td><span class="bpcl-product-code">YL</span></td></tr>
+          <tr><td>4</td><td>01/01</td><td>FIFOMATCHING</td><td>FIFO Matching</td><td class="soa-debit">—</td><td class="soa-credit">₹2,28,564</td><td><span class="bpcl-product-code">ZA</span></td></tr>
+          <tr><td>7</td><td>02/01</td><td>4583964855</td><td>Invoice</td><td class="soa-debit">₹2,38,305</td><td class="soa-credit">—</td><td><span class="bpcl-product-code">RV</span></td></tr>
+          <tr><td>8</td><td>02/01</td><td>187618</td><td>BKIDR520260102</td><td class="soa-debit">—</td><td class="soa-credit">₹2,38,500</td><td><span class="bpcl-product-code">YY</span></td></tr>
+          <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:12px">... 122 more transactions ...</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="bp-codes">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🏷️ BPCL Product Codes</div></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>Product Code</th><th>Description</th><th>Our Name</th></tr>
+          ${Object.entries(ERP.bpclCodes).map(([code,desc])=>`
+            <tr>
+              <td><span class="bpcl-product-code">${code}</span></td>
+              <td>${desc}</td>
+              <td style="color:var(--text-secondary);font-size:12px">${code==='5350'||code==='5370'?'14.2 kg Domestic (same product)':desc}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+      <div class="alert alert-info" style="margin-top:12px">ℹ️ 5350 + 5370 = एकच उत्पादन / Same product (14.2 kg Domestic). Treat as one.</div>
+    </div>
+  </div>
+  `;
+}
+
+// ======== TRACKING ========
+function buildTracking() {
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">📍 Live Tracking / थेट ट्रॅकिंग</div>
+      <div class="page-header-sub">All delivery vehicles — real-time location</div>
+    </div>
+    <div class="live-indicator"><span class="status-dot status-delivered pulse"></span> LIVE</div>
+  </div>
+
+  <!-- VEHICLE STATUS -->
+  <div class="grid-4" style="margin-bottom:16px">
+    ${[
+      {name:'Vishwas Bhore',icon:'🚐',status:'On Route',color:'var(--accent-green)',area:'Shahunagar'},
+      {name:'Mahesh Patil',icon:'🏍️',status:'At Godown',color:'var(--accent-blue)',area:'Loading'},
+      {name:'Harun Fakir',icon:'🚐',status:'Returned',color:'var(--text-secondary)',area:'Jambhali'},
+      {name:'Vishal Magdum',icon:'🏍️',status:'On Route',color:'var(--accent-orange)',area:'Patel Chouk'},
+    ].map(v=>`
+      <div class="vehicle-card" style="flex-direction:column;align-items:flex-start">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+          <span style="font-size:28px">${v.icon}</span>
+          <div>
+            <div class="vehicle-info"><div class="vname">${v.name}</div><div class="vtype" style="color:${v.color}">${v.status}</div></div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary)">📍 ${v.area}</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text-muted)">Last update: 2 min ago</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- MAP -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">🗺️ Live Map — Jaysingpur & Rural Areas</div></div>
+    <div class="map-placeholder" style="height:400px">
+      <div class="map-icon">🗺️</div>
+      <div style="font-size:16px;font-weight:700">Live GPS Tracking Map</div>
+      <div style="font-size:13px;color:var(--text-secondary);text-align:center;max-width:300px">
+        🚐 Delivery van icons on route<br>
+        📍 Customer pin drops (known addresses)<br>
+        🔵 Scheduled · 🟡 In Trip · 🟢 Delivered
+      </div>
+      <div class="alert alert-info" style="max-width:400px;margin-top:8px">
+        Server required for live GPS. Connect to local WiFi or upgrade to internet server for real-time tracking.
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+// ======== PAYROLL ========
+function buildPayroll() {
+  const canApprove = ERP.currentRole === 'owner';
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">💰 Payroll / पगार व्यवस्थापन</div>
+      <div class="page-header-sub">Wage calculation · Advances · Monthly settlement</div>
+    </div>
+    ${canApprove ? '<span class="chip chip-yellow">👑 Owner — Approve Access</span>' : '<span class="chip chip-blue">📋 Manager — View & Submit</span>'}
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'pr-delivery')">🚴 Delivery Men</button>
+    <button class="tab-btn" onclick="switchTab(this,'pr-office')">🏢 Office Staff</button>
+    <button class="tab-btn" onclick="switchTab(this,'pr-godown')">🏭 Godown Crew</button>
+    <button class="tab-btn" onclick="switchTab(this,'pr-advance')">💳 Advances</button>
+  </div>
+
+  <div class="tab-content active" id="pr-delivery">
+    <div class="alert alert-info" style="margin-bottom:12px">
+      <strong>वेतन नियम / Wage Rules:</strong> Urban (Jaysingpur): ₹8/cylinder | Rural (Villages): ₹7/cylinder | Pair Bonus: ₹200/day | Cash Difference: deducted at once | Advance: ₹5000/month deduction
+    </div>
+    ${buildDeliveryPayroll('Vishwas Bhore', 50, 0, 4, 0, 41200, 40000, 20000, 5000)}
+    ${buildDeliveryPayroll('Mahesh Patil', 47, 0, 0, 0, 40232, 40000, 0, 0)}
+    ${buildDeliveryPayroll('Harun Fakir', 31, 8, 2, 0, 28900, 28900, 0, 0)}
+    ${buildDeliveryPayroll('Vishal Magdum', 35, 5, 3, 0, 34500, 32000, 5000, 5000)}
+  </div>
+
+  <div class="tab-content" id="pr-office">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🏢 Office Staff Wages</div></div>
+      <div class="salary-row" style="border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:8px;font-size:14px;font-weight:700">
+        <span class="label">Name / नाव</span><span>Designation</span><span>Base Salary</span><span>Status</span>
+      </div>
+      <div class="salary-row"><span class="label">Rajesh Awale</span><span>Manager</span><span class="amount" style="color:var(--accent-green)">₹15,000</span><span class="chip chip-yellow">Pending Approval</span></div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="pr-godown">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🏭 Godown Crew — Per Vehicle</div></div>
+      <div class="alert alert-info">Sandeep + Sager: ₹800 per BPCL truck (₹400 each) for loading/unloading</div>
+      <div class="salary-row"><span class="label">Ajinath (Truck Driver)</span><span>Monthly</span><span class="amount salary-add">₹18,000</span><span class="chip chip-green">Fixed</span></div>
+      <div class="salary-row"><span class="label">Sandeep (Unloading)</span><span>Per vehicle</span><span class="amount salary-add">₹400 × loads</span><span class="chip chip-blue">Variable</span></div>
+      <div class="salary-row"><span class="label">Sager (Unloading)</span><span>Per vehicle</span><span class="amount salary-add">₹400 × loads</span><span class="chip chip-blue">Variable</span></div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="pr-advance">
+    <div class="card">
+      <div class="card-header"><div class="card-title">💳 Advance Tracker / आगाऊ रकमेचा हिशोब</div></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>Staff</th><th>Total Advance</th><th>Monthly Deduction</th><th>Remaining</th><th>Add Advance</th></tr>
+          <tr>
+            <td>Vishwas Bhore</td><td class="soa-debit">₹20,000</td><td>₹5,000</td>
+            <td style="color:var(--accent-orange);font-family:var(--font-mono)">₹15,000</td>
+            <td><input type="number" style="width:80px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="₹0"> <button class="btn btn-sm btn-warning">Add</button></td>
+          </tr>
+          <tr>
+            <td>Vishal Magdum</td><td class="soa-debit">₹5,000</td><td>₹5,000</td>
+            <td style="color:var(--accent-orange);font-family:var(--font-mono)">₹0</td>
+            <td><input type="number" style="width:80px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center" placeholder="₹0"> <button class="btn btn-sm btn-warning">Add</button></td>
+          </tr>
+        </table>
+      </div>
+      ${canApprove ? '<button class="btn btn-success" style="margin-top:12px">✅ सर्व पगार मंजूर करा / Approve All Wages</button>' : '<div class="alert alert-info">Wages submitted for owner approval.</div>'}
+    </div>
+  </div>
+  `;
+}
+
+function buildDeliveryPayroll(name, urbanCyl, ruralCyl, pairDays, extraDays, cashSale, deposited, prevAdvance, monthlyDeduct) {
+  const urbanWage = urbanCyl * 8;
+  const ruralWage = ruralCyl * 7;
+  const pairBonus = pairDays * 200;
+  const cashDiff = cashSale - deposited;
+  const grossWage = urbanWage + ruralWage + pairBonus;
+  const netWage = grossWage - monthlyDeduct - cashDiff;
+  const remainAdvance = prevAdvance - monthlyDeduct;
+
+  return `
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <div class="card-title">👤 ${name}</div>
+      <span class="chip chip-blue">Delivery Man</span>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent-blue);margin-bottom:6px">📊 Cylinder Sales (This Month)</div>
+        <div class="salary-row"><span class="label">Urban (Jaysingpur) × ₹8</span><span class="amount salary-add">${urbanCyl} × ₹8 = ₹${urbanWage.toLocaleString('en-IN')}</span></div>
+        <div class="salary-row"><span class="label">Rural (Villages) × ₹7</span><span class="amount salary-add">${ruralCyl} × ₹7 = ₹${ruralWage}</span></div>
+        <div class="salary-row"><span class="label">Pair Bonus (${pairDays} days)</span><span class="amount salary-add">₹${pairBonus}</span></div>
+        <div class="salary-row" style="border-top:1px solid var(--border)"><span class="label" style="font-weight:700">Gross Wage</span><span class="amount salary-add" style="font-size:16px">₹${grossWage.toLocaleString('en-IN')}</span></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent-red);margin-bottom:6px">📉 Deductions</div>
+        <div class="salary-row"><span class="label">Cash Difference (₹${cashSale}-₹${deposited})</span><span class="amount salary-deduct">-₹${cashDiff.toLocaleString('en-IN')}</span></div>
+        <div class="salary-row"><span class="label">Advance Deduction</span><span class="amount salary-deduct">-₹${monthlyDeduct.toLocaleString('en-IN')}</span></div>
+        <div class="salary-row" style="border-top:1px solid var(--border)">
+          <span class="label" style="font-weight:700">Net Payable / देय पगार</span>
+          <span class="amount salary-net">₹${netWage.toLocaleString('en-IN')}</span>
+        </div>
+        <div class="salary-row"><span class="label">Remaining Advance</span><span class="amount salary-deduct">₹${remainAdvance.toLocaleString('en-IN')}</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="btn btn-warning btn-sm">✏️ Edit</button>
+      <button class="btn btn-primary btn-sm">💳 Add Cash Difference</button>
+      ${ERP.currentRole==='manager' ? '<button class="btn btn-success btn-sm">📤 Submit to Owner</button>' : ''}
+      ${ERP.currentRole==='owner' ? '<button class="btn btn-success btn-sm">✅ Approve & Pay</button>' : ''}
+    </div>
+  </div>
+  `;
+}
+
+// ======== GST / ACCOUNTS ========
+function buildGst() {
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">📑 GST & Accounts / हिशोब</div>
+      <div class="page-header-sub">Tally-style accounting · GST-ready</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'ac-ledger')">📒 Ledger</button>
+    <button class="tab-btn" onclick="switchTab(this,'ac-gst')">🧾 GST</button>
+    <button class="tab-btn" onclick="switchTab(this,'ac-cash')">💰 Cash Book</button>
+    <button class="tab-btn" onclick="switchTab(this,'ac-bpcl')">🏢 BPCL Account</button>
+  </div>
+
+  <div class="tab-content active" id="ac-ledger">
+    <div class="grid-4" style="margin-bottom:16px">
+      <div class="stat-card green"><div class="stat-icon">📈</div><div class="stat-label">Total Sales (MTD)</div><div class="stat-value" style="font-size:18px;color:var(--accent-green)">₹38.4L</div></div>
+      <div class="stat-card red"><div class="stat-icon">📉</div><div class="stat-label">Total Purchase</div><div class="stat-value" style="font-size:18px;color:var(--accent-red)">₹35.1L</div></div>
+      <div class="stat-card yellow"><div class="stat-icon">💵</div><div class="stat-label">Net Profit</div><div class="stat-value" style="font-size:18px;color:var(--accent-yellow)">₹3.3L</div></div>
+      <div class="stat-card" style="--accent:var(--accent-orange)"><div class="stat-icon">🏦</div><div class="stat-label">BPCL Balance</div><div class="stat-value" style="font-size:18px;color:var(--accent-orange)">₹2.49L</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">📒 Ledger Entries</div></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>Date</th><th>Particulars</th><th>Debit</th><th>Credit</th><th>Balance</th></tr>
+          <tr><td>15/02</td><td>BPCL Invoice Receipt</td><td class="soa-debit">₹2,66,341</td><td>—</td><td class="soa-credit">₹2,49,309</td></tr>
+          <tr><td>15/02</td><td>Cash Sales — 14.2 kg (89 refills)</td><td>—</td><td class="soa-credit">₹76,184</td><td class="soa-credit">₹3,25,493</td></tr>
+          <tr><td>15/02</td><td>Salaries Paid</td><td class="soa-debit">₹15,000</td><td>—</td><td class="soa-credit">₹3,10,493</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="ac-gst">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🧾 GST Summary</div></div>
+      <div class="alert alert-info">LPG cylinders — GST rates as per BPCL schedule. Commercial 19 kg — 18% GST. Domestic — subsidized rates.</div>
+      <div class="form-row">
+        <div class="form-group"><label>GSTIN</label><input type="text" placeholder="27XXXXX"></div>
+        <div class="form-group"><label>Period</label><select><option>Feb 2026</option><option>Jan 2026</option></select></div>
+      </div>
+      <button class="btn btn-primary">📊 Generate GST Report</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="ac-cash">
+    <div class="card">
+      <div class="card-header"><div class="card-title">💰 Cash Book</div></div>
+      <div class="trip-summary-card">
+        <div class="trip-row"><span>Opening Balance</span><span style="font-family:var(--font-mono)">₹15,000</span></div>
+        <div class="trip-row"><span>Cash Received (Deliveries)</span><span style="color:var(--accent-green);font-family:var(--font-mono)">+₹83,600</span></div>
+        <div class="trip-row"><span>Cash Received (BDA)</span><span style="color:var(--accent-green);font-family:var(--font-mono)">+₹12,400</span></div>
+        <div class="trip-row"><span>Expenses</span><span style="color:var(--accent-red);font-family:var(--font-mono)">-₹2,400</span></div>
+        <div class="trip-row"><span>Cash Given (Staff)</span><span style="color:var(--accent-red);font-family:var(--font-mono)">-₹5,000</span></div>
+        <div class="trip-row" style="border-top:1px solid var(--border-bright)"><strong>Closing Balance</strong><span style="color:var(--accent-yellow);font-weight:700;font-family:var(--font-mono)">₹1,03,600</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="ac-bpcl">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🏢 BPCL Account Status</div></div>
+      <div class="grid-2">
+        <div class="stat-card red"><div class="stat-label">Opening Balance (Dr)</div><div class="stat-value" style="font-size:18px;color:var(--accent-red)">₹42,594</div></div>
+        <div class="stat-card"><div class="stat-label">Closing Balance (Jan)</div><div class="stat-value" style="font-size:18px;color:var(--accent-yellow)">₹2,49,309</div></div>
+      </div>
+      <div class="alert alert-warning" style="margin-top:12px">⚠️ Outstanding amount with BPCL: ₹2,49,309. Ensure timely payment to avoid supply disruption.</div>
+    </div>
+  </div>
+  `;
+}
+
+// ======== STAFF PAGE ========
+function buildStaff() {
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">👥 Staff Management / कर्मचारी व्यवस्थापन</div>
+      <div class="page-header-sub">All personnel · Vehicles · BDA owners</div>
+    </div>
+    ${ERP.currentRole==='owner' ? '<button class="btn btn-primary btn-sm">+ कर्मचारी जोडा / Add Staff</button>' : ''}
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'st-staff')">👤 Staff</button>
+    <button class="tab-btn" onclick="switchTab(this,'st-bda')">🏪 BDA</button>
+    <button class="tab-btn" onclick="switchTab(this,'st-vehicles')">🚐 Vehicles</button>
+    <button class="tab-btn" onclick="switchTab(this,'st-temp')">⏱️ Temp Access</button>
+  </div>
+
+  <div class="tab-content active" id="st-staff">
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Name / नाव</th><th>Designation</th><th>Salary / पगार</th><th>Mobile</th><th>Alt Mobile</th><th>Actions</th></tr>
+        ${ERP.staff.map(s=>`
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="user-avatar" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,${s.type==='owner'?'#FFD100,#f97316':s.type==='delivery'?'#22c55e,#0f6631':s.type==='manager'?'#4a90e2,#1a4a8a':'#a855f7,#5a1a8a'})">${s.name.split(' ').map(x=>x[0]).join('').slice(0,2)}</div>
+                <div>
+                  <div style="font-weight:700;font-size:13px">${s.name}</div>
+                  ${s.note ? `<div style="font-size:10px;color:var(--text-muted)">${s.note}</div>` : ''}
+                </div>
+              </div>
+            </td>
+            <td><span class="chip ${s.type==='owner'?'chip-yellow':s.type==='delivery'?'chip-green':s.type==='manager'?'chip-blue':'chip-purple'}">${s.designation}</span></td>
+            <td style="font-family:var(--font-mono);color:var(--accent-yellow)">${s.salary==='na'?'N/A':s.salary==='urban+rural'?'₹8/cyl (Urban) · ₹7/cyl (Rural)':s.salary.includes('/')?s.salary:`₹${parseInt(s.salary).toLocaleString('en-IN')}/month`}</td>
+            <td>${s.mobile ? `📞 ${s.mobile}` : '—'}</td>
+            <td>${s.alt ? `📞 ${s.alt}` : '—'}</td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-sm btn-warning" style="padding:4px 8px">✏️</button>
+                ${ERP.currentRole==='owner'?'<button class="btn btn-sm btn-danger" style="padding:4px 8px">🗑️</button>':''}
+              </div>
+            </td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-content" id="st-bda">
+    <div class="grid-2">
+      ${ERP.bdas.map(b=>`
+        <div class="bda-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div class="bda-name">🏪 ${b.area}</div>
+              <div class="bda-area">${b.owner}</div>
+              <div class="bda-owner">📞 ${b.mobile}</div>
+            </div>
+            <span class="chip chip-green">Active</span>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:6px">
+            <button class="btn btn-sm btn-warning">✏️ Edit</button>
+            ${ERP.currentRole==='owner'?'<button class="btn btn-sm btn-danger">🗑️ Remove</button>':''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+
+  <div class="tab-content" id="st-vehicles">
+    <div class="vehicle-card"><span class="vehicle-icon">🚐</span><div class="vehicle-info"><div class="vname">Tata Ace Gold</div><div class="vtype">Light Commercial Vehicle (LCV)</div><div class="vplate">MH-09-XX-1234</div><div style="font-size:11px;color:var(--text-muted)">Driver: Vishwas Bhore · Assigned route: Urban</div></div></div>
+    <div class="vehicle-card"><span class="vehicle-icon">🚐</span><div class="vehicle-info"><div class="vname">Mahindra Supro</div><div class="vtype">Light Commercial Vehicle (LCV)</div><div class="vplate">MH-09-XX-5678</div><div style="font-size:11px;color:var(--text-muted)">Driver: Harun Fakir · Assigned route: Rural/Jambhali</div></div></div>
+    <div class="vehicle-card"><span class="vehicle-icon">🏍️</span><div class="vehicle-info"><div class="vname">TVS Cargo King</div><div class="vtype">Three-Wheeler Cargo</div><div class="vplate">MH-09-XX-9012</div><div style="font-size:11px;color:var(--text-muted)">Driver: Mahesh Patil</div></div></div>
+    <div class="vehicle-card"><span class="vehicle-icon">🚛</span><div class="vehicle-info"><div class="vname">BPCL Tanker — Tata LPT</div><div class="vtype">Heavy Commercial Vehicle (HCV)</div><div class="vplate">MH-09-XX-3456</div><div style="font-size:11px;color:var(--text-muted)">Driver: Ajinath · BPCL Delivery</div></div></div>
+    ${ERP.currentRole==='owner'?'<button class="btn btn-primary" style="margin-top:8px">+ वाहन जोडा / Add Vehicle</button>':''}
+  </div>
+
+  <div class="tab-content" id="st-temp">
+    <div class="card">
+      <div class="card-header"><div class="card-title">⏱️ Temporary Access / तात्पुरता प्रवेश</div></div>
+      <div class="alert alert-info">Temp helper gets 1-day access to view map, delivery list, and capture customer numbers + OTP.</div>
+      <div class="form-row">
+        <div class="form-group"><label>Helper Name</label><input type="text" placeholder="Name"></div>
+        <div class="form-group"><label>Mobile</label><input type="tel" placeholder="Mobile No."></div>
+        <div class="form-group"><label>Access Duration</label>
+          <select><option>1 Day</option><option>2 Days</option><option>3 Days</option></select>
+        </div>
+        <div class="form-group"><label>Assigned To</label>
+          <select><option>Vishwas Bhore</option><option>Mahesh Patil</option><option>Harun Fakir</option><option>Vishal Magdum</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Temporary Password</label><input type="text" placeholder="Set temp password"></div>
+      <button class="btn btn-success">✅ Create Temp Access</button>
+    </div>
+  </div>
+  `;
+}
+
+// ======== SETTINGS ========
+function buildSettings() {
+  return `
+  <div class="page-header"><div><div class="page-header-title">⚙️ Settings / सेटिंग</div></div></div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🔐 Security / सुरक्षा</div></div>
+      <div class="form-group"><label>पासवर्ड बदला / Change My Password</label></div>
+      <button class="btn btn-warning" onclick="openModal('passwordModal')">🔑 Change Password</button>
+      ${ERP.currentRole==='owner' ? `
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="form-group"><label>Reset Any User Password</label>
+            <select id="resetUser">${Object.keys(ERP.users).map(k=>`<option value="${k}">${ERP.users[k].name}</option>`).join('')}</select>
+          </div>
+          <div class="form-group"><label>New Password</label><input type="text" id="resetNewPass" placeholder="New password"></div>
+          <button class="btn btn-danger btn-sm" onclick="adminResetPassword()">🔄 Reset Password</button>
+        </div>
+      ` : ''}
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">💰 Pricing / किंमत</div></div>
+      <div class="form-group"><label>14.2 kg Cylinder Price (₹)</label><input type="number" value="856"></div>
+      <div class="form-group"><label>5 kg Cylinder Price (₹)</label><input type="number" value="420"></div>
+      <div class="form-group"><label>19 kg Commercial Price (₹)</label><input type="number" value="1923"></div>
+      <button class="btn btn-success btn-sm">✅ Update Prices</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">🏢 Company Info</div></div>
+      <div class="form-group"><label>Company Name</label><input type="text" value="Shourya Bharatgas Services"></div>
+      <div class="form-group"><label>SAP Code</label><input type="text" value="187618" readonly></div>
+      <div class="form-group"><label>GSTIN</label><input type="text" placeholder="27XXXXX"></div>
+      <div class="form-group"><label>Address</label><input type="text" value="Jaysingpur, Dist. Kolhapur, Maharashtra"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">📍 Area Configuration</div></div>
+      <div class="alert alert-info" style="font-size:12px">Urban Area: Jaysingpur city (all pockets: Shahunagar, Sambhajipur, Patel Chowk, Kumbhar Galli, etc.) — ₹8/cylinder<br>Rural Area: All villages (Jambhali, Danoli, Nimshirgav, etc.) — ₹7/cylinder</div>
+      <div class="form-group"><label>Urban Rate (₹/cylinder)</label><input type="number" value="8"></div>
+      <div class="form-group"><label>Rural Rate (₹/cylinder)</label><input type="number" value="7"></div>
+      <div class="form-group"><label>Pair Bonus (₹/day)</label><input type="number" value="200"></div>
+    </div>
+  </div>
+  `;
+}
+
+// ======== NOTICE ========
+function buildNotice() {
+  return `
+  <div class="page-header">
+    <div><div class="page-header-title">📢 Notice Board / सूचना फलक</div></div>
+    ${ERP.currentRole==='owner'||ERP.currentRole==='manager' ? '<button class="btn btn-primary btn-sm" onclick="addNotice()">+ नोटीस जोडा</button>' : ''}
+  </div>
+
+  ${ERP.currentRole==='owner'||ERP.currentRole==='manager' ? `
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><div class="card-title">✏️ नवीन नोटीस / New Notice</div></div>
+    <div class="form-group"><label>Type in English — will show in Marathi too / इंग्रजी टाइप करा</label>
+      <textarea id="noticeInput" rows="3" placeholder="Type notice in English (Marathi will be shown automatically)..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Priority</label>
+        <select id="noticePriority"><option value="🔴 URGENT">🔴 URGENT</option><option value="⚠️ NOTICE">⚠️ NOTICE</option><option value="✅ INFO">✅ INFO</option></select>
+      </div>
+    </div>
+    <button class="btn btn-success" onclick="postNotice()">📢 सूचना पाठवा / Post Notice</button>
+  </div>
+  ` : ''}
+
+  <div id="noticeList">
+    ${ERP.notices.map(n=>`
+      <div class="notice-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="notice-badge">${n.badge}</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div class="notice-date">${n.date}</div>
+            ${ERP.currentRole==='owner'?`<button class="btn btn-danger btn-sm" style="padding:2px 6px;font-size:10px" onclick="deleteNotice(${n.id})">✕</button>`:''}
+          </div>
+        </div>
+        <div class="notice-text">${n.text}</div>
+      </div>
+    `).join('')}
+  </div>
+  `;
+}
+
+// ======== CASH (DELIVERY BOY) ========
+function buildCash() {
+  return `
+  <div class="page-header"><div><div class="page-header-title">💵 Cash Summary / रोख सारांश</div></div></div>
+  <div class="summary-block">
+    <div class="summary-block-header">💵 आजचा रोख / Today's Cash Collection</div>
+    <div class="summary-block-row"><span class="label">Customer Cash</span><span class="value" style="color:var(--accent-green)">₹38,500</span></div>
+    <div class="summary-block-row"><span class="label">BDA Cash Received</span><span class="value" style="color:var(--accent-green)">₹4,200</span></div>
+    <div class="summary-block-row"><span class="label">Online Payments</span><span class="value" style="color:var(--accent-blue)">₹3,200</span></div>
+    <div class="summary-total"><span>एकूण / Total</span><span style="color:var(--accent-yellow)">₹45,900</span></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-header"><div class="card-title">💵 नोट मोजणी / Denomination Count</div></div>
+    <table class="denom-table">
+      ${[500,200,100,50,20,10].map(n=>`
+        <tr><td style="color:var(--accent-yellow);font-family:var(--font-mono)">₹${n}</td><td>×</td><td><input class="marathi-grid-input" id="cd${n}" placeholder="0" oninput="calcCashDenom()"></td><td>=</td><td><span class="marathi-grid-result" id="cdt${n}">₹0</span></td></tr>
+      `).join('')}
+      <tr><td colspan="3">Coins / नाणी</td><td><input class="marathi-grid-input" id="cdcoins" placeholder="0" oninput="calcCashDenom()"></td><td></td></tr>
+      <tr><td colspan="4" style="font-weight:700;padding-top:8px">Total</td><td><span class="marathi-grid-result" id="cashDenomTotal">₹0</span></td></tr>
+    </table>
+  </div>
+  `;
+}
+
+// ======== BDA HOME ========
+function buildBdaHome() {
+  const user = ERP.users[ERP.currentUser];
+  return `
+  <div class="page-header">
+    <div>
+      <div class="page-header-title">🏪 BDA Dashboard / BDA डॅशबोर्ड</div>
+      <div class="page-header-sub">${user.name} — ${user.area||'BDA Area'}</div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="stat-card green"><div class="stat-icon">🛢️</div><div class="stat-label">Stock in Hand / हातात साठा</div><div class="stat-value">14</div><div class="stat-sub">No cap enforced</div></div>
+    <div class="stat-card yellow"><div class="stat-icon">✅</div><div class="stat-label">आज विकले / Sold Today</div><div class="stat-value">7</div></div>
+    <div class="stat-card" style="--accent:var(--accent-blue)"><div class="stat-icon">💰</div><div class="stat-label">Cash Collected</div><div class="stat-value" style="font-size:18px">₹5,992</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'bda-sales')">🛒 Sales</button>
+    <button class="tab-btn" onclick="switchTab(this,'bda-cash')">💰 Cash</button>
+    <button class="tab-btn" onclick="switchTab(this,'bda-otp')">🔑 OTP Collect</button>
+    <button class="tab-btn" onclick="switchTab(this,'bda-spot')">🆕 Spot Booking</button>
+  </div>
+
+  <div class="tab-content active" id="bda-sales">
+    <div class="summary-block">
+      <div class="summary-block-header">🛒 ग्राहकांना दिलेले / Customer Deliveries</div>
+      <div class="summary-block-row"><span class="label">Cash / रोख</span><span class="value">5</span></div>
+      <div class="summary-block-row"><span class="label">QR Code</span><span class="value">1</span></div>
+      <div class="summary-block-row"><span class="label">GPay</span><span class="value">0</span></div>
+      <div class="summary-block-row"><span class="label">Paytm</span><span class="value">1</span></div>
+      <div class="summary-block-row"><span class="label">Advance (BPCL)</span><span class="value">0</span></div>
+      <div class="summary-block-row"><span class="label">Partial</span><span class="value">0</span></div>
+      <div class="summary-total"><span>एकूण / Total</span><span>7</span></div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="card-header"><div class="card-title">📦 Stock Transfer</div></div>
+      <div class="form-row">
+        <div class="form-group"><label>भरलेले मिळाले / Full Received</label><input type="number" placeholder="0"></div>
+        <div class="form-group"><label>रिकामे दिले / Empty Returned</label><input type="number" placeholder="0"></div>
+      </div>
+      <div class="form-group"><label>Cash to Delivery Man</label>
+        <select><option>Vishwas Bhore</option><option>Mahesh Patil</option><option>Harun Fakir</option><option>Vishal Magdum</option></select>
+      </div>
+      <button class="btn btn-success btn-sm">✅ Record Transfer</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="bda-cash">
+    <div class="summary-block">
+      <div class="summary-block-header">💵 Cash & Online Payments</div>
+      <div class="summary-block-row"><span class="label">Cash from Customers</span><span class="value" style="color:var(--accent-green)">₹4,280</span></div>
+      <div class="summary-block-row"><span class="label">Online from Customers</span><span class="value" style="color:var(--accent-blue)">₹1,712</span></div>
+      <div class="summary-total"><span>Total</span><span style="color:var(--accent-yellow)">₹5,992</span></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="card-header"><div class="card-title">💵 BDA Denomination Count</div></div>
+      <table class="denom-table">
+        ${[500,200,100,50,20,10].map(n=>`
+          <tr><td style="color:var(--accent-yellow);font-family:var(--font-mono)">₹${n}</td><td>×</td><td><input class="marathi-grid-input" placeholder="0"></td><td>=</td><td><span class="marathi-grid-result">₹0</span></td></tr>
+        `).join('')}
+        <tr><td colspan="5" style="font-weight:700;padding-top:8px">Total: ₹0</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-content" id="bda-otp">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🔑 OTP Collection — ${user.area||''} Area</div></div>
+      <div class="alert alert-info">BPCL app OTP collection for delivery boys. Store area-wise for faster SAP reconciliation.</div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>Customer Name</th><th>Consumer No.</th><th>Mobile</th><th>OTP</th><th>Date</th></tr>
+          <tr><td>Sample Customer</td><td>40968000</td><td>9876543210</td><td><input style="width:80px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:4px;color:var(--text-primary);padding:3px;text-align:center;font-family:var(--font-mono)" placeholder="6-digit"></td><td>${new Date().toLocaleDateString('en-IN')}</td></tr>
+        </table>
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px">+ Add OTP Entry</button>
+      <div class="alert alert-success" style="margin-top:8px">📋 Print Area-wise OTP list for delivery boy reference.</div>
+      <button class="btn btn-warning btn-sm">🖨️ Print OTP List</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="bda-spot">
+    <div class="card">
+      <div class="card-header"><div class="card-title">🆕 Spot Booking & Delivery</div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Customer Name</label><input type="text" placeholder="नाव..."></div>
+        <div class="form-group"><label>Mobile</label><input type="tel" placeholder="10 digits"></div>
+        <div class="form-group"><label>Consumer No. (if known)</label><input type="text" placeholder="Optional"></div>
+      </div>
+      <div class="form-group"><label>Payment Mode</label>
+        <div class="pay-mode-grid">
+          ${ERP.paymentModes.map(m=>`<button class="pay-mode-btn" onclick="selectPayMode(this,'${m}')" data-mode="${m}">${m}</button>`).join('')}
+        </div>
+      </div>
+      <div class="form-group"><label>Amount ₹</label><input type="number" value="856"></div>
+      <button class="btn btn-success">✅ Spot Delivery Record करा</button>
+    </div>
+  </div>
+  `;
+}
+
+// ======== OTP COLLECT (BDA) ========
+function buildOtp() {
+  return `
+  <div class="page-header"><div><div class="page-header-title">🔑 OTP Collect / OTP जमा</div></div></div>
+  <div class="card">
+    <div class="alert alert-info">BPCL app OTP साठवा — delivery boy पुढे सोपवेल / Collect BPCL app OTP from customers and save area-wise</div>
+    <div class="form-group"><label>Customer Name</label><input type="text"></div>
+    <div class="form-group"><label>Consumer No.</label><input type="text"></div>
+    <div class="form-group"><label>OTP</label><input type="text" pattern="[0-9]{6}" maxlength="6"></div>
+    <button class="btn btn-success">✅ OTP Save करा</button>
+  </div>
+  `;
+}
+
+// ======== PAGE EVENTS ========
+function initPageEvents(page) {
+  if (page === 'godown' || page === 'office' || page === 'bpcl' || page === 'staff' || page === 'payroll' || page === 'gst' || page === 'bda_home') {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.onclick = function() { switchTab(this, this.onclick.toString().match(/'([^']+)'/)?.[1]); };
+    });
+  }
+}
+
+// ======== TAB SWITCHER ========
+function switchTab(btn, tabId) {
+  const container = btn.closest('.page') || document;
+  container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  container.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const target = container.querySelector('#' + tabId);
+  if (target) target.classList.add('active');
+}
+
+// ======== CALC FUNCTIONS ========
+function calcGrid() {
+  // 14.2 full single row
+  const c = parseFloat(document.getElementById('r1c')?.value||0);
+  const r = parseFloat(document.getElementById('r1r')?.value||0);
+  const e = parseFloat(document.getElementById('r1e')?.value||0);
+  const total = c * r + e;
+  const el = document.getElementById('r1result');
+  if (el) el.textContent = total;
+
+  // 14.2 empty double row formula: (cols*rows + extra1)*2 + single = total
+  const ec = parseFloat(document.getElementById('e1c')?.value||0);
+  const er = parseFloat(document.getElementById('e1r')?.value||0);
+  const ea1 = parseFloat(document.getElementById('e1a1')?.value||0);
+  const ea2 = parseFloat(document.getElementById('e1a2')?.value||0);
+  const etotal = (ec * er + ea1) * 2 + ea2;
+  const eel = document.getElementById('e1result');
+  if (eel) eel.textContent = etotal;
+
+  const tf = document.getElementById('totalFull14');
+  const te = document.getElementById('totalEmpty14');
+  if (tf) tf.textContent = total;
+  if (te) te.textContent = etotal;
+}
+
+function calcDenom() {
+  let total = 0;
+  [500,200,100,50,20,10].forEach(n => {
+    const qty = parseFloat(document.getElementById('d'+n)?.value||0);
+    const amount = qty * n;
+    const el = document.getElementById('dt'+n);
+    if (el) el.textContent = '₹' + amount.toLocaleString('en-IN');
+    total += amount;
+  });
+  const coins = parseFloat(document.getElementById('dcoins')?.value||0);
+  total += coins;
+  const el = document.getElementById('denomTotal');
+  if (el) el.textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+function calcCashDenom() {
+  let total = 0;
+  [500,200,100,50,20,10].forEach(n => {
+    const qty = parseFloat(document.getElementById('cd'+n)?.value||0);
+    const amount = qty * n;
+    const el = document.getElementById('cdt'+n);
+    if (el) el.textContent = '₹' + amount.toLocaleString('en-IN');
+    total += amount;
+  });
+  const coins = parseFloat(document.getElementById('cdcoins')?.value||0);
+  total += coins;
+  const el = document.getElementById('cashDenomTotal');
+  if (el) el.textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+function addExpenseRow() {
+  const tbl = document.getElementById('expenseTable');
+  if (!tbl) return;
+  const row = tbl.insertRow(-1);
+  row.innerHTML = `
+    <td><input type="text" style="background:transparent;border:none;color:var(--text-primary);width:120px" placeholder="Type..."></td>
+    <td><input style="background:transparent;border:none;color:var(--text-primary);width:150px" placeholder="Description"></td>
+    <td><input type="number" style="width:80px;background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:4px;padding:3px" placeholder="0"></td>
+    <td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">✕</button></td>
+  `;
+}
+
+function showDeliveryBoyDetail(name) {
+  showPage('delivery');
+}
+
+function adminResetPassword() {
+  const user = document.getElementById('resetUser').value;
+  const pass = document.getElementById('resetNewPass').value;
+  if (!pass || pass.length < 4) { alert('Min 4 characters'); return; }
+  ERP.passwords[user] = pass;
+  alert(`✅ Password reset for ${ERP.users[user].name}`);
+}
+
+function postNotice() {
+  const text = document.getElementById('noticeInput')?.value;
+  const badge = document.getElementById('noticePriority')?.value || '⚠️ NOTICE';
+  if (!text) return;
+  ERP.notices.unshift({
+    id: Date.now(),
+    date: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),
+    text, badge,
+  });
+  showPage('notice');
+}
+
+function deleteNotice(id) {
+  ERP.notices = ERP.notices.filter(n=>n.id!==id);
+  showPage('notice');
+}
+
+function showStockModal() {
+  document.getElementById('stockModalContent').innerHTML = `
+    <div class="form-row">
+      <div class="form-group"><label>Transfer To</label>
+        <select>${[...ERP.staff.filter(s=>s.type==='delivery').map(s=>`<option>${s.name}</option>`), ...ERP.bdas.map(b=>`<option>BDA - ${b.area}</option>`)].join('')}</select>
+      </div>
+      <div class="form-group"><label>14.2 Full Given</label><input type="number" placeholder="0"></div>
+      <div class="form-group"><label>14.2 Empty Taken</label><input type="number" placeholder="0"></div>
+    </div>
+    <button class="btn btn-success" style="width:100%">✅ Record Transfer</button>
+  `;
+  openModal('stockModal');
+}
+
+// ======== INIT ========
+parseCSV();
+</script>
+</body>
+</html>

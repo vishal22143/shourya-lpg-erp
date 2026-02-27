@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>शौर्य भारत गॅस ERP v5.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  --blue:#003087;--bm:#0052CC;--yellow:#FFD700;--orange:#FF6B00;--green:#00E676;
+  --red:#FF1744;--purple:#AA00FF;--accent:#00C6FF;
+  --bg:#060D1A;--bgp:#0B1526;--bgc:#0F1C31;--bgh:#162540;--bgi:#091422;
+  --bdr:rgba(0,144,255,.18);--bdra:rgba(0,198,255,.4);
+  --t:#E2EAF8;--td:#6B7C99;--tb:#FFFFFF;
+  --fm:'Rajdhani',sans-serif;--fmr:'Noto Sans Devanagari',sans-serif;--fmn:'JetBrains Mono',monospace;
+  --r:10px;--rs:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t);font-family:var(--fm);font-size:15px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px}
+
+/* LOGIN */
+#LS{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 40%,#0D1E40,#040A16 70%);display:flex;align-items:center;justify-content:center;z-index:500;padding:16px}
+.lb{background:var(--bgp);border:1px solid var(--bdra);border-radius:18px;padding:36px;width:480px;max-width:100%;box-shadow:0 30px 80px rgba(0,0,0,.8),0 0 60px rgba(0,198,255,.06)}
+.lic{width:80px;height:80px;background:linear-gradient(135deg,#003087,#00C6FF);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 14px;box-shadow:0 0 40px rgba(0,198,255,.25)}
+.ltitle{font-size:26px;font-weight:700;color:var(--yellow);text-align:center;letter-spacing:1px}
+.lsub{font-size:12px;color:var(--td);text-align:center;margin-top:3px}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.rb{padding:12px 7px;border-radius:var(--r);border:2px solid var(--bdr);background:var(--bgc);cursor:pointer;text-align:center;transition:all .2s}
+.rb:hover,.rb.sel{border-color:var(--yellow);background:rgba(255,215,0,.06);box-shadow:0 0 12px rgba(255,215,0,.12)}
+.ric{font-size:24px;margin-bottom:4px}
+.rn{font-size:13px;font-weight:700;color:var(--t)}
+.rm{font-size:9px;color:var(--td);font-family:var(--fmr)}
+.fl{font-size:10px;color:var(--td);letter-spacing:.5px;font-weight:700;text-transform:uppercase;margin-bottom:4px}
+.fg{display:flex;flex-direction:column;flex:1;min-width:120px}
+.fr{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+input,select,textarea{background:var(--bgi);border:1px solid var(--bdr);color:var(--t);padding:9px 12px;border-radius:var(--rs);font-family:var(--fm);font-size:15px;width:100%;transition:border-color .2s}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,198,255,.1)}
+input::placeholder{color:var(--td)}
+select option{background:var(--bgp)}
+textarea{resize:vertical;min-height:70px;font-size:14px}
+.btn{padding:9px 18px;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--fm);font-size:15px;font-weight:700;transition:all .18s;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.bpri{background:var(--blue);color:#fff}.bpri:hover{background:var(--bm)}
+.byl{background:var(--yellow);color:#000}.byl:hover{background:#E6C200}
+.bgr{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.25)}.bgr:hover{background:rgba(0,230,118,.2)}
+.brd{background:rgba(255,23,68,.1);color:var(--red);border:1px solid rgba(255,23,68,.25)}
+.bor{background:rgba(255,107,0,.1);color:var(--orange);border:1px solid rgba(255,107,0,.25)}
+.bg2{background:transparent;color:var(--td);border:1px solid var(--bdr)}.bg2:hover{background:var(--bgh);color:var(--t);border-color:var(--accent)}
+.bsm{padding:5px 11px;font-size:13px}.blg{padding:12px 24px;font-size:17px}
+
+/* APP LAYOUT */
+#APP{display:flex;height:100vh;width:100vw;overflow:hidden;display:none}
+#SB{width:224px;background:var(--bgp);border-right:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s;z-index:40}
+#SB.mini{width:54px}
+#SB.mini .snl,.snl2,.nsec,.slu,.slr{display:none!important}
+.sh{padding:13px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;min-height:60px}
+.slogo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#003087,#00C6FF);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 16px rgba(0,198,255,.25)}
+.stitle{font-size:13px;font-weight:700;color:var(--yellow);line-height:1.2;white-space:nowrap}
+.ssub{font-size:10px;color:var(--td);font-family:var(--fmr)}
+.snav{flex:1;overflow-y:auto;padding:6px 0}
+.nsec{padding:8px 13px 3px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--td);font-weight:700;white-space:nowrap}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 13px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none}
+.ni:hover{background:var(--bgh);border-left-color:var(--accent)}
+.ni.act{background:rgba(0,198,255,.07);border-left-color:var(--yellow)}
+.ni .ic{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+.snl{font-size:14px;font-weight:600;color:var(--t);white-space:nowrap}
+.snl2{font-size:10px;color:var(--td);font-family:var(--fmr)}
+.ni.act .snl{color:var(--yellow)}
+.sf{padding:11px 13px;border-top:1px solid var(--bdr)}
+.su{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.sav{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.slu{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slr{font-size:10px;color:var(--td);font-family:var(--fmr)}
+
+/* TOPBAR */
+#MN{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#TB{height:56px;background:var(--bgp);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0}
+.tmb{background:none;border:none;color:var(--td);font-size:22px;cursor:pointer;padding:4px;transition:color .2s}.tmb:hover{color:var(--yellow)}
+.ttl{font-size:19px;font-weight:700;color:var(--tb);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tclk{font-family:var(--fmn);font-size:11px;color:var(--td);white-space:nowrap}
+.tbtn{padding:6px 13px;border-radius:var(--rs);border:1px solid var(--bdr);background:transparent;color:var(--td);cursor:pointer;font-family:var(--fm);font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap}
+.tbtn:hover{background:var(--bgh);border-color:var(--accent);color:var(--t)}
+.tusr{display:flex;align-items:center;gap:7px;padding:6px 11px;background:var(--bgc);border-radius:7px;cursor:pointer;border:1px solid var(--bdr)}
+.tudot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.tuname{font-size:13px;font-weight:600}
+#CT{flex:1;overflow-y:auto;background:var(--bg)}
+.pw{padding:18px;animation:fu .2s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb14{margin-bottom:14px}.mb16{margin-bottom:16px}
+
+/* CARDS */
+.card{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:15px}
+.csm{padding:10px}
+.chd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px;gap:8px}
+.ctitle{font-size:17px;font-weight:700;color:var(--tb)}
+.csub{font-size:10px;color:var(--td);font-family:var(--fmr);margin-top:2px}
+
+/* STAT CARDS */
+.stat{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:15px;position:relative;overflow:hidden;cursor:default;transition:transform .15s,border-color .15s}
+.stat:hover{transform:translateY(-2px);border-color:var(--bdra)}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sbl::after{background:linear-gradient(90deg,var(--blue),var(--accent))}
+.sgy::after{background:var(--yellow)}
+.sgr::after{background:var(--green)}
+.srd::after{background:var(--red)}
+.sor::after{background:var(--orange)}
+.spr::after{background:var(--purple)}
+.slb{font-size:10px;color:var(--td);letter-spacing:.5px}
+.slbm{font-size:9px;color:var(--td);font-family:var(--fmr)}
+.sv{font-size:26px;font-weight:700;color:var(--tb);line-height:1.1;margin:3px 0}
+.ss{font-size:10px;color:var(--td);display:flex;align-items:center;gap:4px}
+.sico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:36px;opacity:.07;pointer-events:none}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bdr)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:var(--bgp)}
+th{padding:10px 12px;text-align:left;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--td);font-weight:700;white-space:nowrap;border-bottom:1px solid var(--bdr)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--bgh)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.bb{background:rgba(0,48,135,.4);color:var(--accent);border:1px solid rgba(0,198,255,.2)}
+.by{background:rgba(255,215,0,.12);color:var(--yellow);border:1px solid rgba(255,215,0,.2)}
+.bg{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.br{background:rgba(255,23,68,.1);color:var(--red);border:1px solid rgba(255,23,68,.2)}
+.bo{background:rgba(255,107,0,.1);color:var(--orange);border:1px solid rgba(255,107,0,.2)}
+.bp{background:rgba(170,0,255,.1);color:var(--purple);border:1px solid rgba(170,0,255,.2)}
+.bdm{background:rgba(255,255,255,.05);color:var(--td);border:1px solid var(--bdr)}
+
+/* TABS */
+.tabs{display:flex;gap:1px;margin-bottom:16px;border-bottom:1px solid var(--bdr);overflow-x:auto}
+.tab{padding:10px 17px;cursor:pointer;font-size:13px;font-weight:600;color:var(--td);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--t)}.tab.act{color:var(--yellow);border-bottom-color:var(--yellow)}
+
+/* ALERTS */
+.al{padding:10px 14px;border-radius:var(--rs);font-size:13px;display:flex;align-items:flex-start;gap:8px;margin-bottom:11px;line-height:1.5}
+.ali{background:rgba(0,198,255,.07);border:1px solid rgba(0,198,255,.2);color:var(--accent)}
+.alw{background:rgba(255,107,0,.07);border:1px solid rgba(255,107,0,.22);color:var(--orange)}
+.als{background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.22);color:var(--green)}
+.ald{background:rgba(255,23,68,.07);border:1px solid rgba(255,23,68,.22);color:var(--red)}
+
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:none;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px)}
+.mov.open{display:flex}
+.mod{background:var(--bgp);border:1px solid var(--bdra);border-radius:14px;width:600px;max-width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.8)}
+.mhd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.mtitle{font-size:19px;font-weight:700;color:var(--tb)}
+.mtitle span{display:block;font-size:11px;color:var(--td);font-family:var(--fmr);font-weight:400;margin-top:2px}
+.cx{background:none;border:none;color:var(--td);font-size:22px;cursor:pointer;padding:2px 7px;transition:color .2s;line-height:1}.cx:hover{color:var(--red)}
+
+/* EXPAND */
+.exhd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bgp);border-radius:var(--rs);cursor:pointer;transition:background .15s;border:1px solid var(--bdr);margin-bottom:4px;user-select:none}
+.exhd:hover,.exhd.open{background:var(--bgh);border-color:var(--accent)}
+.extitle{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.exarr{font-size:11px;transition:transform .2s;color:var(--td);margin-left:8px}
+.exhd.open .exarr{transform:rotate(180deg)}
+.exbody{padding:12px;border:1px solid var(--bdr);border-top:none;border-radius:0 0 var(--rs) var(--rs);margin-bottom:4px;display:none}
+.exbody.open{display:block}
+
+/* CHAT */
+#CP{position:fixed;right:0;top:0;bottom:0;width:360px;background:var(--bgp);border-left:1px solid var(--bdr);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);z-index:200;box-shadow:-4px 0 24px rgba(0,0,0,.6)}
+#CP.open{transform:translateX(0)}
+.chathd{padding:14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.chatbody{display:flex;flex:1;overflow:hidden}
+.chatcl{width:140px;border-right:1px solid var(--bdr);overflow-y:auto;flex-shrink:0}
+.chatc{padding:10px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:background .15s}
+.chatc:hover,.chatc.act{background:var(--bgh)}
+.chatcn{font-size:12px;font-weight:700;margin-bottom:2px}
+.chatcprev{font-size:10px;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chatmw{flex:1;display:flex;flex-direction:column}
+.chatms{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px}
+.chatm{max-width:84%;display:flex;flex-direction:column}
+.chatm.mine{align-self:flex-end;align-items:flex-end}
+.chatb{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.5;word-break:break-word}
+.chatm.mine .chatb{background:var(--blue);color:#fff;border-bottom-right-radius:3px}
+.chatm.theirs .chatb{background:var(--bgc);border:1px solid var(--bdr);border-bottom-left-radius:3px}
+.chatmt{font-size:9px;color:var(--td);margin-top:3px}
+.chatir{padding:10px;border-top:1px solid var(--bdr);display:flex;gap:7px;flex-shrink:0}
+.chatir input{flex:1;font-size:13px}
+
+/* DELIVERY CARD */
+.dc{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;position:relative;overflow:hidden;transition:all .15s}
+.dc:hover{border-color:var(--bdra);transform:translateY(-1px)}
+.dc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.dbl::before{background:var(--accent)}.dyl::before{background:var(--yellow)}
+.dgl::before{background:var(--green)}.dol::before{background:var(--orange)}
+.drl::before{background:var(--red)}.dpl::before{background:var(--purple)}
+.dcname{font-size:17px;font-weight:700;margin-bottom:3px}
+.dcaddr{font-size:12px;color:var(--td)}
+.dcmeta{display:flex;gap:10px;margin-top:8px;font-size:11px;flex-wrap:wrap;align-items:center}
+.dcacts{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+
+/* CYLINDER BOX */
+.cylr{display:flex;gap:10px;flex-wrap:wrap}
+.cyb{background:var(--bgp);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 15px;text-align:center;min-width:80px}
+.cyc{font-size:32px;font-weight:700;font-family:var(--fmn)}
+.cyl{font-size:10px;color:var(--td);margin-top:3px}
+.cylm{font-size:9px;color:var(--td);font-family:var(--fmr)}
+.cyb.full .cyc{color:var(--green)}.cyb.empty .cyc{color:var(--td)}.cyb.def .cyc{color:var(--red)}.cyb.veh .cyc{color:var(--accent)}
+
+/* CALL BTN */
+.cbtn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(0,230,118,.08);color:var(--green);border:1px solid rgba(0,230,118,.22);border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;transition:background .15s}
+.cbtn:hover{background:rgba(0,230,118,.18)}
+
+/* PROGRESS */
+.prog{height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .5s ease}
+.pb{background:linear-gradient(90deg,var(--blue),var(--accent))}
+
+/* DENOM */
+.denr{display:flex;align-items:center;gap:9px;padding:9px;border-bottom:1px solid var(--bdr)}
+.dennote{width:50px;font-size:16px;font-weight:700;color:var(--yellow);font-family:var(--fmn)}
+.denin{width:90px;font-size:16px;text-align:center}
+.deneq{flex:1;text-align:right;font-family:var(--fmn);font-size:13px;color:var(--td)}
+.dentot{display:flex;justify-content:space-between;padding:12px;background:rgba(0,198,255,.05);border-radius:var(--rs);margin-top:6px;font-size:17px;font-weight:700}
+
+/* MAP */
+#dmap{height:320px;border-radius:var(--r);overflow:hidden;border:1px solid var(--bdr)}
+.leaflet-container{background:#0A1628}
+
+/* MISC */
+.sep{border:none;border-top:1px solid var(--bdr);margin:14px 0}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* TICKER */
+.ticker{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.14);border-radius:var(--rs);padding:7px 13px;display:flex;align-items:center;gap:10px;overflow:hidden;margin-bottom:14px}
+.tickertag{font-size:10px;font-weight:700;color:var(--yellow);white-space:nowrap;letter-spacing:1px;flex-shrink:0}
+.tickert{font-size:12px;color:var(--td);white-space:nowrap;display:inline-block;animation:tick 30s linear infinite}
+@keyframes tick{0%{transform:translateX(100%)}100%{transform:translateX(-200%)}}
+
+/* BDA CARD */
+.bdac{background:var(--bgc);border:1px solid var(--bdr);border-left:4px solid var(--yellow);border-radius:var(--r);padding:14px;transition:all .15s}
+.bdac:hover{border-right-color:var(--accent);transform:translateY(-1px)}
+
+@media(max-width:900px){#SB{width:54px}.snl,.snl2,.nsec,.slu,.slr{display:none}.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g3,.g4{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.pw{padding:10px}#TB{padding:0 8px}}
+</style>
+
+<style>
+/* === EXTRA v5 STYLES === */
+.paymgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.paymode{padding:10px 7px;border-radius:8px;border:2px solid var(--bdr);background:var(--bgc);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
+.paymode:hover,.paymode.sel{border-color:var(--yellow);background:rgba(255,215,0,.07);color:var(--yellow)}
+.paymode .pic{font-size:20px;margin-bottom:3px}
+.paymode .plb{font-size:11px;font-weight:700}
+.salerowtbl{width:100%;border-collapse:collapse;margin-bottom:8px}
+.salerowtbl td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.salerowtbl tr:hover td{background:var(--bgh)}
+.qtyin{width:64px;text-align:center;font-size:17px;font-weight:700;padding:6px;font-family:var(--fmn)}
+.amtin{width:100px;text-align:right;font-size:15px;font-family:var(--fmn)}
+.opboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.opcard{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;transition:all .2s;cursor:default}
+.opcard:hover{border-color:var(--bdra)}
+.opnum{font-size:36px;font-weight:700;font-family:var(--fmn);line-height:1.1}
+.oplb{font-size:10px;color:var(--td);letter-spacing:.5px;font-weight:700;text-transform:uppercase}
+.oplbm{font-size:10px;color:var(--td);font-family:var(--fmr)}
+.daybar{background:var(--bgp);border:1px solid var(--bdra);border-radius:var(--r);padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.dbitem{display:flex;flex-direction:column;align-items:center;min-width:80px}
+.dbval{font-size:22px;font-weight:700;font-family:var(--fmn)}
+.dblb{font-size:9px;color:var(--td);letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+.exs{border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:8px}
+.exshd{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--bgp);cursor:pointer;transition:background .15s;user-select:none}
+.exshd:hover,.exshd.open{background:var(--bgh)}
+.exstitle{font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
+.exsarr{font-size:11px;color:var(--td);transition:transform .2s}
+.exshd.open .exsarr{transform:rotate(180deg)}
+.exsbody{padding:14px;display:none;border-top:1px solid var(--bdr)}
+.exsbody.open{display:block}
+.vblock{background:var(--bgp);border:1px solid var(--bdr);border-left:4px solid var(--green);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.loadinp{width:80px;text-align:center;font-size:18px;font-weight:700;font-family:var(--fmn)}
+.mismatch{background:rgba(255,23,68,.08);border:1px solid rgba(255,23,68,.3);color:var(--red);padding:9px 12px;border-radius:7px;font-size:13px;font-weight:700;margin-top:5px}
+.match{background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);color:var(--green);padding:9px 12px;border-radius:7px;font-size:13px;font-weight:700;margin-top:5px}
+.dlvrow{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.03);transition:background .12s}
+.dlvrow:hover{background:var(--bgh)}
+.dlvrow .dname{flex:1;font-size:14px;font-weight:700}
+.dlvrow .darea{font-size:10px;color:var(--accent);font-weight:600}
+.locpin{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
+.locpin.new{background:rgba(255,107,0,.12);color:var(--orange);border:1px solid rgba(255,107,0,.25)}
+.locpin.saved{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.areasel{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.areabt{padding:6px 14px;border-radius:20px;border:1px solid var(--bdr);background:var(--bgc);cursor:pointer;font-size:12px;font-weight:700;transition:all .15s}
+.areabt.act{background:var(--blue);border-color:var(--accent);color:#fff}
+.otpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.otpcard{background:var(--bgc);border:1px solid var(--bdr);border-radius:var(--r);padding:13px}
+.otpval{font-size:28px;font-weight:700;letter-spacing:6px;color:var(--green);font-family:var(--fmn)}
+.bpclcomprow{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.03)}
+.bpclcomprow .bcprod{width:100px;font-family:var(--fmn);font-size:11px;color:var(--accent);font-weight:700}
+.bpclcomprow .bcnm{flex:1;font-size:13px}
+.bpclcomprow .bcerp{width:80px;text-align:right;font-family:var(--fmn);font-weight:700;color:var(--green)}
+.bpclcomprow .bcsap{width:90px}
+.bpclcomprow .bcdiff{width:90px;text-align:right;font-family:var(--fmn);font-weight:700}
+.locked{opacity:.6;pointer-events:none}
+.lockbadge{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:var(--yellow);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700}
+</style>
+</head>
+
+
+<body>
+<!-- ════ LOGIN ════ -->
+<div id="LS">
+  <div class="lb">
+    <div class="lic">🔥</div>
+    <div class="ltitle">शौर्य भारत गॅस</div>
+    <div class="lsub" style="font-size:14px;color:var(--accent)">Dist. 187618 | Jaysingpur, Kolhapur</div>
+    <div class="lsub">ERP v5.0 — Complete Management System</div>
+    <div class="fl" style="margin:16px 0 9px">ROLE निवडा / SELECT ROLE</div>
+    <div class="rgrid" id="RG">
+      <div class="rb sel" onclick="selR(this,'owner')"><div class="ric">👑</div><div class="rn">Owner/Partner</div><div class="rm">मालक/भागीदार</div></div>
+      <div class="rb" onclick="selR(this,'office')"><div class="ric">🏢</div><div class="rn">Office</div><div class="rm">व्यवस्थापक</div></div>
+      <div class="rb" onclick="selR(this,'delivery')"><div class="ric">🚚</div><div class="rn">Delivery Man</div><div class="rm">डिलिव्हरी</div></div>
+      <div class="rb" onclick="selR(this,'loader')"><div class="ric">⚓</div><div class="rn">Loading Crew</div><div class="rm">लोडिंग टीम</div></div>
+      <div class="rb" onclick="selR(this,'bda')"><div class="ric">🤝</div><div class="rn">BDA Partner</div><div class="rm">बीडीए</div></div>
+      <div class="rb" onclick="selR(this,'accountant')"><div class="ric">📊</div><div class="rn">Accountant</div><div class="rm">लेखापाल</div></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Username</div><input id="lu" placeholder="Username" value="vishal"></div>
+      <div class="fg"><div class="fl">Password</div><input id="lp" type="password" placeholder="Password" value="1234"></div>
+    </div>
+    <button class="btn byl blg" style="width:100%" onclick="doLogin()">🔐 LOGIN / प्रवेश करा</button>
+    <div style="margin-top:14px;font-size:11px;color:var(--td);text-align:center">
+      owner/1234 | office/1234 | bhore/1234 | sandeep/1234 | bda1/1234<br>
+      <strong style="color:rgba(0,198,255,.5)">💾 Data stored in localStorage — persists between sessions</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div id="APP">
+  <div id="SB">
+    <div class="sh">
+      <div class="slogo">🔥</div>
+      <div><div class="stitle">शौर्य भारत गॅस</div><div class="ssub" id="S_ROLE">ERP v5.0</div></div>
+    </div>
+    <div class="snav" id="NAV"></div>
+    <div class="sf">
+      <div class="su"><div class="sav" id="S_AV">V</div><div><div class="slu" id="S_NAME">User</div><div class="slr" id="S_ROLE2">—</div></div></div>
+      <div style="font-size:9px;color:var(--td);margin-bottom:7px" id="S_DAY">ERP Day: —</div>
+      <button class="btn bg2 bsm" style="width:100%" onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+  <div id="MN">
+    <div id="TB">
+      <button class="tmb" onclick="toggleSB()">☰</button>
+      <div class="ttl" id="TB_TITLE">Dashboard</div>
+      <div style="flex:1"></div>
+      <div class="tclk" id="CLK"></div>
+      <button class="tbtn" onclick="openM('MN_NOTICE')">📢 Notice</button>
+      <button class="tbtn" onclick="openM('MN_CSV')">📤 CSV</button>
+      <button class="tbtn" onclick="toggleChat()">💬 Chat</button>
+      <div class="tusr"><div class="tudot"></div><div class="tuname" id="TB_USER">—</div></div>
+    </div>
+    <div id="CT"><div class="pw" id="PC"><div class="al ali">Loading...</div></div></div>
+  </div>
+</div>
+
+<!-- ════ CHAT ════ -->
+<div id="CP">
+  <div class="chathd"><div><div style="font-size:16px;font-weight:700">💬 Team Chat / संघ संवाद</div></div><button class="cx" onclick="toggleChat()">✕</button></div>
+  <div class="chatbody">
+    <div class="chatcl" id="CHAT_CL"></div>
+    <div class="chatmw">
+      <div id="CHAT_WHO" style="padding:8px 12px;border-bottom:1px solid var(--bdr);font-size:12px;font-weight:700;color:var(--accent);flex-shrink:0"></div>
+      <div class="chatms" id="CHAT_MS"></div>
+      <div class="chatir"><input id="CHAT_INP" placeholder="Message..." onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn bpri bsm" onclick="sendMsg()">➤</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODALS ════ -->
+
+<!-- NOTICE -->
+<div class="mov" id="MN_NOTICE"><div class="mod" style="width:540px">
+  <div class="mhd"><div class="mtitle">📢 Notice Board<span>सूचना फलक</span></div><button class="cx" onclick="closeM('MN_NOTICE')">✕</button></div>
+  <div class="fg mb12"><div class="fl">English</div><textarea id="N_EN" placeholder="Notice..."></textarea></div>
+  <div class="fg mb12"><div class="fl">मराठी</div><textarea id="N_MR" placeholder="मराठी सूचना..." style="font-family:var(--fmr)"></textarea></div>
+  <button class="btn byl" onclick="postNotice()">📢 Post</button>
+  <div id="NB_LIST" style="margin-top:12px"></div>
+</div></div>
+
+<!-- CSV -->
+<div class="mov" id="MN_CSV"><div class="mod">
+  <div class="mhd"><div class="mtitle">📤 BPCL CSV Upload<span>Cash Memo / NI / Blocked List</span></div><button class="cx" onclick="closeM('MN_CSV')">✕</button></div>
+  <div class="al ali mb12">Upload multiple times. Delivered customers never reappear. De-dup: Consumer No. → Mobile → Name+Area.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Type</div><select id="CSV_TYPE"><option value="cashmemo">Cash Memo</option><option value="ni">NI List</option><option value="blocked">Blocked</option></select></div>
+    <div class="fg"><div class="fl">Assign To</div><select id="CSV_DM"></select></div>
+    <div class="fg" style="max-width:130px"><div class="fl">Date</div><input type="date" id="CSV_DT"></div>
+  </div>
+  <div class="fg mb12"><div class="fl">File (.csv)</div><input type="file" id="CSV_FILE" accept=".csv"></div>
+  <button class="btn bpri" onclick="processCSV()">⬆ Process & Load</button>
+  <div id="CSV_RES" style="margin-top:12px"></div>
+</div></div>
+
+<!-- DELIVERY ACTION (full modes) -->
+<div class="mov" id="MN_DA"><div class="mod">
+  <div class="mhd">
+    <div class="mtitle" id="DA_TITLE">Delivery Entry<span id="DA_SUB"></span></div>
+    <button class="cx" onclick="closeM('MN_DA')">✕</button>
+  </div>
+  <div id="DA_INFO" class="al ali mb10"></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Status / स्थिती</div>
+      <select id="DA_ST" onchange="updDA()">
+        <option value="delivered_otp">🟢 Delivered — OTP</option>
+        <option value="delivered_doorstep_first">🏠 First Doorstep (save GPS)</option>
+        <option value="delivered_vehicle">🚐 Collected from Vehicle</option>
+        <option value="delivered_nootp">🟠 Emergency — No OTP</option>
+        <option value="not_home">🔴 Not Home</option>
+        <option value="rescheduled">📅 Rescheduled</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:120px"><div class="fl">Type</div>
+      <select id="DA_CYL" onchange="updDAamt()">
+        <option value="14.2">14.2 Kg</option>
+        <option value="5">5 Kg</option>
+        <option value="19">19 Kg</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:100px"><div class="fl">Qty</div><input type="number" id="DA_QTY" value="1" oninput="updDAamt()" min="1"></div>
+  </div>
+  <!-- Payment mode grid -->
+  <div class="fl" style="margin-bottom:7px">Payment Mode / पेमेंट पद्धत *</div>
+  <div class="paymgrid" id="DA_PAYMODES">
+    <div class="paymode sel" data-pay="cash" onclick="selPay(this,'DA')"><div class="pic">💵</div><div class="plb">Cash / रोख</div></div>
+    <div class="paymode" data-pay="qr" onclick="selPay(this,'DA')"><div class="pic">📷</div><div class="plb">QR Code</div></div>
+    <div class="paymode" data-pay="gpay" onclick="selPay(this,'DA')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+    <div class="paymode" data-pay="paytm" onclick="selPay(this,'DA')"><div class="pic">📱</div><div class="plb">Paytm</div></div>
+    <div class="paymode" data-pay="phonepe" onclick="selPay(this,'DA')"><div class="pic">📱</div><div class="plb">PhonePe</div></div>
+    <div class="paymode" data-pay="bpcl_adv" onclick="selPay(this,'DA')"><div class="pic">🔖</div><div class="plb">BPCL Advance</div></div>
+    <div class="paymode" data-pay="partial" onclick="selPay(this,'DA')"><div class="pic">💰</div><div class="plb">Cash + Online</div></div>
+  </div>
+  <div id="DA_PARTIAL" style="display:none" class="fr">
+    <div class="fg"><div class="fl">Cash Part ₹</div><input type="number" id="DA_CASH_P" placeholder="Cash amount"></div>
+    <div class="fg"><div class="fl">Online Part ₹</div><input type="number" id="DA_ONL_P" placeholder="Online amount"></div>
+    <div class="fg" style="max-width:120px"><div class="fl">Online Mode</div><select id="DA_ONL_MODE"><option>GPay</option><option>Paytm</option><option>PhonePe</option><option>QR</option></select></div>
+  </div>
+  <div id="DA_AMT_ROW" class="fr">
+    <div class="fg"><div class="fl">Amount ₹</div><input type="number" id="DA_AMT" placeholder="Auto"></div>
+    <div style="align-self:flex-end;padding-bottom:2px;font-size:12px;color:var(--td)" id="DA_AMTCALC"></div>
+  </div>
+  <div id="DA_OTP_ROW" class="fr" style="display:none">
+    <div class="fg"><div class="fl">OTP (6-digit)</div><input type="text" id="DA_OTP" maxlength="6" placeholder="______" style="letter-spacing:7px;font-size:22px;text-align:center;font-family:var(--fmn)"></div>
+    <div class="fg"><div class="fl">OTP By</div><select id="DA_OTPBY"><option>Delivery Man</option><option>BDA</option><option>Customer</option></select></div>
+  </div>
+  <div class="fg mb10"><div class="fl">Note / टीप</div><input id="DA_NOTE" placeholder="Optional note (note for partial cash)"></div>
+  <div style="display:flex;gap:8px">
+    <button class="btn bgr blg" onclick="confirmDA()">✅ Confirm / पुष्टी करा</button>
+    <button class="btn bg2" onclick="closeM('MN_DA')">Cancel</button>
+  </div>
+</div></div>
+
+<!-- SPOT / EMERGENCY -->
+<div class="mov" id="MN_SPOT"><div class="mod" style="width:460px">
+  <div class="mhd"><div class="mtitle">⚡ Emergency / Spot Delivery<span>Consumer No. mandatory — saved independently</span></div><button class="cx" onclick="closeM('MN_SPOT')">✕</button></div>
+  <div class="al alw mb10">Spot delivery does not come from CSV. Consumer number + location saved separately.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Consumer No. *</div><input type="number" id="SP_C" placeholder="Required *"></div>
+    <div class="fg"><div class="fl">Name</div><input id="SP_N" placeholder="Name"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Mobile</div><input type="tel" id="SP_M"></div>
+    <div class="fg"><div class="fl">Area</div><input id="SP_A" placeholder="Area/Location"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Cylinder</div><select id="SP_CYL" onchange="updSpot()"><option value="14.2">14.2 Kg (₹856)</option><option value="5">5 Kg (₹352.50)</option><option value="19">19 Kg (₹2,132)</option></select></div>
+    <div class="fg" style="max-width:100px"><div class="fl">Qty</div><input type="number" id="SP_QTY" value="1" oninput="updSpot()"></div>
+    <div class="fg" style="max-width:100px"><div class="fl">Amount ₹</div><input type="number" id="SP_AMT" value="856"></div>
+  </div>
+  <div class="paymgrid" id="SP_PAYMODES">
+    <div class="paymode sel" data-pay="cash" onclick="selPay(this,'SP')"><div class="pic">💵</div><div class="plb">Cash</div></div>
+    <div class="paymode" data-pay="qr" onclick="selPay(this,'SP')"><div class="pic">📷</div><div class="plb">QR</div></div>
+    <div class="paymode" data-pay="gpay" onclick="selPay(this,'SP')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+    <div class="paymode" data-pay="paytm" onclick="selPay(this,'SP')"><div class="pic">📱</div><div class="plb">Paytm</div></div>
+    <div class="paymode" data-pay="phonepe" onclick="selPay(this,'SP')"><div class="pic">📱</div><div class="plb">PhonePe</div></div>
+    <div class="paymode" data-pay="bpcl_adv" onclick="selPay(this,'SP')"><div class="pic">🔖</div><div class="plb">BPCL Adv</div></div>
+  </div>
+  <button class="btn bor blg" style="width:100%" onclick="confirmSpot()">⚡ Confirm Spot Delivery</button>
+</div></div>
+
+<!-- BPCL RECEIPT (loader/driver entry) -->
+<div class="mov" id="MN_BPCLR"><div class="mod">
+  <div class="mhd"><div class="mtitle">📦 BPCL Receipt<span>Loading Crew / Driver Entry — Godown auto-updates</span></div><button class="cx" onclick="closeM('MN_BPCLR')">✕</button></div>
+  <div class="al ali mb10">Sandeep + Sager: ₹400 each per truck. Auto-credited.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Invoice / DO No.</div><input id="BR_INV" placeholder="Invoice number"></div>
+    <div class="fg" style="max-width:140px"><div class="fl">Date</div><input type="date" id="BR_DT"></div>
+  </div>
+  <div style="background:var(--bgp);border-radius:9px;padding:13px;margin-bottom:13px">
+    <div style="font-size:11px;color:var(--td);margin-bottom:8px;font-weight:700">CYLINDERS RECEIVED (भरलेले मिळाले)</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">14.2 Kg Full</div><input type="number" id="BR_F14" placeholder="342" oninput="calcBR()"></div>
+      <div class="fg"><div class="fl">5 Kg Full</div><input type="number" id="BR_F5" placeholder="0" oninput="calcBR()"></div>
+      <div class="fg"><div class="fl">19 Kg Full</div><input type="number" id="BR_F19" placeholder="0" oninput="calcBR()"></div>
+    </div>
+    <div style="font-size:11px;color:var(--td);margin-bottom:8px;margin-top:10px;font-weight:700">EMPTIES RETURNED (रिकामे परत)</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">14.2 Kg Empty</div><input type="number" id="BR_E14" placeholder="342" oninput="calcBR()"></div>
+      <div class="fg"><div class="fl">5 Kg Empty</div><input type="number" id="BR_E5" placeholder="0"></div>
+      <div class="fg"><div class="fl">19 Kg Empty</div><input type="number" id="BR_E19" placeholder="0"></div>
+    </div>
+  </div>
+  <div id="BR_CALC" class="al ali mb10"></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Exception Notes</div><input id="BR_NOTE" placeholder="Truck delay / Partial unloading..."></div>
+    <div class="fg" style="max-width:160px"><div class="fl">Status</div><select id="BR_STATUS"><option value="complete">Complete</option><option value="partial">Partial Unloading</option><option value="delay">Truck Delay</option></select></div>
+  </div>
+  <div style="background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:12px;margin-bottom:13px;font-size:13px">
+    <strong style="color:var(--yellow)">Auto Wages:</strong> Sandeep ₹400 + Sager ₹400 = ₹800 per truck receipt
+  </div>
+  <button class="btn bpri" onclick="saveBPCLR()">✅ Confirm BPCL Receipt</button>
+</div></div>
+
+<!-- TRIP CLOSE -->
+<div class="mov" id="MN_TRIPCLOSE"><div class="mod">
+  <div class="mhd"><div class="mtitle">🔒 Close Trip<span>ट्रिप बंद — Cannot edit after close</span></div><button class="cx" onclick="closeM('MN_TRIPCLOSE')">✕</button></div>
+  <div class="al ali mb10">Check cylinder count. Auto-calc: Delivered = Loaded − Remaining.</div>
+  <div class="g3 mb12" id="TC_STATS"></div>
+  <div class="fr mb10">
+    <div class="fg"><div class="fl">14.2 Empty Returned</div><input type="number" id="TC_E14" placeholder="0"></div>
+    <div class="fg"><div class="fl">5 Kg Empty</div><input type="number" id="TC_E5" placeholder="0"></div>
+    <div class="fg"><div class="fl">19 Kg Empty</div><input type="number" id="TC_E19" placeholder="0"></div>
+  </div>
+  <div class="fg mb10"><div class="fl">Remaining Full (if any)</div><input type="number" id="TC_REM" placeholder="0 if all delivered"></div>
+  <div class="card mb10"><div class="ctitle mb8">💵 Cash Denomination / नोटा मोजणी</div>
+    <div id="TC_DEN"></div>
+    <div class="dentot"><span style="font-family:var(--fmr)">एकूण / Total Cash</span><span id="TC_TOTAL" style="color:var(--green);font-family:var(--fmn)">₹0</span></div>
+  </div>
+  <div class="fr mb12">
+    <div class="fg"><div class="fl">GPay Received ₹</div><input type="number" id="TC_GP" placeholder="0"></div>
+    <div class="fg"><div class="fl">QR/Other Online ₹</div><input type="number" id="TC_QR" placeholder="0"></div>
+    <div class="fg"><div class="fl">Paytm ₹</div><input type="number" id="TC_PT" placeholder="0"></div>
+  </div>
+  <div class="fg mb10"><div class="fl">Reason for mismatch (if any / जर फरक असेल)</div><input type="text" id="TC_REASON" placeholder="कारण / Reason in Marathi or English..."></div>
+  <button class="btn byl blg" style="width:100%" onclick="closeTrip()">🔒 Close Trip & Submit / ट्रिप बंद करा</button>
+</div></div>
+
+<!-- ADVANCE -->
+<div class="mov" id="MN_ADV"><div class="mod" style="width:460px">
+  <div class="mhd"><div class="mtitle">💸 Advance Entry<span>Priority: Cash Shortage → Recovery → Wages</span></div><button class="cx" onclick="closeM('MN_ADV')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Staff</div><select id="ADV_ST" onchange="refreshAdvBal()"></select></div>
+    <div class="fg"><div class="fl">Type</div><select id="ADV_TY"><option value="give">Give Advance</option><option value="recovery">Recovery (deduct wages)</option><option value="cash_short">Cash Shortage (auto-advance)</option><option value="cash_in">Cash Received from Staff</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Amount ₹</div><input type="number" id="ADV_AMT"></div>
+    <div class="fg"><div class="fl">Monthly Recovery ₹</div><input type="number" id="ADV_MR" placeholder="Set recovery amount"></div>
+  </div>
+  <div style="background:var(--bgp);border-radius:9px;padding:14px;margin-bottom:14px"><div style="font-size:11px;color:var(--td)">Current Balance</div><div id="ADV_BAL" style="font-size:28px;font-weight:700;color:var(--orange)">₹0</div></div>
+  <button class="btn bpri" onclick="saveAdvance()">💾 Save</button>
+</div></div>
+
+<!-- STAFF -->
+<div class="mov" id="MN_STAFF"><div class="mod">
+  <div class="mhd"><div class="mtitle">👤 Add/Edit Staff<span>कर्मचारी नोंद</span></div><button class="cx" onclick="closeM('MN_STAFF')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Name</div><input id="ST_NM" placeholder="Full name"></div>
+    <div class="fg"><div class="fl">Role</div><select id="ST_RL"><option value="delivery">Delivery Man</option><option value="office">Office Staff</option><option value="loader">Loading Crew</option><option value="truck">Truck Driver</option><option value="helper">Helper</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Mobile 1</div><input type="tel" id="ST_M1"></div>
+    <div class="fg"><div class="fl">Mobile 2</div><input type="tel" id="ST_M2"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Area</div><select id="ST_AR"><option value="urban">Urban</option><option value="rural">Rural</option><option value="mixed">Mixed</option></select></div>
+    <div class="fg" style="max-width:90px"><div class="fl">Urban ₹/cyl</div><input type="number" id="ST_WU" value="8"></div>
+    <div class="fg" style="max-width:90px"><div class="fl">Rural ₹/cyl</div><input type="number" id="ST_WR" value="7"></div>
+    <div class="fg" style="max-width:90px"><div class="fl">Salary ₹</div><input type="number" id="ST_SAL" value="0"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Username</div><input id="ST_US"></div>
+    <div class="fg"><div class="fl">Password</div><input type="password" id="ST_PW" value="1234"></div>
+    <div class="fg" style="max-width:110px"><div class="fl">Adv ₹</div><input type="number" id="ST_ADV" value="0"></div>
+    <div class="fg" style="max-width:110px"><div class="fl">Monthly Rec ₹</div><input type="number" id="ST_REC" value="0"></div>
+  </div>
+  <button class="btn bpri" onclick="saveStaff()">💾 Save Staff</button>
+</div></div>
+
+<!-- EXPENSE -->
+<div class="mov" id="MN_EXPENSE"><div class="mod" style="width:460px">
+  <div class="mhd"><div class="mtitle">🧾 Add Expense<span>खर्च — auto-deducted from cash register</span></div><button class="cx" onclick="closeM('MN_EXPENSE')">✕</button></div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Category</div>
+      <select id="EX_CAT">
+        <option>Petrol / पेट्रोल</option>
+        <option>Vehicle Maintenance</option>
+        <option>Termination Voucher (Cash to Customer)</option>
+        <option>Name Change Fee (Cash to Customer)</option>
+        <option>Salary / Wages Paid</option>
+        <option>Advance to Staff</option>
+        <option>Unloading Wages</option>
+        <option>Office Stationery / Courier</option>
+        <option>Cylinder Testing Fee</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="fg" style="max-width:120px"><div class="fl">Paid By</div><select id="EX_PB"><option>Office Cash</option><option>Owner</option><option>Staff (Reimbursable)</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Amount ₹ (given TO customer for TV/NC)</div><input type="number" id="EX_AMT"></div>
+    <div class="fg" style="max-width:140px"><div class="fl">Date</div><input type="date" id="EX_DT"></div>
+  </div>
+  <div class="fg mb12"><div class="fl">Description / तपशील</div><input id="EX_DESC" placeholder="Details..."></div>
+  <div class="al alw mb10" style="font-size:11px">⚠️ Termination Voucher & Name Change = Cash PAID to customer. This DEBITS the cash register.</div>
+  <button class="btn bpri" onclick="saveExpense()">💾 Save Expense</button>
+</div></div>
+
+<!-- BDA MODAL -->
+<div class="mov" id="MN_BDA"><div class="mod">
+  <div class="mhd"><div class="mtitle" id="BDA_TITLE">BDA<span id="BDA_SUB"></span></div><button class="cx" onclick="closeM('MN_BDA')">✕</button></div>
+  <div class="tabs">
+    <div class="tab act" onclick="bdaTab('stock',this)">🛢️ Stock</div>
+    <div class="tab" onclick="bdaTab('cash',this)">💵 Cash</div>
+    <div class="tab" onclick="bdaTab('otp',this)">🔑 OTP</div>
+    <div class="tab" onclick="bdaTab('spot',this)">⚡ Spot</div>
+  </div>
+  <div id="BDA_stock">
+    <div class="fr">
+      <div class="fg"><div class="fl">14.2 Full Given</div><input type="number" id="BS_F14" placeholder="0"></div>
+      <div class="fg"><div class="fl">14.2 Empty Taken</div><input type="number" id="BS_E14" placeholder="0"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">5 Kg Given</div><input type="number" id="BS_F5" placeholder="0"></div>
+      <div class="fg"><div class="fl">19 Kg Given</div><input type="number" id="BS_F19" placeholder="0"></div>
+    </div>
+    <button class="btn bpri" onclick="saveBDAStock()">💾 Save Stock</button>
+  </div>
+  <div id="BDA_cash" style="display:none">
+    <div class="fr"><div class="fg"><div class="fl">Cyls Sold</div><input type="number" id="BC_QTY" oninput="calcBDASale()"></div><div class="fg"><div class="fl">Type</div><select id="BC_TY" onchange="calcBDASale()"><option value="14.2">14.2 Kg</option><option value="5">5 Kg</option><option value="19">19 Kg</option></select></div></div>
+    <div style="margin-bottom:10px"><div class="fl" style="margin-bottom:5px">Payment Modes</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cash ₹</div><input type="number" id="BC_CASH"></div>
+      <div class="fg"><div class="fl">GPay ₹</div><input type="number" id="BC_GP"></div>
+      <div class="fg"><div class="fl">Paytm ₹</div><input type="number" id="BC_PT"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">PhonePe ₹</div><input type="number" id="BC_PP"></div>
+      <div class="fg"><div class="fl">QR ₹</div><input type="number" id="BC_QR"></div>
+      <div class="fg"><div class="fl">Cash Given To</div><select id="BC_TO"><option>Office</option><option>Delivery Man</option><option>Owner</option><option>OSBS Account</option></select></div>
+    </div></div>
+    <div id="BC_CALC" class="al ali mb8"></div>
+    <button class="btn bpri" onclick="saveBDAPayment()">💾 Save Payment</button>
+  </div>
+  <div id="BDA_otp" style="display:none">
+    <div class="al ali mb8">OTP area-wise centrally stored. Office/delivery can view. / ओटीपी क्षेत्रनिहाय साठवले — कार्यालय व डिलिव्हरी पाहू शकते.</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Consumer No.</div><input id="BO_C"></div>
+      <div class="fg"><div class="fl">Name</div><input id="BO_N"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">OTP</div><input type="text" id="BO_OTP" maxlength="6" placeholder="______" style="letter-spacing:7px;font-size:22px;text-align:center;font-family:var(--fmn)"></div>
+      <div class="fg"><div class="fl">Area</div><input id="BO_AREA"></div>
+    </div>
+    <button class="btn bpri mb10" onclick="saveBDAOTP()">✅ Save OTP</button>
+    <div id="BO_LIST"></div>
+  </div>
+  <div id="BDA_spot" style="display:none">
+    <div class="fr"><div class="fg"><div class="fl">Consumer No. *</div><input type="number" id="BSP_C"></div><div class="fg"><div class="fl">Mobile</div><input type="tel" id="BSP_M"></div></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cylinder</div><select id="BSP_CY"><option value="14.2">14.2 Kg</option><option value="5">5 Kg</option></select></div>
+      <div class="paymgrid" style="margin:0"><div class="paymode sel" data-pay="cash" onclick="selPay(this,'BSP')"><div class="pic">💵</div><div class="plb">Cash</div></div><div class="paymode" data-pay="gpay" onclick="selPay(this,'BSP')"><div class="pic">📱</div><div class="plb">GPay</div></div><div class="paymode" data-pay="qr" onclick="selPay(this,'BSP')"><div class="pic">📷</div><div class="plb">QR</div></div></div>
+      <div class="fg" style="max-width:100px"><div class="fl">Amount ₹</div><input type="number" id="BSP_A" value="856"></div>
+    </div>
+    <button class="btn bor" onclick="saveBDASpot()">⚡ Confirm Spot</button>
+  </div>
+</div></div>
+
+<!-- STOCK UPDATE (owner/partner only) -->
+<div class="mov" id="MN_STOCK_UPD"><div class="mod" style="width:460px">
+  <div class="mhd"><div class="mtitle">🛢️ Manual Stock Adjustment<span>Owner / Partner only — with reason</span></div><button class="cx" onclick="closeM('MN_STOCK_UPD')">✕</button></div>
+  <div class="al alw mb10">Manual adjustments require a reason. All changes are logged.</div>
+  <div class="fr">
+    <div class="fg"><div class="fl">Location</div><select id="SUP_LOC"><option value="godown_f14">Godown 14.2 Full</option><option value="godown_e14">Godown 14.2 Empty</option><option value="godown_f5">Godown 5 Kg Full</option><option value="godown_f19">Godown 19 Kg Full</option><option value="office_f14">Office 14.2 Full</option><option value="office_f5">Office 5 Kg</option><option value="office_sv">Office SV Stock</option><option value="office_bb">Office Blue Book</option><option value="office_pipe">Office Suraksha Pipe</option><option value="office_dpr_good">DPR Good</option><option value="office_dpr_def">DPR Defective</option></select></div>
+    <div class="fg" style="max-width:100px"><div class="fl">New Value</div><input type="number" id="SUP_VAL"></div>
+  </div>
+  <div class="fg mb12"><div class="fl">Reason (mandatory / कारण)</div><input id="SUP_REASON" placeholder="Reason for adjustment..."></div>
+  <button class="btn byl" onclick="saveStockUpdate()">💾 Save Adjustment</button>
+</div></div>
+
+</body>
+
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// v5 DATA — localStorage with blank-slate support
+// ═══════════════════════════════════════════════════════════════
+const STORE_KEY='shourya_erp_v5';
+
+// ── RATES v5 ──
+const RATES={'14.2':856,'5':352.5,'19':2132};
+
+const DEFAULT_DATA={
+  staff:[
+    {id:'s_vishal',name:'Vishal Patil',role:'owner',m1:'7887456789',m2:'9869234868',area:'mixed',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'vishal',pw:'1234'},
+    {id:'s_mrinmayi',name:'Mrinmayi Patil',role:'owner',m1:'8080802880',m2:'',area:'mixed',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'mrinmayi',pw:'1234'},
+    {id:'s_baba',name:'Baba Patil',role:'owner',m1:'7276884888',m2:'',area:'mixed',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'baba',pw:'1234'},
+    {id:'s_rajesh',name:'Rajesh Awale',role:'office',m1:'8007183197',m2:'',area:'urban',wu:0,wr:0,sal:15000,adv:0,mrec:0,active:true,un:'office',pw:'1234'},
+    {id:'s_bhore',name:'Vishwas Bhore',role:'delivery',m1:'7643982982',m2:'9975464383',area:'mixed',wu:8,wr:7,sal:0,adv:5000,mrec:1000,active:true,un:'bhore',pw:'1234'},
+    {id:'s_swapnil',name:'Swapnil Patil',role:'delivery',m1:'8830669611',m2:'',area:'mixed',wu:8,wr:7,sal:0,adv:2000,mrec:500,active:true,un:'swapnil',pw:'1234'},
+    {id:'s_haroon',name:'Haroon Fakir',role:'delivery',m1:'9970660901',m2:'',area:'rural',wu:8,wr:7,sal:0,adv:0,mrec:0,active:true,un:'haroon',pw:'1234'},
+    {id:'s_magdum',name:'Vishal Magdum',role:'delivery',m1:'9096853954',m2:'7643987987',area:'rural',wu:8,wr:7,sal:0,adv:3000,mrec:500,active:true,un:'magdum',pw:'1234'},
+    {id:'s_ajinath',name:'Ajinath',role:'truck',m1:'8669164977',m2:'',area:'mixed',wu:0,wr:0,sal:18000,adv:0,mrec:0,active:true,un:'ajinath',pw:'1234'},
+    {id:'s_sandeep',name:'Sandeep',role:'loader',m1:'8788076864',m2:'',area:'mixed',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'sandeep',pw:'1234'},
+    {id:'s_sager',name:'Sager',role:'loader',m1:'8605444617',m2:'',area:'mixed',wu:0,wr:0,sal:0,adv:0,mrec:0,active:true,un:'sager',pw:'1234'},
+  ],
+  bda:[
+    {id:'b1',name:'Sarika Waghmode',area:'Kondigre',mob:'9561242972',f14:0,e14:0,f5:0,active:true,un:'bda1',pw:'1234'},
+    {id:'b2',name:'Kumar Thomake',area:'Nimshirgav',mob:'9673824646',f14:0,e14:0,f5:0,active:true,un:'bda2',pw:'1234'},
+    {id:'b3',name:'Lakhane',area:'Nimshirgav',mob:'7588262265',f14:0,e14:0,f5:0,active:true,un:'bda3',pw:'1234'},
+    {id:'b4',name:'Manoj',area:'Danoli',mob:'9970731436',f14:0,e14:0,f5:0,active:true,un:'bda4',pw:'1234'},
+    {id:'b5',name:'Yadav',area:'Kothali',mob:'9405744020',f14:0,e14:0,f5:0,active:true,un:'bda5',pw:'1234'},
+    {id:'b6',name:'Sudhakar Patil',area:'Kavatesar',mob:'9822180498',f14:0,e14:0,f5:0,active:true,un:'bda6',pw:'1234'},
+    {id:'b7',name:'Vikrant Kamble',area:'Shirol',mob:'7028502299',f14:0,e14:0,f5:0,active:true,un:'bda7',pw:'1234'},
+    {id:'b8',name:'Rajesh Awale',area:'Chipri Beghar',mob:'8007183197',f14:0,e14:0,f5:0,active:true,un:'bda8',pw:'1234'},
+  ],
+  stock:{
+    godown:{f14:0,e14:0,f5:0,e5:0,f19:0,e19:0,def:0},
+    office:{f14:0,e14:0,f5:0,e5:0,f19:0,sv:0,bb:0,pipe:0,dpr_good:0,dpr_def:0},
+    vehicles:{}
+  },
+  deliveries:[],
+  trips:[],
+  bpclReceipts:[],
+  cashLedger:[],
+  advLedger:[],
+  expenses:[],
+  notices:[],
+  otpStore:[],
+  customerPins:{},
+  stockLog:[],
+  chatMsg:{
+    'All Staff':[{from:'System',msg:'ERP v5.0 Ready. Good luck team! / तयार आहे.',ts:'00:00',mine:false}],
+    'Office':[],
+    'Bhore':[],
+    'Haroon':[],
+    'Swapnil':[],
+    'Magdum':[]
+  },
+  erpDay:new Date().toISOString().slice(0,10),
+  morningLocked:false,
+  dayEndLocked:false
+};
+
+function loadData(){
+  try{const s=localStorage.getItem(STORE_KEY);if(s)return JSON.parse(s);}
+  catch(e){console.warn('Load failed');}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(D));}catch(e){console.warn('Save:',e);}}
+function resetToBlank(){if(!confirm('Reset ALL data to blank slate? This cannot be undone.'))return;localStorage.removeItem(STORE_KEY);location.reload();}
+
+let D=loadData();
+setInterval(saveData,30000);
+
+// Ensure vehicles exist for all delivery men
+function ensureVehicles(){D.staff.filter(s=>s.role==='delivery').forEach(s=>{if(!D.stock.vehicles[s.id])D.stock.vehicles[s.id]={f14:0,e14:0,f5:0,f19:0};});}
+
+// ── HELPERS ──
+const fmt=n=>'₹'+(parseFloat(n)||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtN=n=>(parseFloat(n)||0).toLocaleString('en-IN');
+const ts=()=>new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+const G=id=>document.getElementById(id);
+const totalBDA=()=>D.bda.reduce((t,b)=>t+(b.f14||0),0);
+const totalVeh=()=>Object.values(D.stock.vehicles||{}).reduce((t,v)=>t+(v.f14||0),0);
+const getBalance=()=>D.cashLedger.reduce((b,l)=>b+(l.cr||0)-(l.dr||0),0);
+const isOwner=()=>['owner'].includes(D.role);
+const isOffice=()=>['owner','office','accountant'].includes(D.role);
+const AREAS=['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk','Chipri Beghar','Kothali','Kondigre','Nimshirgav','Danoli','Kavatesar','Shirol','Sakharale','Yadrav','Hebbal','Rural-Haroon'];
+
+// ── LOGIN ──
+let selRole='owner';
+function selR(el,r){document.querySelectorAll('.rb').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');selRole=r;}
+function doLogin(){
+  const u=G('lu').value.trim(),p=G('lp').value;
+  if(!u||!p){toast('Enter credentials','w');return;}
+  let found=null;
+  [...D.staff,...D.bda].forEach(s=>{if(s.un===u&&s.pw===p)found={...s};});
+  if(!found&&p==='1234'){
+    const rm={owner:'s_vishal',office:'s_rajesh',delivery:'s_bhore',loader:'s_sandeep',bda:'b1',accountant:'s_rajesh'};
+    found=[...D.staff,...D.bda].find(x=>x.id===rm[selRole]);
+    if(found)found={...found};
+  }
+  if(!found){toast('Invalid login / चुकीचा पासवर्ड','e');return;}
+  if(['s_vishal','s_mrinmayi','s_baba'].includes(found.id))D.role='owner';
+  else if(found.role==='bda'||found.id?.startsWith('b'))D.role='bda';
+  else D.role=found.role||selRole;
+  D.userId=found.id;D.userName=found.name;
+  if(D.role==='delivery')D.currentDeliveryId=found.id;
+  if(D.role==='bda')D.currentBDAId=found.id;
+  if(!D.activeChatContact)D.activeChatContact='All Staff';
+  ensureVehicles();
+  G('LS').style.display='none';
+  G('APP').style.display='flex';
+  initApp();
+}
+function doLogout(){saveData();G('LS').style.display='flex';G('APP').style.display='none';}
+
+// ── NAV ──
+const NAV_CFG={
+  owner:[
+    {sec:'Overview'},{page:'dashboard',ic:'📊',l:'Dashboard',m:'डॅशबोर्ड'},
+    {page:'tracking',ic:'🗺️',l:'Live Tracking',m:'थेट ट्रॅकिंग'},
+    {sec:'Operations'},{page:'deliveries',ic:'🚚',l:'All Deliveries',m:'सर्व डिलिव्हरी'},
+    {page:'godownboard',ic:'🏭',l:'Godown Board',m:'गोदाम बोर्ड'},
+    {page:'bda',ic:'🤝',l:'BDA Partners',m:'बीडीए'},
+    {page:'otpcentral',ic:'🔑',l:'Central OTP',m:'केंद्रीय OTP'},
+    {sec:'Finance'},{page:'cash',ic:'💵',l:'Cash Register',m:'रोख'},
+    {page:'expenses',ic:'🧾',l:'Expenses',m:'खर्च'},
+    {page:'dayend',ic:'📋',l:'Day End',m:'दिवसअखेर'},
+    {page:'payroll',ic:'💰',l:'Payroll',m:'वेतन'},
+    {page:'accounting',ic:'📑',l:'Accounting',m:'लेखा'},
+    {sec:'Admin'},{page:'stock',ic:'🛢️',l:'Stock Summary',m:'स्टॉक'},
+    {page:'staff',ic:'👥',l:'Staff',m:'कर्मचारी'},
+    {page:'bpclverify',ic:'✅',l:'BPCL Verify',m:'बीपीसीएल'},
+    {page:'settings',ic:'⚙️',l:'Settings',m:'सेटिंग'},
+  ],
+  office:[
+    {sec:'Daily'},{page:'dashboard',ic:'📊',l:'Dashboard',m:'डॅशबोर्ड'},
+    {page:'morningcount',ic:'🌅',l:'Morning Count',m:'सकाळची मोजणी'},
+    {page:'godownboard',ic:'🏭',l:'Godown Board',m:'गोदाम बोर्ड'},
+    {page:'deliveries',ic:'🚚',l:'Deliveries',m:'डिलिव्हरी'},
+    {page:'officesales',ic:'🏪',l:'Office Sales',m:'विक्री'},
+    {page:'otpcentral',ic:'🔑',l:'Central OTP',m:'केंद्रीय OTP'},
+    {sec:'Finance'},{page:'cash',ic:'💵',l:'Cash Register',m:'रोख'},
+    {page:'expenses',ic:'🧾',l:'Expenses',m:'खर्च'},
+    {page:'dayend',ic:'📋',l:'Day End',m:'दिवसअखेर'},
+    {page:'payroll',ic:'💰',l:'Wages',m:'वेतन'},
+    {sec:'Stock'},{page:'stock',ic:'🛢️',l:'All Stock',m:'स्टॉक'},
+    {page:'bda',ic:'🤝',l:'BDA',m:'बीडीए'},
+    {page:'bpclverify',ic:'✅',l:'BPCL',m:'बीपीसीएल'},
+  ],
+  delivery:[
+    {sec:'Today'},{page:'myroute',ic:'📍',l:"Today's Route",m:'आजची डिलिव्हरी'},
+    {page:'starttrip',ic:'🚀',l:'Start Trip',m:'ट्रिप सुरू'},
+    {sec:'My Info'},{page:'mystock',ic:'🛢️',l:'My Stock',m:'माझा स्टॉक'},
+    {page:'mycash',ic:'💵',l:'Submit Cash',m:'रोख जमा'},
+    {page:'mywages',ic:'💰',l:'My Wages',m:'माझे वेतन'},
+    {page:'otpcentral',ic:'🔑',l:'Area OTPs',m:'क्षेत्र OTP'},
+  ],
+  loader:[
+    {sec:'Godown'},{page:'godownboard',ic:'🏭',l:'Godown Board',m:'गोदाम बोर्ड'},
+    {page:'bpclentry',ic:'📦',l:'BPCL Entry',m:'बीपीसीएल नोंद'},
+  ],
+  bda:[
+    {sec:'BDA'},{page:'bdamy',ic:'📊',l:'My Dashboard',m:'माझा डॅशबोर्ड'},
+    {page:'bdaotp',ic:'🔑',l:'OTP Collection',m:'ओटीपी'},
+    {page:'bdasspot',ic:'⚡',l:'Spot Booking',m:'स्पॉट'},
+  ],
+  accountant:[
+    {sec:'Finance'},{page:'dashboard',ic:'📊',l:'Dashboard',m:'डॅशबोर्ड'},
+    {page:'accounting',ic:'📑',l:'Accounts',m:'लेखा'},
+    {page:'bpclverify',ic:'✅',l:'BPCL',m:'बीपीसीएल'},
+    {page:'payroll',ic:'💰',l:'Payroll',m:'वेतन'},
+  ]
+};
+const PAGE_TITLES={
+  dashboard:'Dashboard / डॅशबोर्ड',tracking:'Live Tracking / थेट ट्रॅकिंग',
+  deliveries:'All Deliveries / सर्व डिलिव्हरी',stock:'Stock Summary / स्टॉक सारांश',
+  godownboard:'Godown Board / गोदाम बोर्ड',bda:'BDA Partners / बीडीए',
+  cash:'Cash Register / रोख',expenses:'Expenses / खर्च',
+  dayend:'Day End / दिवसअखेर',payroll:'Payroll / वेतन',
+  accounting:'Accounts & GST / लेखा',staff:'Staff / कर्मचारी',
+  bpclverify:'BPCL Verify / तुलना',settings:'Settings / सेटिंग',
+  morningcount:'Morning Count / सकाळची मोजणी',officesales:'Office Sales / विक्री',
+  myroute:"Today's Route / आजची डिलिव्हरी",starttrip:'Start Trip / ट्रिप सुरू',
+  mystock:'My Stock / माझा स्टॉक',mycash:'Submit Cash / रोख जमा',mywages:'My Wages / माझे वेतन',
+  bdamy:'BDA Dashboard',bdaotp:'OTP Collection / ओटीपी',bdasspot:'Spot Booking / स्पॉट',
+  otpcentral:'Central OTP / केंद्रीय OTP',bpclentry:'BPCL Entry / बीपीसीएल नोंद',
+};
+
+let mapInst=null;
+function initApp(){
+  ensureVehicles();
+  G('TB_USER').textContent=D.userName;G('S_NAME').textContent=D.userName;G('S_AV').textContent=D.userName[0];
+  const rL={owner:'मालक',office:'व्यवस्थापक',delivery:'डिलिव्हरी',loader:'लोडिंग',bda:'बीडीए',accountant:'लेखापाल'};
+  G('S_ROLE').textContent=rL[D.role]||D.role;G('S_ROLE2').textContent=rL[D.role]||D.role;
+  G('S_DAY').textContent='ERP: '+D.erpDay;
+  ['CSV_DT','EX_DT','BR_DT'].forEach(id=>{if(G(id))G(id).value=D.erpDay;});
+  if(G('CSV_DM'))G('CSV_DM').innerHTML='<option value="">Auto-assign</option>'+D.staff.filter(s=>s.role==='delivery').map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  buildAdvStaffSel();
+  buildNav();
+  const fp=(NAV_CFG[D.role]||NAV_CFG.owner).find(n=>n.page);
+  setPage(fp?fp.page:'dashboard');
+  startClock();
+  initChat();
+}
+function toggleSB(){G('SB').classList.toggle('mini');}
+function buildNav(){
+  const items=NAV_CFG[D.role]||NAV_CFG.owner;
+  G('NAV').innerHTML=items.map(it=>{
+    if(it.sec)return`<div class="nsec">${it.sec}</div>`;
+    return`<div class="ni" id="N_${it.page}" onclick="setPage('${it.page}')"><span class="ic">${it.ic}</span><div><div class="snl">${it.l}</div><div class="snl2">${it.m}</div></div></div>`;
+  }).join('');
+}
+function setPage(pg){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('act'));
+  const el=G('N_'+pg);if(el)el.classList.add('act');
+  G('TB_TITLE').textContent=PAGE_TITLES[pg]||pg;
+  const fn=PAGES[pg];
+  G('PC').innerHTML=fn?fn():`<div class="pw"><div class="al ali">📍 ${pg} — Page loading...</div></div>`;
+  if(!fn)return;
+  if(pg==='tracking'||pg==='myroute')setTimeout(initMap,150);
+  if(pg==='morningcount')setTimeout(()=>{document.querySelectorAll('.mspi').forEach(i=>i.addEventListener('input',function(){calcMSDiff(this);}));},50);
+  if(pg==='officesales')setTimeout(()=>{G('OS_QTY')&&G('OS_QTY').addEventListener('input',osCalc);},50);
+}
+
+// ════ PAGES ════
+const PAGES={};
+
+// ─── DASHBOARD (Owner/Partner hierarchical) ───
+PAGES.dashboard=function(){
+  const del=D.deliveries.filter(x=>x.st&&x.st.startsWith('delivered')).length;
+  const pend=D.deliveries.filter(x=>!x.st||x.st==='scheduled').length;
+  const cash=getBalance();
+  const mismatch=false; // TODO: real BPCL compare
+  const notices=(D.notices||[]).map(n=>n.en).join('  ●  ')||'ERP Ready — शौर्य भारत गॅस';
+  const tf14=D.stock.godown.f14+D.stock.office.f14+totalBDA()+totalVeh();
+
+  return`<div class="pw">
+<!-- DAY STATUS BAR -->
+<div class="daybar">
+  <div class="dbitem"><div class="dbval" style="font-size:14px">${D.erpDay}</div><div class="dblb">ERP Day</div></div>
+  <span class="badge ${D.dayEndLocked?'bg':'by'}">${D.dayEndLocked?'🟢 Day Closed':'🟡 Day Open'}</span>
+  <span class="badge ${mismatch?'br':'bg'}">${mismatch?'🔴 BPCL Diff':'🟢 BPCL OK'}</span>
+  <div class="dbitem"><div class="dbval" style="color:var(--green)">${del}</div><div class="dblb">Delivered / वितरित</div></div>
+  <div class="dbitem"><div class="dbval" style="color:var(--yellow)">${pend}</div><div class="dblb">Pending / प्रलंबित</div></div>
+  <div class="dbitem"><div class="dbval" style="font-size:16px;color:var(--accent)">${fmt(cash)}</div><div class="dblb">Cash / रोख</div></div>
+  <div style="margin-left:auto;display:flex;gap:6px">
+    <button class="btn bpri bsm" onclick="openM('MN_SPOT')">⚡ Emergency</button>
+    <button class="btn bg2 bsm" onclick="openM('MN_CSV')">📤 CSV</button>
+    <button class="btn bg2 bsm" onclick="openM('MN_NOTICE')">📢 Notice</button>
+  </div>
+</div>
+
+<!-- STOCK BLOCKS (clickable expandable) -->
+<div class="exs mb8">
+  <div class="exshd" onclick="toggleEx2('stk14')">
+    <div class="exstitle">🛢️ 14.2 Kg Stock / साठा<span class="badge bg" style="font-size:10px">${tf14} total full</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><span class="badge ${tf14===0?'br':'bb'}">${tf14===0?'⚠️ ZERO':tf14+' Full'}</span><span class="exsarr">▼</span></div>
+  </div>
+  <div class="exsbody" id="stk14">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px">
+      ${[['🏭 Godown',D.stock.godown.f14,D.stock.godown.e14],['🏢 Office',D.stock.office.f14,D.stock.office.e14],['🤝 BDA',totalBDA(),D.bda.reduce((t,b)=>t+(b.e14||0),0)],['🚐 Vehicles',totalVeh(),0],['⚠️ Defective',D.stock.godown.def,0]].map(([l,f,e])=>`<div class="card csm" style="text-align:center;cursor:pointer" onclick="setPage('stock')"><div style="font-size:11px;color:var(--td);margin-bottom:5px">${l}</div><div style="font-size:24px;font-weight:700;color:var(--green)">${f}</div><div style="font-size:10px;color:var(--td)">${e?'Empty: '+e:''}</div></div>`).join('')}
+    </div>
+    <div style="font-size:11px;color:var(--td);display:flex;gap:12px">
+      <span>BPCL Code 5350+5370 total: <strong style="color:var(--accent)">${tf14}</strong></span>
+      <span>Must match BPCL SAP day-end</span>
+    </div>
+  </div>
+</div>
+
+<!-- DELIVERY MEN (expandable per person → trip → movement) -->
+<div class="exs mb8">
+  <div class="exshd" onclick="toggleEx2('dlv_all')">
+    <div class="exstitle">🚚 Delivery Men / डिलिव्हरी मॅन</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge bb">${D.staff.filter(s=>s.role==='delivery').length} active</span><span class="exsarr">▼</span></div>
+  </div>
+  <div class="exsbody open" id="dlv_all">
+    ${D.staff.filter(s=>s.role==='delivery').map(s=>{
+      const v=D.stock.vehicles[s.id]||{f14:0};
+      const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');
+      const del=D.deliveries.filter(d=>d.sid===s.id&&d.st&&d.st.startsWith('delivered')).length;
+      const pend2=D.deliveries.filter(d=>d.sid===s.id&&(!d.st||d.st==='scheduled')).length;
+      const cash2=D.cashLedger.filter(l=>l.src===s.id).reduce((t,l)=>t+(l.cr||0)-(l.dr||0),0);
+      return `<div class="exs" style="margin-bottom:6px">
+        <div class="exshd" onclick="toggleEx2('dm_${s.id}')">
+          <div class="exstitle">
+            <span class="dot" style="background:${trip?'var(--green)':'var(--yellow)'}"></span>
+            ${s.name}
+            <span class="badge bg" style="font-size:9px">${del} ✓</span>
+            <span class="badge by" style="font-size:9px">${pend2} ⏳</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="badge ${trip?'bg':'bdm'}">${trip?'ON TRIP':'STANDBY'}</span>
+            <span class="exsarr">▼</span>
+          </div>
+        </div>
+        <div class="exsbody" id="dm_${s.id}">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">
+            <div class="card csm" style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--green)">${v.f14||0}</div><div style="font-size:9px;color:var(--td)">Loaded / लोड</div></div>
+            <div class="card csm" style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">${del}</div><div style="font-size:9px;color:var(--td)">Delivered / वितरित</div></div>
+            <div class="card csm" style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--yellow)">${pend2}</div><div style="font-size:9px;color:var(--td)">Pending / प्रलंबित</div></div>
+            <div class="card csm" style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--orange)">${fmt(cash2)}</div><div style="font-size:9px;color:var(--td)">Cash / रोख</div></div>
+          </div>
+          <div style="margin-bottom:8px"><a class="cbtn" href="tel:${s.m1}">📞 ${s.m1}</a>${s.m2?` <a class="cbtn" href="tel:${s.m2}" style="margin-left:5px">📞 Alt</a>`:''}</div>
+          ${trip?`<button class="btn brd bsm" onclick="openTripClose('${s.id}')">🔒 Close Trip</button>`:''}
+          <!-- TRIPS list -->
+          ${D.trips.filter(t=>t.sid===s.id).map(tr=>`
+          <div style="background:var(--bgp);border-radius:7px;padding:10px;margin-top:8px;border-left:3px solid ${tr.status==='open'?'var(--green)':'var(--td)'}">
+            <div style="font-size:11px;font-weight:700;color:${tr.status==='open'?'var(--green)':'var(--td)'}">Trip ${tr.id} | ${tr.status.toUpperCase()} | ${tr.ts}</div>
+            <div style="font-size:12px;margin-top:5px">Loaded: <strong>${tr.f14}</strong> | Cash: <strong>${fmt(tr.cash||0)}</strong> | Online: <strong>${fmt((tr.gp||0)+(tr.qr||0)+(tr.pt||0))}</strong></div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+</div>
+
+<!-- CASH REGISTER SUMMARY (expandable) -->
+<div class="exs mb8">
+  <div class="exshd" onclick="toggleEx2('cash_sum')">
+    <div class="exstitle">💵 Cash Register / रोख नोंद</div>
+    <div style="display:flex;gap:6px;align-items:center"><span style="font-family:var(--fmn);font-size:16px;font-weight:700;color:var(--yellow)">${fmt(cash)}</span><span class="exsarr">▼</span></div>
+  </div>
+  <div class="exsbody" id="cash_sum">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+      <div class="card csm" style="border-left:3px solid var(--blue)">
+        <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:7px">🏢 Office</div>
+        <div style="font-size:12px">Sales: <strong style="color:var(--green)">${fmt(D.cashLedger.filter(l=>l.type==='office_sale').reduce((t,l)=>t+(l.cr||0),0))}</strong></div>
+        <div style="font-size:12px">Expenses: <strong style="color:var(--red)">${fmt(D.cashLedger.filter(l=>l.type==='expense').reduce((t,l)=>t+(l.dr||0),0))}</strong></div>
+      </div>
+      <div class="card csm" style="border-left:3px solid var(--green)">
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:7px">🚚 Delivery Men</div>
+        ${D.staff.filter(s=>s.role==='delivery').map(s=>`<div style="font-size:11px;display:flex;justify-content:space-between"><span>${s.name.split(' ')[0]}</span><span style="color:var(--green)">${fmt(D.cashLedger.filter(l=>l.src===s.id&&l.type==='delivery').reduce((t,l)=>t+(l.cr||0),0))}</span></div>`).join('')}
+      </div>
+      <div class="card csm" style="border-left:3px solid var(--yellow)">
+        <div style="font-size:11px;font-weight:700;color:var(--yellow);margin-bottom:7px">🤝 BDA</div>
+        ${D.bda.slice(0,4).map(b=>`<div style="font-size:11px;display:flex;justify-content:space-between"><span>${b.name.split(' ')[0]}</span><span style="color:var(--yellow)">${fmt(D.cashLedger.filter(l=>l.src===b.id&&l.type==='bda').reduce((t,l)=>t+(l.cr||0),0))}</span></div>`).join('')}
+      </div>
+    </div>
+    <button class="btn bg2 bsm" onclick="setPage('cash')">📒 Full Cash Ledger →</button>
+  </div>
+</div>
+
+<!-- BPCL COMPARISON (expandable) -->
+<div class="exs mb8">
+  <div class="exshd" onclick="toggleEx2('bpcl_sum')">
+    <div class="exstitle">📊 BPCL Day End Comparison / तुलना</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge bg">Status: Pending Entry</span><span class="exsarr">▼</span></div>
+  </div>
+  <div class="exsbody" id="bpcl_sum">
+    <div class="al ali mb10" style="font-size:11px">Enter SAP values to compare. Mismatch → Office review only.</div>
+    <button class="btn bpri bsm" onclick="setPage('bpclverify')">→ Open Full BPCL Verify Page</button>
+  </div>
+</div>
+
+</div>`;
+};
+</script>
+
+
+<script>
+// ─── GODOWN BOARD (replaces old godown page - operational visual board) ───
+PAGES.godownboard=function(){
+  const g=D.stock.godown,lock=D.morningLocked;
+  const canEdit=isOffice()||D.role==='loader'||D.role==='truck';
+  return`<div class="pw">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div><div style="font-size:20px;font-weight:700">🏭 Godown Board / गोदाम बोर्ड</div><div style="font-size:11px;color:var(--td)">Visual operational board — morning count + vehicle loading + BPCL status</div></div>
+  ${lock?'<span class="lockbadge">🔒 Morning Locked</span>':'<button class="btn bpri bsm" onclick="lockMorning()">🔒 Lock Morning</button>'}
+</div>
+
+<!-- SECTION 1: PHYSICAL COUNT -->
+<div class="card mb12" style="border-left:4px solid var(--yellow)">
+  <div class="chd"><div><div class="ctitle">1️⃣ Physical Count / प्रत्यक्ष मोजणी</div><div class="csub" style="font-family:var(--fmr)">Enter physical count → system auto-highlights difference</div></div></div>
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:0;border:1px solid var(--bdr);border-radius:8px;overflow:hidden">
+    <div style="background:var(--bgp);padding:8px 12px;font-size:9px;font-weight:700;color:var(--td);letter-spacing:1px">CYLINDER / सिलेंडर</div>
+    <div style="background:var(--bgp);padding:8px 12px;font-size:9px;font-weight:700;color:var(--accent);text-align:center">PHYSICAL / प्रत्यक्ष</div>
+    <div style="background:var(--bgp);padding:8px 12px;font-size:9px;font-weight:700;color:var(--td);text-align:center">SYSTEM / सिस्टीम</div>
+    <div style="background:var(--bgp);padding:8px 12px;font-size:9px;font-weight:700;color:var(--td);text-align:center">DIFF / फरक</div>
+    ${[
+      {l:'14.2 Kg Full',m:'भरलेले',sys:g.f14,key:'f14'},
+      {l:'14.2 Kg Empty',m:'रिकामे',sys:g.e14,key:'e14'},
+      {l:'5 Kg Full',m:'भरलेले',sys:g.f5,key:'f5'},
+      {l:'19 Kg Full',m:'भरलेले',sys:g.f19,key:'f19'},
+      {l:'Defective',m:'सदोष',sys:g.def,key:'def'},
+    ].map(r=>`
+    <div style="padding:10px 12px;border-top:1px solid var(--bdr)"><div style="font-weight:600;font-size:14px">${r.l}</div><div style="font-size:10px;color:var(--td);font-family:var(--fmr)">${r.m}</div></div>
+    <div style="padding:7px 10px;border-top:1px solid var(--bdr);text-align:center">
+      <input type="number" class="mspi ${lock?'locked':''}" data-sys="${r.sys}" data-key="${r.key}" placeholder="Count" style="font-size:20px;font-weight:700;text-align:center;width:90px;font-family:var(--fmn);border-color:var(--accent)" ${lock?'disabled':''}>
+    </div>
+    <div style="padding:10px 12px;border-top:1px solid var(--bdr);text-align:center"><span style="font-size:22px;font-weight:700;font-family:var(--fmn);color:var(--accent)">${r.sys}</span></div>
+    <div style="padding:8px 10px;border-top:1px solid var(--bdr)" id="msd_${r.key}"><span style="color:var(--td)">--</span></div>
+    `).join('')}
+  </div>
+</div>
+
+<!-- SECTION 2: BPCL MOVEMENT REFERENCE -->
+<div class="card mb12">
+  <div class="chd"><div><div class="ctitle">2️⃣ BPCL Last Movement / शेवटचे BPCL संचलन</div><div class="csub">Reference only — editable by loading crew & driver</div></div>
+  ${canEdit?`<button class="btn bpri bsm" onclick="openM('MN_BPCLR')">+ BPCL Receipt</button>`:''}
+  </div>
+  ${D.bpclReceipts&&D.bpclReceipts.length>0?`
+  <div style="background:var(--bgp);border-radius:9px;padding:13px">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      ${[['Filled Received',D.bpclReceipts.slice(-1)[0]?.f14||0,'var(--green)'],['Empty Returned',D.bpclReceipts.slice(-1)[0]?.e14||0,'var(--td)'],['Date',D.bpclReceipts.slice(-1)[0]?.dt||'--','var(--accent)'],['Invoice',D.bpclReceipts.slice(-1)[0]?.inv||'--','var(--yellow)'],['Status',D.bpclReceipts.slice(-1)[0]?.status||'complete','var(--green)']].map(([l,v,c])=>`<div><div style="font-size:10px;color:var(--td)">${l}</div><div style="font-size:18px;font-weight:700;color:${c}">${v}</div></div>`).join('')}
+    </div>
+  </div>`:`<div class="al ali">No BPCL receipts yet. Enter first receipt using "+ BPCL Receipt" button.</div>`}
+</div>
+
+<!-- SECTION 3: VEHICLE LOADING BOARD -->
+<div class="card mb12">
+  <div class="chd"><div><div class="ctitle">3️⃣ Vehicle Loading / वाहन लोडिंग</div><div class="csub">Godown auto-deducts. Loading cannot exceed available.</div></div></div>
+  ${D.staff.filter(s=>s.role==='delivery').map(s=>{
+    const v=D.stock.vehicles[s.id]||{f14:0};
+    const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');
+    const myD=D.deliveries.filter(d=>d.sid===s.id);
+    return`<div class="vblock">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:24px">🚐</span>
+        <div style="flex:1"><div style="font-size:16px;font-weight:700">${s.name}</div><div style="font-size:10px;color:var(--td)">${trip?'🟢 On Trip':'⚫ Standby'}</div></div>
+        <a class="cbtn" href="tel:${s.m1}">📞 ${s.m1}</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px">
+        <div style="text-align:center;background:var(--bgc);border-radius:7px;padding:9px"><div style="font-size:24px;font-weight:700;color:var(--accent);font-family:var(--fmn)">${v.f14||0}</div><div style="font-size:9px;color:var(--td)">Opening / उघडणे</div></div>
+        <div style="text-align:center;background:var(--bgc);border-radius:7px;padding:9px">
+          <input type="number" id="vl_${s.id}" class="loadinp" placeholder="0">
+          <div style="font-size:9px;color:var(--td)">Load Now / आता</div>
+        </div>
+        <div style="text-align:center;background:var(--bgc);border-radius:7px;padding:9px"><div id="vl_tot_${s.id}" style="font-size:24px;font-weight:700;color:var(--green);font-family:var(--fmn)">${v.f14||0}</div><div style="font-size:9px;color:var(--td)">Total / एकूण</div></div>
+        <div style="text-align:center;background:var(--bgc);border-radius:7px;padding:9px"><div style="font-size:24px;font-weight:700;color:var(--yellow);font-family:var(--fmn)">${myD.length}</div><div style="font-size:9px;color:var(--td)">Planned / नियोजित</div></div>
+      </div>
+      <button class="btn bgr bsm" onclick="loadVehicle('${s.id}')">✅ Confirm Load</button>
+    </div>`;
+  }).join('')}
+</div>
+
+<!-- SECTION 4: GODOWN BALANCE AFTER LOADING -->
+<div class="card mb12">
+  <div class="ctitle mb10">4️⃣ Godown Balance After Loading / वाहन लोडिंग नंतर शिल्लक</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+    ${[['14.2 Kg Full',g.f14,'var(--green)'],['14.2 Kg Empty',g.e14,'var(--td)'],['5 Kg Full',g.f5,'var(--accent)'],['19 Kg Full',g.f19,'var(--yellow)']].map(([l,v,c])=>`<div class="card csm" style="text-align:center"><div style="font-size:32px;font-weight:700;color:${c};font-family:var(--fmn)">${v}</div><div style="font-size:11px;color:var(--td);margin-top:4px">${l}</div></div>`).join('')}
+  </div>
+</div>
+
+<!-- SECTION 5: DPR (Office Stock - View Only for godown) -->
+<div class="card mb12">
+  <div class="chd"><div><div class="ctitle">5️⃣ DPR Stock / डीपीआर साठा</div><div class="csub">Office Stock ONLY — not godown. Godown view-only.</div></div>
+  ${isOffice()?`<button class="btn bg2 bsm" onclick="openM('MN_STOCK_UPD')">✏️ Adjust (Office Only)</button>`:''}</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="card csm" style="background:var(--bgp)"><div style="font-size:11px;color:var(--td)">Good DPR</div><div style="font-size:28px;font-weight:700;color:var(--green)">${D.stock.office.dpr_good||0}</div></div>
+    <div class="card csm" style="background:var(--bgp)"><div style="font-size:11px;color:var(--td)">Defective DPR</div><div style="font-size:28px;font-weight:700;color:var(--red)">${D.stock.office.dpr_def||0}</div></div>
+  </div>
+</div>
+
+<!-- SECTION 6: EMPTY CYLINDER COUNT (Marathi grid method) -->
+<div class="card mb12">
+  <div class="ctitle mb10">6️⃣ Empty Cylinder Counter — Marathi Grid Method<br><span style="font-size:11px;color:var(--td);font-family:var(--fmr)">सूत्र: (उभ्या × आडव्या × 2) + एकेरी</span></div>
+  <div class="g3 mb10">
+    ${[['R','उजवीकडे / Right'],['D','दरवाज्याच्या उजवीकडे'],['L','दरवाज्याच्या डावीकडे']].map(([s,lbl])=>`<div class="card csm" style="background:var(--bgp)"><div style="font-size:10px;color:var(--td);font-family:var(--fmr);margin-bottom:8px">${lbl}</div><div style="display:flex;align-items:center;gap:4px;margin-bottom:7px"><div class="fg"><div style="font-size:9px;color:var(--td);font-family:var(--fmr)">उभ्या</div><input type="number" id="ec_${s}_v" placeholder="0" oninput="calcEC()" style="text-align:center;font-size:15px"></div><span style="padding-top:14px;color:var(--td)">×</span><div class="fg"><div style="font-size:9px;color:var(--td);font-family:var(--fmr)">आडव्या</div><input type="number" id="ec_${s}_h" placeholder="0" oninput="calcEC()" style="text-align:center;font-size:15px"></div><span style="padding-top:14px;color:var(--td)">+</span><div class="fg"><div style="font-size:9px;color:var(--td);font-family:var(--fmr)">एकेरी</div><input type="number" id="ec_${s}_e" placeholder="0" oninput="calcEC()" style="text-align:center;font-size:15px"></div></div><div id="ec_${s}_res" style="font-size:22px;font-weight:700;color:var(--green);text-align:center;padding:6px;background:var(--bgc);border-radius:7px">--</div></div>`).join('')}
+  </div>
+  <div style="background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);border-radius:8px;padding:13px;text-align:center;margin-bottom:10px">
+    <div style="font-size:11px;color:var(--td);font-family:var(--fmr)">एकूण रिकामे / Total Empty</div>
+    <div id="ec_total" style="font-size:38px;font-weight:700;color:var(--green);font-family:var(--fmn)">0</div>
+  </div>
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn byl" onclick="confirmMorning()">✅ Confirm Morning Count / सकाळची मोजणी पुष्टी करा</button>
+  ${canEdit?`<button class="btn bpri" onclick="openM('MN_BPCLR')">📦 BPCL Receipt</button>`:''}
+  <button class="btn bg2" onclick="setPage('stock')">📊 Full Stock View</button>
+</div>
+</div>`;
+};
+
+// BPCL ENTRY PAGE (for loader/driver role)
+PAGES.bpclentry=function(){
+  return`<div class="pw"><div class="card">
+<div class="ctitle mb12">📦 BPCL Receipt Entry<span style="display:block;font-size:11px;color:var(--td);font-weight:400;font-family:var(--fmr)">Loading crew / Truck driver. Sandip + Sager ₹400 each auto-credited.</span></div>
+<div class="al ali mb10">Section A (Standard): 342 filled + 342 empty. Section B (Mixed): enter actual quantities.</div>
+<button class="btn bpri blg" onclick="openM('MN_BPCLR')">📦 Open BPCL Receipt Form</button>
+<div style="margin-top:16px"><div class="ctitle mb8">Recent Receipts / मागील नोंदी</div>
+${(D.bpclReceipts||[]).slice(-5).reverse().map(r=>`<div style="background:var(--bgp);border-radius:7px;padding:11px;margin-bottom:7px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><strong>${r.inv||'No Invoice'}</strong><span style="font-size:11px;color:var(--td)">${r.dt}</span></div><div style="font-size:12px;display:flex;gap:12px"><span>14.2 Filled: <strong style="color:var(--green)">${r.f14||0}</strong></span><span>Empty Returned: <strong style="color:var(--td)">${r.e14||0}</strong></span><span class="badge ${r.status==='complete'?'bg':'by'}">${r.status}</span></div></div>`).join('')||'<div class="al ali">No receipts yet.</div>'}
+</div></div></div>`;
+};
+
+// MORNING COUNT PAGE
+PAGES.morningcount=function(){
+  const g=D.stock.godown, lock=D.morningLocked;
+  return`<div class="pw">
+<div class="al ali mb12">🌅 Enter physical count. System = last closing. RED = mismatch. ${lock?'<strong style="color:var(--yellow)">🔒 LOCKED</strong>':''}</div>
+<div class="card mb12">
+  <div class="ctitle mb12">🏭 Godown Physical Count — FULL CYLINDERS</div>
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0;border:1px solid var(--bdr);border-radius:8px;overflow:hidden">
+    <div style="padding:8px 12px;font-size:9px;font-weight:700;color:var(--td);background:var(--bgp);letter-spacing:1px">CYLINDER</div>
+    <div style="padding:8px 12px;font-size:9px;font-weight:700;color:var(--accent);background:var(--bgp);text-align:center">PHYSICAL</div>
+    <div style="padding:8px 12px;font-size:9px;font-weight:700;color:var(--td);background:var(--bgp);text-align:center">SYSTEM</div>
+    <div style="padding:8px 12px;font-size:9px;font-weight:700;color:var(--td);background:var(--bgp);text-align:center">DIFF</div>
+    ${[{l:'14.2 Kg Full',m:'भरलेले',sys:g.f14,key:'f14'},{l:'19 Kg Full',m:'भरलेले',sys:g.f19,key:'f19'},{l:'5 Kg Full',m:'भरलेले',sys:g.f5,key:'f5'}].map(r=>`<div style="padding:10px 12px;border-top:1px solid var(--bdr)"><div style="font-weight:600;font-size:14px">${r.l}</div><div style="font-size:10px;color:var(--td);font-family:var(--fmr)">${r.m}</div></div><div style="padding:7px 10px;border-top:1px solid var(--bdr);text-align:center"><input type="number" class="mspi ${lock?'locked':''}" data-sys="${r.sys}" data-key="${r.key}" placeholder="Count" style="font-size:20px;font-weight:700;text-align:center;width:90px;font-family:var(--fmn)" ${lock?'disabled':''}></div><div style="padding:10px;border-top:1px solid var(--bdr);text-align:center"><span style="font-size:22px;font-weight:700;font-family:var(--fmn);color:var(--accent)">${r.sys}</span></div><div style="padding:8px 10px;border-top:1px solid var(--bdr)" id="msd_${r.key}"><span style="color:var(--td)">--</span></div>`).join('')}
+  </div>
+</div>
+<div class="card mb12">
+  <div class="ctitle mb10">🏭 EMPTY CYLINDERS / रिकामे सिलेंडर</div>
+  <div class="g3">
+    ${[{l:'14.2 Kg Empty',m:'रिकामे',sys:g.e14,key:'e14'},{l:'19 Kg Empty',sys:g.e19,key:'e19'},{l:'5 Kg Empty',sys:g.e5,key:'e5'}].map(r=>`<div class="card csm" style="background:var(--bgp)"><div style="font-size:12px;font-weight:700;margin-bottom:8px">${r.l}</div><input type="number" class="mspi ${lock?'locked':''}" data-sys="${r.sys||0}" data-key="${r.key}" placeholder="Count" style="font-size:17px;text-align:center" ${lock?'disabled':''}><div style="font-size:11px;color:var(--td);margin-top:5px">System: ${r.sys||0}</div></div>`).join('')}
+  </div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+  ${!lock?`<button class="btn byl blg" onclick="confirmMorning()">✅ Confirm & Lock Morning Count</button>`:`<div class="lockbadge">🔒 Morning Count Locked at ${D.morningLockedAt||'--'}</div>`}
+</div></div>`;
+};
+
+// TODAY'S ROUTE (delivery man) — with area filter
+PAGES.myroute=function(){
+  const s=D.staff.find(x=>x.id===D.currentDeliveryId)||D.staff.find(x=>x.role==='delivery');
+  const v=D.stock.vehicles[s?.id]||{f14:0};
+  const myD=D.deliveries.filter(d=>d.sid===s?.id);
+  const filterArea=D._routeArea||'all';
+  const filtD=filterArea==='all'?myD:myD.filter(d=>d.area===filterArea);
+  const myAreas=[...new Set(myD.map(d=>d.area).filter(Boolean))];
+
+  return`<div class="pw">
+<div class="al ali mb10">🌅 <strong style="font-family:var(--fmr)">नमस्कार ${s?.name||''}!</strong> | ${D.erpDay}</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+  <div class="stat sgr"><div class="slb">Loaded / लोड</div><div class="sv">${v.f14}</div></div>
+  <div class="stat sgy"><div class="slb">Pending / प्रलंबित</div><div class="sv">${myD.filter(d=>!d.st||d.st==='scheduled').length}</div></div>
+  <div class="stat sbl"><div class="slb">Delivered / वितरित</div><div class="sv">${myD.filter(d=>d.st&&d.st.startsWith('delivered')).length}</div></div>
+  <div class="stat srd"><div class="slb">Not Home</div><div class="sv">${myD.filter(d=>d.st==='not_home').length}</div></div>
+</div>
+
+<!-- AREA FILTER -->
+<div style="margin-bottom:12px">
+  <div style="font-size:11px;color:var(--td);margin-bottom:7px;font-weight:700">AREA FILTER / क्षेत्र निवड:</div>
+  <div class="areasel">
+    <div class="areabt ${filterArea==='all'?'act':''}" onclick="setRouteArea('all',this)">All / सर्व</div>
+    ${myAreas.map(a=>`<div class="areabt ${filterArea===a?'act':''}" onclick="setRouteArea('${a}',this)">${a}</div>`).join('')}
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="card mb12" style="padding:0;overflow:hidden">
+  <div style="padding:11px 13px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between">
+    <div><div style="font-size:14px;font-weight:700">🗺️ Route Map</div><div style="font-size:10px;color:var(--purple);font-weight:700">🟣 Nearest Next | 🔵 Pending | 🟢 Done</div></div>
+    <button class="btn bor bsm" onclick="openM('MN_SPOT')">⚡ Emergency</button>
+  </div>
+  <div id="dmap"></div>
+</div>
+
+<!-- DELIVERY LIST WITH AREA FILTER -->
+<div style="font-size:14px;font-weight:700;margin-bottom:10px">
+  📋 <span style="font-family:var(--fmr)">डिलिव्हरी यादी</span> 
+  ${filterArea!=='all'?`<span class="badge bb">${filterArea} — ${filtD.length}</span>`:`<span class="badge bb">${filtD.length} shown</span>`}
+  <!-- OTPs for this area -->
+  ${filterArea!=='all'&&D.otpStore.filter(o=>o.area===filterArea).length>0?`<span class="badge bg" style="cursor:pointer" onclick="setPage('otpcentral')">🔑 ${D.otpStore.filter(o=>o.area===filterArea).length} OTPs</span>`:''}
+</div>
+${filtD.slice(0,50).map((d,i)=>{
+  const st=d.st||'scheduled';
+  const isPend=!d.st||d.st==='scheduled';
+  const isFirst=!D.customerPins[d.cid];
+  const clsMap={'scheduled':i===0?'dpl':'dbl','delivered_otp':'dgl','delivered_nootp':'dol','not_home':'drl','delivered_vehicle':'dbl'}[st]||'dbl';
+  return`<div class="dc ${clsMap}">
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:10px;color:var(--td)">CM:${d.cm||'--'} | ${d.cid}</span>
+      <div style="display:flex;gap:5px;align-items:center">
+        ${isFirst&&isPend?'<span class="locpin new">📍 1st Delivery</span>':''}
+        ${D.customerPins[d.cid]?'<span class="locpin saved">📍 GPS ✓</span>':''}
+        ${i===0?'<span class="badge bp" style="font-size:9px">🟣 NEAREST</span>':''}
+        ${{'delivered_otp':'<span class="badge bg">🟢 Delivered</span>','delivered_nootp':'<span class="badge bo">🟠 Emergency</span>','not_home':'<span class="badge br">🔴 Not Home</span>','delivered_vehicle':'<span class="badge bdm">🚐 Vehicle</span>'}[st]||''}
+      </div>
+    </div>
+    <div class="dcname">${d.name}</div>
+    <div class="dcaddr">📍 ${d.addr||d.area}</div>
+    <div class="dcmeta">
+      <span style="background:rgba(0,144,255,.1);color:var(--accent);padding:2px 8px;border-radius:10px;font-size:10px">${d.area}</span>
+      ${d.mob?`<a class="cbtn" href="tel:${d.mob}" onclick="event.stopPropagation()">📞 ${d.mob}</a>`:''}
+      ${D.otpStore.find(o=>String(o.cid)===String(d.cid))?`<span class="badge bg" style="font-size:9px">🔑 OTP Saved</span>`:''}
+    </div>
+    ${isPend?`<div class="dcacts" onclick="event.stopPropagation()">
+      <button class="btn bgr bsm" onclick="event.stopPropagation();openDA(D.deliveries.find(x=>String(x.cid)===String(${d.cid}))||D.deliveries[${i}])">✅ Deliver</button>
+      <button class="btn bor bsm" onclick="event.stopPropagation();qst('${d.cid}','delivered_nootp')">🟠 Emergency</button>
+      <button class="btn brd bsm" onclick="event.stopPropagation();qst('${d.cid}','not_home')">🔴 Not Home</button>
+      <button class="btn bg2 bsm" onclick="event.stopPropagation();openGoogleMaps(${16.81+i*0.002},${74.55+i*0.002})">🧭 Nav</button>
+    </div>`:''}
+  </div>`;
+}).join('')}
+</div>`;
+};
+
+function setRouteArea(area,el){D._routeArea=area;setPage('myroute');}
+
+// DELIVERIES PAGE
+PAGES.deliveries=function(){
+  const all=D.deliveries;
+  return`<div class="pw">
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px">
+  <div class="stat sbl"><div class="slb">Total</div><div class="sv">${all.length}</div></div>
+  <div class="stat sgr"><div class="slb">Delivered</div><div class="sv">${all.filter(x=>x.st&&x.st.startsWith('delivered')).length}</div></div>
+  <div class="stat sgy"><div class="slb">Pending</div><div class="sv">${all.filter(x=>!x.st||x.st==='scheduled').length}</div></div>
+  <div class="stat srd"><div class="slb">Not Home</div><div class="sv">${all.filter(x=>x.st==='not_home').length}</div></div>
+  <div class="stat sor"><div class="slb">Emergency</div><div class="sv">${all.filter(x=>x.st==='delivered_nootp').length}</div></div>
+</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+  <button class="btn byl" onclick="openM('MN_SPOT')">⚡ Emergency</button>
+  <button class="btn bpri" onclick="openM('MN_CSV')">📤 CSV</button>
+</div>
+<div class="tabs" id="DTABS">
+  <div class="tab act" onclick="filtDlv('all',this)">All (${all.length})</div>
+  ${D.staff.filter(s=>s.role==='delivery').map(s=>`<div class="tab" onclick="filtDlv('${s.id}',this)">${s.name.split(' ')[0]}</div>`).join('')}
+  <div class="tab" onclick="filtDlv('scheduled',this)">🔵 Pending</div>
+  <div class="tab" onclick="filtDlv('delivered',this)">🟢 Done</div>
+  <div class="tab" onclick="filtDlv('not_home',this)">🔴 Not Home</div>
+</div>
+<div class="tw"><table>
+  <thead><tr><th>#</th><th>Area</th><th>Consumer</th><th>Address</th><th>Mobile</th><th>Staff</th><th>Status</th><th>Payment</th><th>Amount</th><th>Action</th></tr></thead>
+  <tbody id="DTBODY">${renderDRows(all)}</tbody>
+</table></div>
+</div>`;
+};
+
+function renderDRows(list){
+  return list.slice(0,150).map((d,i)=>{
+    const st=d.st||'scheduled';
+    const bs={'scheduled':'bb','delivered_otp':'bg','delivered_nootp':'bo','not_home':'br','delivered_vehicle':'bdm','rescheduled':'by'}[st]||'bdm';
+    const sl={'scheduled':'🔵 Pending','delivered_otp':'🟢 OTP','delivered_nootp':'🟠 Emergency','not_home':'🔴 Not Home','delivered_vehicle':'🚐 Vehicle','rescheduled':'📅'}[st]||st;
+    const sf=D.staff.find(s=>s.id===d.sid);
+    return`<tr><td style="color:var(--td);font-size:10px">${i+1}</td><td><span class="badge bb" style="font-size:9px">${d.area||'--'}</span></td><td><div style="font-weight:600;font-size:12px">${d.name||'--'}</div><div style="font-size:10px;color:var(--td)">${d.cid}</div></td><td style="font-size:11px;color:var(--td);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.addr||''}</td><td>${d.mob?`<a class="cbtn" href="tel:${d.mob}" onclick="event.stopPropagation()" style="font-size:10px">📞 ${d.mob}</a>`:'--'}</td><td style="font-size:11px">${sf?sf.name.split(' ')[0]:'--'}</td><td><span class="badge ${bs}" style="font-size:9px">${sl}</span></td><td style="font-size:11px">${d.pay||'--'}</td><td style="font-family:var(--fmn);font-size:11px">${d.amt?fmt(d.amt):''}</td><td>${!d.st||d.st==='scheduled'?`<button class="btn bsm bpri" onclick="openDA(D.deliveries[${i}])">→</button>`:''}${d.otp?`<span class="badge bg" style="font-size:9px">OTP✓</span>`:''}</td></tr>`;
+  }).join('');
+}
+function filtDlv(f,el){
+  document.querySelectorAll('#DTABS .tab').forEach(t=>t.classList.remove('act'));el.classList.add('act');
+  let l=[...D.deliveries];
+  if(f!=='all'){if(f.startsWith('s_'))l=l.filter(d=>d.sid===f);else if(f==='delivered')l=l.filter(d=>d.st&&d.st.startsWith('delivered'));else l=l.filter(d=>d.st===f);}
+  G('DTBODY').innerHTML=renderDRows(l);
+}
+
+// CENTRAL OTP PAGE
+PAGES.otpcentral=function(){
+  const allOTPs=D.otpStore||[];
+  const areaFilter=D._otpArea||'all';
+  const filtOTPs=areaFilter==='all'?allOTPs:allOTPs.filter(o=>o.area===areaFilter);
+  const areas=[...new Set(allOTPs.map(o=>o.area).filter(Boolean))];
+  return`<div class="pw">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div><div style="font-size:20px;font-weight:700">🔑 Central OTP Store / केंद्रीय OTP साठा</div><div style="font-size:11px;color:var(--td)">Area-wise. All delivery men + BDA can view. Office can print/export.</div></div>
+  <div style="display:flex;gap:7px">
+    <button class="btn bpri bsm" onclick="printOTP()">🖨️ Print OTP List</button>
+    <button class="btn bg2 bsm" onclick="exportOTPCSV()">📊 Export CSV</button>
+  </div>
+</div>
+<div style="margin-bottom:14px">
+  <div class="fl" style="margin-bottom:6px">Filter by Area / क्षेत्र निवड:</div>
+  <div class="areasel">
+    <div class="areabt ${areaFilter==='all'?'act':''}" onclick="D._otpArea='all';setPage('otpcentral')">All (${allOTPs.length})</div>
+    ${areas.map(a=>`<div class="areabt ${areaFilter===a?'act':''}" onclick="D._otpArea='${a}';setPage('otpcentral')">${a} (${allOTPs.filter(o=>o.area===a).length})</div>`).join('')}
+  </div>
+</div>
+${filtOTPs.length===0?'<div class="al ali">No OTPs saved yet. / अजून ओटीपी नाही.</div>':''}
+<div class="otpgrid">
+  ${filtOTPs.map(o=>`<div class="otpcard">
+    <div style="display:flex;justify-content:space-between;margin-bottom:7px"><span class="badge bb">${o.area||'--'}</span><span style="font-size:10px;color:var(--td)">${o.ts} | ${o.by}</span></div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:4px">${o.nm||'Consumer '+o.cid}</div>
+    <div style="font-size:11px;color:var(--td);margin-bottom:8px">Consumer No: ${o.cid}</div>
+    <div class="otpval">${o.otp}</div>
+    <div style="font-size:9px;color:var(--td);margin-top:5px">Saved by: ${o.by}</div>
+  </div>`).join('')}
+</div></div>`;
+};
+
+// OFFICE SALES (improved)
+PAGES.officesales=function(){
+  return`<div class="pw">
+<!-- CYLINDER SALE SECTION with payment summary table -->
+<div class="g2 mb12">
+  <div class="card">
+    <div class="ctitle mb12">🏪 Office Counter Sale / विक्री</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Cylinder</div><select id="OS_CYL" onchange="osCalc()"><option value="14.2">14.2 Kg (₹856)</option><option value="5">5 Kg (₹352.50)</option><option value="19">19 Kg (₹2,132)</option></select></div>
+      <div class="fg" style="max-width:80px"><div class="fl">Qty</div><input type="number" id="OS_QTY" value="1" oninput="osCalc()" style="text-align:center;font-size:17px"></div>
+      <div class="fg"><div class="fl">Consumer No.</div><input type="number" id="OS_CONS" placeholder="Consumer No."></div>
+    </div>
+    <div class="fl" style="margin-bottom:6px">Payment Mode / पेमेंट पद्धत</div>
+    <div class="paymgrid" id="OS_PAYMODES">
+      <div class="paymode sel" data-pay="cash" onclick="selPay(this,'OS')"><div class="pic">💵</div><div class="plb">Cash / रोख</div></div>
+      <div class="paymode" data-pay="qr" onclick="selPay(this,'OS')"><div class="pic">📷</div><div class="plb">QR Code</div></div>
+      <div class="paymode" data-pay="gpay" onclick="selPay(this,'OS')"><div class="pic">📱</div><div class="plb">GPay</div></div>
+      <div class="paymode" data-pay="paytm" onclick="selPay(this,'OS')"><div class="pic">📱</div><div class="plb">Paytm</div></div>
+      <div class="paymode" data-pay="phonepe" onclick="selPay(this,'OS')"><div class="pic">📱</div><div class="plb">PhonePe</div></div>
+      <div class="paymode" data-pay="bpcl_adv" onclick="selPay(this,'OS')"><div class="pic">🔖</div><div class="plb">BPCL Adv</div></div>
+    </div>
+    <div style="background:var(--bgp);padding:10px;border-radius:8px;margin-bottom:12px">Total: <strong id="OS_TOT" style="color:var(--yellow);font-family:var(--fmn);font-size:18px">₹856.00</strong></div>
+    <button class="btn byl" onclick="saveOfficeSale()">💾 Save Sale</button>
+  </div>
+
+  <!-- TODAY'S SALE SUMMARY TABLE -->
+  <div class="card">
+    <div class="ctitle mb10">📊 Today Sales Summary</div>
+    <table class="salerowtbl">
+      <thead><tr style="background:var(--bgp)"><th style="padding:7px;font-size:9px;color:var(--td);text-align:left">Type</th><th style="padding:7px;font-size:9px;color:var(--td)">Qty</th><th style="padding:7px;font-size:9px;color:var(--td)">Amount</th></tr></thead>
+      <tbody>
+        ${['cash','qr','gpay','paytm','phonepe','bpcl_adv'].map(pay=>{const items=D.deliveries.filter(d=>d.pay===pay&&d.st&&d.st.startsWith('delivered'));const qty=items.length;const amt=items.reduce((t,d)=>t+(d.amt||0),0);return qty>0?`<tr><td style="padding:7px"><span class="badge bdm">${pay}</span></td><td style="padding:7px;text-align:center;font-family:var(--fmn);font-weight:700">${qty}</td><td style="padding:7px;text-align:right;font-family:var(--fmn);color:var(--green)">${fmt(amt)}</td></tr>`:''}).join('')}
+        <tr style="background:rgba(255,215,0,.05)"><td style="padding:8px;font-weight:700">TOTAL</td><td style="padding:8px;text-align:center;font-family:var(--fmn);font-weight:700;font-size:16px">${D.deliveries.filter(d=>d.st&&d.st.startsWith('delivered')).length}</td><td style="padding:8px;text-align:right;font-family:var(--fmn);color:var(--yellow);font-size:16px;font-weight:700">${fmt(D.deliveries.filter(d=>d.st&&d.st.startsWith('delivered')).reduce((t,d)=>t+(d.amt||0),0))}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ADDITIONAL SALES -->
+<div class="card mb12">
+  <div class="ctitle mb12">📦 Additional Sales / अतिरिक्त विक्री</div>
+  <div class="tw"><table>
+    <thead><tr><th>Item</th><th>Details</th><th>Customer Pays ₹</th><th>Note</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td style="font-weight:700">Subscription Voucher (SV)</td><td style="color:var(--td);font-size:11px">From Office Stock</td><td style="color:var(--green)">FREE</td><td style="font-size:11px;color:var(--td)">Deduct office SV stock</td><td><button class="btn bg2 bsm" onclick="addItem('SV',0,false,'sv')">+ Record</button></td></tr>
+      <tr><td style="font-weight:700">Suraksha Pipe</td><td style="color:var(--td);font-size:11px">Safety pipe</td><td style="color:var(--yellow)">₹350</td><td style="font-size:11px;color:var(--td)">Add to cash</td><td><button class="btn bg2 bsm" onclick="addItem('Suraksha Pipe',350,false,'pipe')">+ Record</button></td></tr>
+      <tr><td style="font-weight:700">Blue Book</td><td style="color:var(--td);font-size:11px">Booklet</td><td style="color:var(--green)">FREE</td><td></td><td><button class="btn bg2 bsm" onclick="addItem('Blue Book',0,false,'bb')">+ Record</button></td></tr>
+      <tr><td style="font-weight:700">DPR</td><td><select id="DPR_TYPE" style="font-size:12px"><option value="free">Free</option><option value="paid">Paid ₹150</option></select></td><td id="DPR_PRICE" style="color:var(--td)">₹0/150</td><td style="font-size:11px;color:var(--td)">From Office DPR stock</td><td><button class="btn bg2 bsm" onclick="addDPR()">+ Record</button></td></tr>
+      <tr><td style="font-weight:700">5 Kg Cylinder</td><td style="color:var(--td);font-size:11px">Office stock</td><td style="color:var(--yellow)">₹352.50</td><td></td><td><button class="btn bg2 bsm" onclick="addItem('5 Kg Counter',352.5,false,'f5')">+ Record</button></td></tr>
+      <tr style="background:rgba(255,23,68,.04)"><td style="font-weight:700">Termination Voucher</td><td style="color:var(--td);font-size:11px;font-family:var(--fmr)">बंद करणे</td><td><input type="number" id="TV_AMT" placeholder="Amount" style="width:90px;font-size:13px"></td><td style="font-size:11px;color:var(--red)">CASH TO CUSTOMER — DEBIT</td><td><button class="btn brd bsm" onclick="addTV()">Debit →</button></td></tr>
+      <tr style="background:rgba(255,23,68,.04)"><td style="font-weight:700">Name Change Fee</td><td style="color:var(--td);font-size:11px;font-family:var(--fmr)">नाव बदल</td><td><input type="number" id="NC_AMT" placeholder="Amount" style="width:90px;font-size:13px"></td><td style="font-size:11px;color:var(--red)">CASH TO CUSTOMER — DEBIT</td><td><button class="btn brd bsm" onclick="addNC()">Debit →</button></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- STOCK TRANSFER TO DELIVERY MEN -->
+<div class="card">
+  <div class="ctitle mb10">🔄 Transfer to Delivery Men / डिलिव्हरी मॅनला हस्तांतरण <span class="badge bdm" style="font-size:9px">NO WAGES for office transfer</span></div>
+  <div class="tw"><table>
+    <thead><tr><th>Driver / चालक</th><th>14.2 Full Given</th><th>14.2 Empty Taken</th><th>5 Kg Given</th><th>Action</th></tr></thead>
+    <tbody>${D.staff.filter(s=>s.role==='delivery').map(s=>`<tr><td style="font-weight:700">${s.name}<br><a class="cbtn" href="tel:${s.m1}" style="font-size:10px;margin-top:3px">📞 ${s.m1}</a></td><td><input type="number" id="oft_f14_${s.id}" placeholder="0" style="width:75px;text-align:center;font-size:15px"></td><td><input type="number" id="oft_e14_${s.id}" placeholder="0" style="width:75px;text-align:center;font-size:15px"></td><td><input type="number" id="oft_f5_${s.id}" placeholder="0" style="width:75px;text-align:center;font-size:15px"></td><td><button class="btn bpri bsm" onclick="offTransfer('${s.id}')">✓ Transfer</button></td></tr>`).join('')}</tbody>
+  </table></div>
+</div>
+</div>`;
+};
+
+// TRACKING
+PAGES.tracking=function(){
+  return`<div class="pw"><div class="g2" style="gap:14px">
+  <div>
+    <div class="card mb10" style="padding:0;overflow:hidden">
+      <div style="padding:13px;border-bottom:1px solid var(--bdr)">
+        <div style="font-size:16px;font-weight:700">🗺️ Live Map — Jaysingpur, Kolhapur</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px">
+          <span><span class="dot" style="background:var(--purple)"></span> 🟣 Nearest Next</span>
+          <span><span class="dot" style="background:var(--accent)"></span> Pending</span>
+          <span><span class="dot" style="background:var(--green)"></span> Delivered</span>
+          <span><span class="dot" style="background:var(--red)"></span> Not Home</span>
+          <span><span class="dot" style="background:var(--orange)"></span> Emergency</span>
+        </div>
+      </div>
+      <div id="dmap"></div>
+    </div>
+    <div class="card"><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn bpri bsm" onclick="openM('MN_SPOT')">⚡ Emergency</button><button class="btn bg2 bsm" onclick="openM('MN_CSV')">📤 CSV</button><button class="btn bg2 bsm" onclick="openM('MN_BPCLR')">📦 BPCL Receipt</button></div></div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="chd"><div class="ctitle">🚐 Vehicle Status</div></div>
+      ${D.staff.filter(s=>s.role==='delivery').map(s=>{const v=D.stock.vehicles[s.id]||{};const trip=D.trips.find(t=>t.sid===s.id&&t.status==='open');const del=D.deliveries.filter(d=>d.sid===s.id&&d.st&&d.st.startsWith('delivered')).length;return`<div style="background:var(--bgp);border-radius:9px;padding:12px;margin-bottom:9px;border-left:3px solid ${trip?'var(--green)':'var(--yellow)'}"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="font-size:22px">🚐</span><div style="flex:1"><div style="font-size:15px;font-weight:700">${s.name}</div></div><span class="badge ${trip?'bg':'by'}">${trip?'ON TRIP':'READY'}</span></div><div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px">${[['Loaded',v.f14||0,'var(--green)'],['Delivered',del,'var(--accent)'],['Empty',v.e14||0,'var(--td)']].map(([l,n,c])=>`<div style="background:var(--bgc);border-radius:6px;padding:6px 9px;text-align:center"><div style="font-size:16px;font-weight:700;color:${c}">${n}</div><div style="font-size:9px;color:var(--td)">${l}</div></div>`).join('')}</div><a class="cbtn" href="tel:${s.m1}">📞 ${s.m1}</a></div>`;}).join('')}
+    </div>
+  </div>
+</div></div>`;
+};
+
+// START TRIP
+PAGES.starttrip=function(){
+  const s=D.staff.find(x=>x.id===D.currentDeliveryId)||D.staff.find(x=>x.role==='delivery');
+  const v=D.stock.vehicles[s?.id]||{f14:0};
+  return`<div class="pw"><div class="card" style="max-width:540px;margin:0 auto">
+<div class="ctitle mb14" style="text-align:center">🚀 <span style="font-family:var(--fmr)">ट्रिप सुरू करा</span> / Start Trip — ${s?.name}</div>
+<div style="background:var(--bgp);border-radius:8px;padding:12px;margin-bottom:14px"><div style="font-size:11px;color:var(--td);margin-bottom:4px">Godown Available / गोदामात उपलब्ध</div><div style="display:flex;gap:14px;font-size:14px"><span>14.2: <strong style="color:var(--green);font-size:20px">${D.stock.godown.f14}</strong></span><span>5 Kg: <strong>${D.stock.godown.f5}</strong></span><span>19 Kg: <strong>${D.stock.godown.f19}</strong></span></div></div>
+<div class="fr">
+  <div class="fg"><div class="fl" style="font-family:var(--fmr)">१४.२ किलो लोड / Load 14.2 Kg</div><input type="number" id="TL14" placeholder="Cylinders" style="font-size:18px;text-align:center"></div>
+  <div class="fg" style="max-width:90px"><div class="fl">5 Kg</div><input type="number" id="TL5" placeholder="0" style="text-align:center"></div>
+  <div class="fg" style="max-width:90px"><div class="fl">19 Kg</div><input type="number" id="TL19" placeholder="0" style="text-align:center"></div>
+</div>
+<div class="fr">
+  <div class="fg"><div class="fl" style="font-family:var(--fmr)">उघडणारी रोख / Opening Cash</div><input type="number" id="TL_CASH" placeholder="₹ on hand"></div>
+  <div class="fg"><div class="fl">Vehicle No.</div><input id="TL_VEH" placeholder="MH09 AB 1234"></div>
+</div>
+<div class="al ali mb12" style="font-size:11px">Trip will auto-count: Loaded − Remaining = Delivered. Only enter manual reason if mismatch.</div>
+<button class="btn byl blg" style="width:100%;font-size:16px" onclick="startTrip()">🚀 START TRIP / ट्रिप सुरू करा</button>
+</div></div>`;
+};
+
+// MY STOCK, MY CASH, MY WAGES
+PAGES.mystock=function(){
+  const s=D.staff.find(x=>x.id===D.currentDeliveryId)||D.staff.find(x=>x.role==='delivery');
+  const v=D.stock.vehicles[s?.id]||{f14:0,e14:0,f5:0};
+  return`<div class="pw"><div class="card" style="max-width:540px;margin:0 auto">
+<div class="ctitle mb12">🛢️ <span style="font-family:var(--fmr)">माझा वाहन स्टॉक</span> — ${s?.name}</div>
+<div class="al ali mb10" style="font-size:11px">System count shown. Enter physical to confirm. Any difference requires reason in Marathi.</div>
+<div style="background:var(--bgp);border-radius:8px;padding:12px;margin-bottom:12px">
+  <div style="font-size:11px;color:var(--td);margin-bottom:4px">System / सिस्टीम</div>
+  <div style="display:flex;gap:14px"><span>14.2: <strong style="color:var(--accent);font-size:20px">${v.f14}</strong></span><span>Empty: <strong>${v.e14}</strong></span><span>5 Kg: <strong>${v.f5}</strong></span></div>
+</div>
+<div class="fr">
+  <div class="fg"><div class="fl" style="font-family:var(--fmr)">प्रत्यक्ष भरलेले / Physical Full 14.2</div><input type="number" id="VS_F14" placeholder="Count" style="font-size:18px;text-align:center"></div>
+  <div class="fg"><div class="fl" style="font-family:var(--fmr)">रिकामे / Empty</div><input type="number" id="VS_E14" placeholder="Count" style="font-size:18px;text-align:center"></div>
+</div>
+<div class="fg mb10"><div class="fl" style="font-family:var(--fmr)">फरकाचे कारण / Reason (if any)</div><input id="VS_REASON" placeholder="कारण मराठीत / Reason..."></div>
+<button class="btn bpri" style="width:100%" onclick="saveVehStock()">✅ <span style="font-family:var(--fmr)">पुष्टी करा</span></button>
+</div></div>`;
+};
+
+PAGES.mycash=function(){
+  return`<div class="pw"><div class="card" style="max-width:540px;margin:0 auto">
+<div class="ctitle mb12">💵 <span style="font-family:var(--fmr)">रोख जमा करा</span> / Submit Cash to Office</div>
+<div class="al ali mb10" style="font-family:var(--fmr);font-size:12px">नोटा मोजा, प्रत्येक डिनॉमिनेशनची संख्या टाका</div>
+${[500,200,100,50,20,10,5].map(d=>`<div class="denr"><div class="dennote">₹${d}</div><input type="number" id="mc_${d}" class="loadinp" placeholder="Qty" oninput="calcMyC()"><div class="deneq" id="mce_${d}">= ₹0</div></div>`).join('')}
+<div class="denr"><div class="dennote">Coins</div><input type="number" id="mc_c" class="loadinp" placeholder="₹" oninput="calcMyC()"><div class="deneq" id="mce_c">₹0</div></div>
+<div class="dentot" style="margin-bottom:12px"><span style="font-family:var(--fmr)">एकूण रोख / Total Cash</span><span id="mc_tot" style="color:var(--green);font-family:var(--fmn)">₹0</span></div>
+<div class="fr mb12">
+  <div class="fg"><div class="fl">GPay Received ₹</div><input type="number" id="mc_gp" placeholder="0" oninput="calcMyC()"></div>
+  <div class="fg"><div class="fl">QR / Paytm ₹</div><input type="number" id="mc_qr" placeholder="0" oninput="calcMyC()"></div>
+</div>
+<div id="mc_status" class="als al" style="display:none;margin-bottom:10px"></div>
+<button class="btn byl blg" style="width:100%" onclick="submitCash()">✅ <span style="font-family:var(--fmr)">कार्यालयात जमा करा</span></button>
+</div></div>`;
+};
+
+PAGES.mywages=function(){
+  const s=D.staff.find(x=>x.id===D.currentDeliveryId)||D.staff.find(x=>x.role==='delivery')||D.staff[4];
+  const uc=D.deliveries.filter(d=>d.sid===s.id&&d.area&&['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk'].includes(d.area)&&d.st&&d.st.startsWith('delivered')).length||0;
+  const rc=D.deliveries.filter(d=>d.sid===s.id&&d.area&&!['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk'].includes(d.area)&&d.st&&d.st.startsWith('delivered')).length||0;
+  const gross=uc*(s.wu||8)+rc*(s.wr||7);
+  const cs=0,ar=s.mrec||0,net=gross-cs-ar;
+  return`<div class="pw"><div class="card" style="max-width:540px;margin:0 auto">
+<div class="ctitle mb12">💰 <span style="font-family:var(--fmr)">माझे वेतन</span> — ${s.name}</div>
+<div class="g2 mb12">
+  <div style="background:var(--bgp);border-radius:8px;padding:11px"><div style="font-size:10px;color:var(--td)">Urban ×₹${s.wu||8}/cyl</div><div style="font-size:22px;font-weight:700;color:var(--green)">${uc} cyls = ${fmt(uc*(s.wu||8))}</div></div>
+  <div style="background:var(--bgp);border-radius:8px;padding:11px"><div style="font-size:10px;color:var(--td)">Rural ×₹${s.wr||7}/cyl</div><div style="font-size:22px;font-weight:700;color:var(--accent)">${rc} cyls = ${fmt(rc*(s.wr||7))}</div></div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:11px;background:rgba(255,215,0,.07);border-radius:8px;margin-bottom:10px"><span>GROSS</span><span style="font-family:var(--fmn);color:var(--yellow);font-size:18px;font-weight:700">${fmt(gross)}</span></div>
+<div style="background:rgba(255,23,68,.05);border-radius:8px;padding:11px;margin-bottom:10px">
+  <div style="font-size:11px;color:var(--td);margin-bottom:4px;font-weight:700">DEDUCTIONS — Priority Order:</div>
+  <div style="font-size:13px;display:flex;justify-content:space-between;padding:3px 0"><span>1. Cash Shortage</span><span style="color:var(--red);font-family:var(--fmn)">- ${fmt(cs)}</span></div>
+  <div style="font-size:13px;display:flex;justify-content:space-between;padding:3px 0"><span>2. Advance Recovery</span><span style="color:var(--orange);font-family:var(--fmn)">- ${fmt(ar)}</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:14px;background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.2);border-radius:9px;font-size:20px;font-weight:700"><span style="font-family:var(--fmr)">निव्वळ वेतन</span><span style="color:var(--green);font-family:var(--fmn)">${fmt(net)}</span></div>
+<div style="margin-top:10px;font-size:12px;color:var(--td)">Advance Balance: <strong style="color:var(--orange)">${fmt(s.adv||0)}</strong> | Monthly Recovery: <strong>${fmt(s.mrec||0)}</strong></div>
+</div></div>`;
+};
+</script>
+
+
+<script>
+// ─── REMAINING PAGES ───
+PAGES.stock=function(){
+  const canUpdate=isOwner()||D.role==='office';
+  return`<div class="pw">
+<div class="g4 mb12">
+  <div class="stat sgr"><div class="slb">Total 14.2 Full (All)</div><div class="sv">${D.stock.godown.f14+D.stock.office.f14+totalBDA()+totalVeh()}</div></div>
+  <div class="stat sbl"><div class="slb">Godown Full</div><div class="sv">${D.stock.godown.f14}</div></div>
+  <div class="stat sgy"><div class="slb">BDA Total</div><div class="sv">${totalBDA()}</div></div>
+  <div class="stat sor"><div class="slb">On Vehicles</div><div class="sv">${totalVeh()}</div></div>
+</div>
+<div class="g3 mb12">
+  <div class="card" style="border-top:3px solid var(--accent)">
+    <div class="chd"><div><div class="ctitle">🏭 Godown / गोदाम</div></div>
+      ${canUpdate?`<button class="btn bg2 bsm" onclick="openM('MN_STOCK_UPD')">✏️ Adjust</button>`:'<span class="badge bdm" style="font-size:9px">View Only</span>'}</div>
+    ${stRows([['14.2 Full',D.stock.godown.f14,'g'],['14.2 Empty',D.stock.godown.e14],['5 Kg Full',D.stock.godown.f5,'g'],['5 Kg Empty',D.stock.godown.e5],['19 Kg Full',D.stock.godown.f19,'g'],['Defective',D.stock.godown.def,'r']])}
+  </div>
+  <div class="card" style="border-top:3px solid var(--yellow)">
+    <div class="chd"><div><div class="ctitle">🏢 Office / कार्यालय</div><div class="csub">DPR = Office Stock Only</div></div>
+      ${canUpdate?`<button class="btn bg2 bsm" onclick="openM('MN_STOCK_UPD')">✏️ Adjust</button>`:'<span class="badge bdm" style="font-size:9px">View Only</span>'}</div>
+    ${stRows([['14.2 Full',D.stock.office.f14,'g'],['5 Kg Full',D.stock.office.f5,'g'],['19 Kg Full',D.stock.office.f19,'g'],['SV Stock',D.stock.office.sv||0],['Blue Book',D.stock.office.bb||0],['Suraksha Pipe',D.stock.office.pipe||0],['DPR Good',D.stock.office.dpr_good||0],['DPR Defective',D.stock.office.dpr_def||0,'r']])}
+  </div>
+  <div class="card" style="border-top:3px solid var(--green)">
+    <div class="chd"><div><div class="ctitle">🤝 BDA Partners</div></div><button class="btn bg2 bsm" onclick="setPage('bda')">All →</button></div>
+    ${D.bda.map(b=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03)"><div><div style="font-size:12px;font-weight:700">${b.name}</div><div style="font-size:10px;color:var(--accent)">${b.area}</div></div><div style="font-family:var(--fmn);text-align:right;font-size:12px"><div style="color:var(--green)">F:${b.f14}</div><div style="color:var(--td)">E:${b.e14}</div></div></div>`).join('')}
+  </div>
+</div>
+<div class="card">
+  <div class="chd"><div class="ctitle">🚐 Vehicle-wise Stock</div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+    ${D.staff.filter(s=>s.role==='delivery').map(s=>{const v=D.stock.vehicles[s.id]||{};return`<div class="card csm" style="background:var(--bgp)"><div style="font-weight:700;margin-bottom:6px">🚐 ${s.name.split(' ')[0]}</div><div style="font-size:13px"><div>14.2: <strong style="color:var(--green)">${v.f14||0}</strong></div><div>Empty: <strong style="color:var(--td)">${v.e14||0}</strong></div><div>5 Kg: <strong>${v.f5||0}</strong></div></div><a class="cbtn" style="margin-top:7px;font-size:10px" href="tel:${s.m1}">📞 ${s.m1}</a></div>`;}).join('')}
+  </div>
+</div></div>`;
+};
+function stRows(items){return items.map(r=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-size:13px;font-weight:600">${r[0]}</span><span style="font-size:22px;font-weight:700;font-family:var(--fmn);color:${r[2]==='g'?'var(--green)':r[2]==='r'?'var(--red)':'var(--t)'}">${r[1]}</span></div>`).join('');}
+
+PAGES.bda=function(){
+  return`<div class="pw">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div><div style="font-size:20px;font-weight:700">🤝 BDA Partners (${D.bda.length})</div></div>
+  <div style="display:flex;gap:6px"><button class="btn byl bsm" onclick="printOTP()">🖨️ OTP List</button><button class="btn bpri bsm" onclick="setPage('otpcentral')">🔑 Central OTP</button></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">
+${D.bda.map(b=>`<div class="bdac">
+  <div style="display:flex;justify-content:space-between;margin-bottom:11px">
+    <div><div style="font-size:16px;font-weight:700">${b.name}</div><div style="font-size:11px;color:var(--accent)">📍 ${b.area}</div></div>
+    <span class="badge bg">ACTIVE</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:11px">
+    <div style="background:var(--bgp);border-radius:7px;padding:9px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--green)">${b.f14}</div><div style="font-size:9px;color:var(--td)">14.2 Full</div></div>
+    <div style="background:var(--bgp);border-radius:7px;padding:9px;text-align:center"><div style="font-size:22px;font-weight:700">${b.e14}</div><div style="font-size:9px;color:var(--td)">14.2 Empty</div></div>
+    <div style="background:var(--bgp);border-radius:7px;padding:9px;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--yellow)">${D.otpStore.filter(o=>o.area===b.area).length}</div><div style="font-size:9px;color:var(--td)">OTPs</div></div>
+  </div>
+  <div style="margin-bottom:9px"><a class="cbtn" href="tel:${b.mob}">📞 ${b.mob}</a></div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap">
+    <button class="btn bpri bsm" onclick="openBDA('${b.id}','stock')">🛢️ Stock</button>
+    <button class="btn bg2 bsm" onclick="openBDA('${b.id}','cash')">💵 Cash</button>
+    <button class="btn bg2 bsm" onclick="openBDA('${b.id}','otp')">🔑 OTP</button>
+    <button class="btn bor bsm" onclick="openBDA('${b.id}','spot')">⚡ Spot</button>
+  </div>
+</div>`).join('')}
+</div></div>`;
+};
+
+PAGES.cash=function(){
+  const lb=[];let bal=0;D.cashLedger.forEach(l=>{bal+=(l.cr||0)-(l.dr||0);lb.push({...l,bal});});
+  return`<div class="pw">
+<div class="g4 mb12">
+  <div class="stat sgr"><div class="slb">Cash In / येणे</div><div class="sv" style="font-size:18px">${fmt(D.cashLedger.reduce((t,l)=>t+(l.cr||0),0))}</div></div>
+  <div class="stat srd"><div class="slb">Cash Out / जाणे</div><div class="sv" style="font-size:18px">${fmt(D.cashLedger.reduce((t,l)=>t+(l.dr||0),0))}</div></div>
+  <div class="stat sgy"><div class="slb">Balance / शिल्लक</div><div class="sv" style="font-size:18px">${fmt(getBalance())}</div></div>
+  <div class="stat sbl"><div class="slb">Entries</div><div class="sv">${D.cashLedger.length}</div></div>
+</div>
+<div class="g2 mb12">
+  <div class="card">
+    <div class="ctitle mb10">💵 Note Denomination / नोटा मोजणी</div>
+    ${[500,200,100,50,20,10].map(d=>`<div class="denr"><div class="dennote">₹${d}</div><input type="number" id="den_${d}" class="loadinp" placeholder="Qty" oninput="calcDenom()"><div class="deneq" id="den_eq_${d}">= ₹0</div></div>`).join('')}
+    <div class="denr"><div class="dennote">Coins</div><input type="number" id="den_c" class="loadinp" placeholder="₹" oninput="calcDenom()"><div class="deneq" id="den_eq_c">₹0</div></div>
+    <div class="dentot"><span>Total / एकूण</span><span id="den_grand" style="color:var(--green);font-family:var(--fmn)">₹0</span></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--td)">Auto-checks against ledger balance: <strong style="color:var(--yellow)">${fmt(getBalance())}</strong></div>
+  </div>
+  <div class="card">
+    <div class="ctitle mb10">➕ New Entry</div>
+    <div class="fg mb8"><div class="fl">Type</div>
+      <select id="CE_TY">
+        <option value="delivery_cash">Cash from Delivery Man</option>
+        <option value="bda_cash">Cash from BDA</option>
+        <option value="gpay">GPay / UPI Received</option>
+        <option value="counter_sale">Office Counter Sale</option>
+        <option value="petrol">Petrol (Expense)</option>
+        <option value="maintenance">Maintenance (Expense)</option>
+        <option value="salary">Salary / Wages Paid</option>
+        <option value="advance">Advance to Staff</option>
+        <option value="tv_nc">TV/NC — Cash to Customer</option>
+        <option value="given_owner">Given to Owner</option>
+        <option value="bpcl_adv">BPCL Advance Paid</option>
+        <option value="other_in">Other Income</option>
+        <option value="other_out">Other Expense</option>
+      </select>
+    </div>
+    <div class="fr"><div class="fg"><div class="fl">Amount ₹</div><input type="number" id="CE_AMT"></div><div class="fg"><div class="fl">From / To Person</div><input id="CE_PERS" placeholder="Name / Note"></div></div>
+    <button class="btn bpri" onclick="saveCashEntry()">💾 Save</button>
+  </div>
+</div>
+<div class="card">
+  <div class="chd"><div class="ctitle">📒 Cash Ledger / रोख वही (Tally-style)</div></div>
+  <div class="tw"><table>
+    <thead><tr><th>Time</th><th>Description</th><th>Type</th><th>Debit ₹</th><th>Credit ₹</th><th>Balance ₹</th></tr></thead>
+    <tbody>${lb.slice(-50).reverse().map(l=>`<tr><td style="font-family:var(--fmn);font-size:10px;color:var(--td)">${l.ts}</td><td style="font-size:12px">${l.desc}</td><td><span class="badge bdm" style="font-size:9px">${l.type}</span></td><td style="font-family:var(--fmn);color:var(--red)">${l.dr?fmt(l.dr):'--'}</td><td style="font-family:var(--fmn);color:var(--green)">${l.cr?fmt(l.cr):'--'}</td><td style="font-family:var(--fmn);font-weight:700">${fmt(l.bal)}</td></tr>`).join('')}</tbody>
+  </table></div>
+</div></div>`;
+};
+
+PAGES.expenses=function(){
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:20px;font-weight:700">🧾 Expenses / खर्च</div><button class="btn bpri" onclick="openM('MN_EXPENSE')">+ Add</button></div>
+<div class="g4 mb12">
+  <div class="stat srd"><div class="slb">Today / आज</div><div class="sv" style="font-size:18px">${fmt(D.expenses.filter(e=>e.dt===D.erpDay).reduce((t,e)=>t+e.amt,0))}</div></div>
+  <div class="stat sor"><div class="slb">This Month</div><div class="sv" style="font-size:18px">${fmt(D.expenses.reduce((t,e)=>t+e.amt,0))}</div></div>
+  <div class="stat sbl"><div class="slb">TV/NC Paid Out</div><div class="sv" style="font-size:18px">${fmt(D.expenses.filter(e=>e.cat.includes('Termination')||e.cat.includes('Name')).reduce((t,e)=>t+e.amt,0))}</div></div>
+  <div class="stat sgy"><div class="slb">Total Entries</div><div class="sv">${D.expenses.length}</div></div>
+</div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount ₹</th><th>Paid By</th><th>Type</th></tr></thead>
+  <tbody>${D.expenses.map(e=>`<tr><td style="font-size:11px">${e.dt}</td><td><span class="badge ${e.cat.includes('Termination')||e.cat.includes('Name')?'br':'bo'}">${e.cat.slice(0,20)}</span></td><td style="font-size:12px">${e.desc||''}</td><td style="font-family:var(--fmn);color:var(--red);font-weight:700">${fmt(e.amt)}</td><td style="font-size:11px">${e.pb}</td><td><span class="badge bdm" style="font-size:9px">${e.cat.includes('Termination')||e.cat.includes('Name')?'CASH OUT':'Expense'}</span></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--td);padding:20px">No expenses yet</td></tr>'}</tbody>
+</table></div></div></div>`;
+};
+
+PAGES.payroll=function(){
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="font-size:20px;font-weight:700">💰 Payroll / वेतन पत्रक</div><button class="btn bg2 bsm" onclick="openM('MN_ADV')">💸 Advance</button></div>
+<div class="card mb12">
+  <div class="ctitle mb10">🚚 Delivery Wages — Urban ₹${D.staff[4]?.wu||8} | Rural ₹${D.staff[4]?.wr||7} | Helper ₹200/day</div>
+  <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead style="background:var(--bgp)"><tr><th style="padding:10px;text-align:left">Staff</th><th style="padding:10px">Urban</th><th style="padding:10px">Rural</th><th style="padding:10px">Gross</th><th style="padding:10px">Cash Short</th><th style="padding:10px">Adv Rec</th><th style="padding:10px;background:rgba(0,230,118,.07)">NET ✓</th><th style="padding:10px">Adv Bal</th></tr></thead>
+    <tbody>${D.staff.filter(s=>s.role==='delivery').map(s=>{
+      const uc=D.deliveries.filter(d=>d.sid===s.id&&['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk'].some(a=>d.area===a)&&d.st&&d.st.startsWith('delivered')).length||0;
+      const rc=D.deliveries.filter(d=>d.sid===s.id&&!['Shahunagar','Jambhali','Nandani Road','Sambhaji Nagar','Sudarshan Chouk'].some(a=>d.area===a)&&d.st&&d.st.startsWith('delivered')).length||0;
+      const gr=uc*(s.wu||8)+rc*(s.wr||7);
+      const cs=0,ar=s.mrec||0;
+      return`<tr><td style="padding:9px;font-weight:700">${s.name}<br><a class="cbtn" href="tel:${s.m1}" style="font-size:9px">📞 ${s.m1}</a></td><td style="text-align:center;padding:9px;font-family:var(--fmn)">${uc}</td><td style="text-align:center;padding:9px;font-family:var(--fmn)">${rc}</td><td style="text-align:center;padding:9px;font-family:var(--fmn);color:var(--yellow);font-weight:700">${fmt(gr)}</td><td style="text-align:center;padding:9px;font-family:var(--fmn);color:var(--red)">${cs?fmt(cs):'--'}</td><td style="text-align:center;padding:9px;font-family:var(--fmn);color:var(--orange)">${ar?fmt(ar):'--'}</td><td style="text-align:center;padding:9px;font-family:var(--fmn);color:var(--green);font-size:14px;font-weight:700;background:rgba(0,230,118,.04)">${fmt(gr-cs-ar)}</td><td style="text-align:center;padding:9px;font-family:var(--fmn);color:${(s.adv||0)>0?'var(--orange)':'var(--green)'}">${fmt(s.adv||0)}</td></tr>`;
+    }).join('')}</tbody>
+  </table></div>
+</div>
+<div class="card">
+  <div class="ctitle mb10">👥 Other Staff / इतर कर्मचारी</div>
+  <div class="tw"><table>
+    <thead><tr><th>Name</th><th>Role</th><th>Salary/Wages</th><th>Note</th></tr></thead>
+    <tbody>
+      ${D.staff.filter(s=>!['delivery','owner'].includes(s.role)).map(s=>`<tr><td style="font-weight:700">${s.name}</td><td><span class="badge bdm">${s.role}</span></td><td style="font-family:var(--fmn)">${s.role==='loader'?'₹400/truck':fmt(s.sal||0)}</td><td style="font-size:11px;color:var(--td)">${s.role==='loader'?'Per BPCL truck':''}</td></tr>`).join('')}
+    </tbody>
+  </table></div>
+</div></div>`;
+};
+
+PAGES.accounting=function(){
+  const lb=[];let bal=0;D.cashLedger.forEach(l=>{bal+=(l.cr||0)-(l.dr||0);lb.push({...l,bal});});
+  return`<div class="pw">
+<div class="g4 mb12">
+  <div class="stat sgr"><div class="slb">Total Credit</div><div class="sv" style="font-size:17px">${fmt(D.cashLedger.reduce((t,l)=>t+(l.cr||0),0))}</div></div>
+  <div class="stat srd"><div class="slb">Total Debit</div><div class="sv" style="font-size:17px">${fmt(D.cashLedger.reduce((t,l)=>t+(l.dr||0),0))}</div></div>
+  <div class="stat sgy"><div class="slb">Net Balance</div><div class="sv" style="font-size:17px">${fmt(getBalance())}</div></div>
+  <div class="stat sbl"><div class="slb">Total Expenses</div><div class="sv" style="font-size:17px">${fmt(D.expenses.reduce((t,e)=>t+e.amt,0))}</div></div>
+</div>
+<div class="card mb12">
+  <div class="chd"><div class="ctitle">📒 Full Cash Ledger</div></div>
+  <div class="tw"><table>
+    <thead><tr><th>Time</th><th>Narration</th><th>Type</th><th>Dr ₹</th><th>Cr ₹</th><th>Balance ₹</th></tr></thead>
+    <tbody>${lb.map(l=>`<tr><td style="font-family:var(--fmn);font-size:10px;color:var(--td)">${l.ts}</td><td style="font-size:12px">${l.desc}</td><td><span class="badge bdm" style="font-size:9px">${l.type||'--'}</span></td><td style="font-family:var(--fmn);color:var(--red)">${l.dr?fmt(l.dr):'--'}</td><td style="font-family:var(--fmn);color:var(--green)">${l.cr?fmt(l.cr):'--'}</td><td style="font-family:var(--fmn);font-weight:700">${fmt(l.bal)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--td);padding:20px">No entries yet. Start by entering cash or recording a delivery.</td></tr>'}</tbody>
+  </table></div>
+</div>
+<div class="card">
+  <div class="ctitle mb10">🧾 GST Summary (CGST 2.5% + SGST 2.5%)</div>
+  <div class="tw"><table>
+    <thead><tr><th>Product</th><th>HSN</th><th>Qty</th><th>Taxable</th><th>CGST 2.5%</th><th>SGST 2.5%</th><th>Total GST</th></tr></thead>
+    <tbody>${[['14.2 Kg Domestic',D.deliveries.filter(d=>(!d.cyl||d.cyl==='14.2')&&d.st&&d.st.startsWith('delivered')).length,856],['5 Kg',D.deliveries.filter(d=>d.cyl==='5'&&d.st&&d.st.startsWith('delivered')).length,352.5],['19 Kg Commercial',D.deliveries.filter(d=>d.cyl==='19'&&d.st&&d.st.startsWith('delivered')).length,2132]].map(([p,q,r])=>{const tv=q*r;const g=tv*0.025;return`<tr><td>${p}</td><td style="font-family:var(--fmn);color:var(--td)">2711</td><td style="font-family:var(--fmn)">${q}</td><td style="font-family:var(--fmn)">${fmt(tv)}</td><td style="font-family:var(--fmn);color:var(--yellow)">${fmt(g)}</td><td style="font-family:var(--fmn);color:var(--yellow)">${fmt(g)}</td><td style="font-family:var(--fmn);color:var(--green);font-weight:700">${fmt(g*2)}</td></tr>`;}).join('')}</tbody>
+  </table></div>
+</div></div>`;
+};
+
+PAGES.dayend=function(){
+  const tf14=D.stock.godown.f14+D.stock.office.f14+totalBDA()+totalVeh();
+  return`<div class="pw">
+<div class="daybar mb12">
+  <div class="dbitem"><div class="dbval" style="font-size:14px">${D.erpDay}</div><div class="dblb">ERP Day</div></div>
+  <span class="badge ${D.dayEndLocked?'bg':'by'}">${D.dayEndLocked?'🟢 CLOSED':'🟡 OPEN'}</span>
+  <div class="dbitem"><div class="dbval" style="color:var(--green)">${D.deliveries.filter(d=>d.st&&d.st.startsWith('delivered')).length}</div><div class="dblb">Delivered</div></div>
+  <div class="dbitem"><div class="dbval" style="color:var(--yellow)">${fmt(getBalance())}</div><div class="dblb">Cash</div></div>
+  <div class="dbitem"><div class="dbval" style="color:var(--accent)">${tf14}</div><div class="dblb">14.2 Full (All)</div></div>
+</div>
+<div class="card mb10">
+  <div class="ctitle mb10">🛢️ Day End Stock — BPCL Codes</div>
+  ${[['5350/5370','14.2 Kg',tf14],['5240','5 Kg',D.stock.godown.f5],['5400','19 Kg',D.stock.godown.f19]].map(([code,nm,v])=>`<div style="display:flex;gap:12px;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.03)"><span style="font-family:var(--fmn);color:var(--accent);font-weight:700;width:80px">${code}</span><div style="flex:1">${nm}</div><span style="font-family:var(--fmn);font-size:22px;font-weight:700;color:var(--green)">${v}</span></div>`).join('')}
+</div>
+${D.staff.filter(s=>s.role==='delivery').map(s=>{
+  const dv=D.deliveries.filter(x=>x.sid===s.id);
+  return`<div class="exs mb8"><div class="exshd" onclick="toggleEx2('de_${s.id}')"><div class="exstitle">🚚 ${s.name}</div><div style="display:flex;gap:6px;align-items:center"><span class="badge bg">${dv.filter(x=>x.st&&x.st.startsWith('delivered')).length} ✓</span><button class="btn brd bsm" style="pointer-events:auto" onclick="event.stopPropagation();openTripClose('${s.id}')">🔒 Close Trip</button><span class="exsarr">▼</span></div></div><div class="exsbody" id="de_${s.id}"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">${[['✅ Done',dv.filter(x=>x.st&&x.st.startsWith('delivered')).length,'var(--green)'],['🔴 Not Home',dv.filter(x=>x.st==='not_home').length,'var(--red)'],['🛢️ Remaining',(D.stock.vehicles[s.id]||{}).f14||0,'var(--accent)'],['💵 Cash',fmt(D.cashLedger.filter(l=>l.src===s.id).reduce((t,l)=>t+(l.cr||0),0)),'var(--yellow)']].map(([l,n,c])=>`<div style="background:var(--bgc);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:${c}">${n}</div><div style="font-size:9px;color:var(--td)">${l}</div></div>`).join('')}</div></div></div>`;
+}).join('')}
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+  <button class="btn bgr blg" onclick="lockDayEnd()">🔒 Lock Day End / दिवस बंद करा</button>
+</div></div>`;
+};
+
+PAGES.bpclverify=function(){
+  const tf14=D.stock.godown.f14+D.stock.office.f14+totalBDA()+totalVeh();
+  const bpclRows=[
+    ['5350','14.2 Domestic (Full)',tf14],
+    ['5370','14.2 Alt/Empty',D.stock.godown.e14],
+    ['5240','5 Kg Commercial',D.stock.godown.f5],
+    ['5250','5 Kg Domestic',0],
+    ['5400','19 Kg Commercial',D.stock.godown.f19],
+    ['5450','19 Kg Cutting',0],
+    ['BPCDPR','DPR Good',D.stock.office.dpr_good||0],
+    ['BPCDPRF','DPR Defective',D.stock.office.dpr_def||0],
+  ];
+  return`<div class="pw">
+<div class="al ali mb12">Compare ERP stock vs BPCL SAP values. Mismatch → Office review only. Godown is a process, not a role.</div>
+<div class="card mb12">
+  <div class="ctitle mb10">📊 ERP vs BPCL SAP Comparison</div>
+  <div style="background:var(--bgp);border-radius:9px;overflow:hidden">
+    <div class="bpclcomprow" style="background:var(--bgc)"><div class="bcprod">BPCL Code</div><div class="bcnm">Product</div><div class="bcerp">ERP Qty</div><div class="bcsap"><div style="font-size:9px;color:var(--accent);font-weight:700;letter-spacing:1px">SAP ENTER</div></div><div class="bcdiff">DIFF</div></div>
+    ${bpclRows.map(([code,nm,erp])=>`<div class="bpclcomprow"><div class="bcprod">${code}</div><div class="bcnm" style="font-size:12px">${nm}</div><div class="bcerp">${erp}</div><div class="bcsap"><input type="number" id="sap_${code}" placeholder="SAP qty" style="width:85px;text-align:center;font-size:13px" onchange="calcBPCLDiff('${code}',${erp})"></div><div class="bcdiff" id="diff_${code}" style="color:var(--td)">--</div></div>`).join('')}
+  </div>
+</div>
+<div class="card mb12">
+  <div class="ctitle mb10">📋 BPCL Movement Logic</div>
+  <div style="font-size:12px;line-height:1.9;color:var(--t)">
+    <div>📌 <strong>Godown Closing</strong> = Opening + BPCL Received − Issued to Vehicles</div>
+    <div>📌 <strong>DPR</strong> = Office Stock ONLY — not godown</div>
+    <div>📌 <strong>Issued > Available</strong> → Alert (cannot happen)</div>
+    <div>📌 Standard case: 342 filled received + 342 empty returned = net 0 change</div>
+    <div>📌 Mixed case: 14.2 + 19 + 5 kg mix — total empties ≈ total filled</div>
+    <div>📌 Mismatch → <strong style="color:var(--yellow)">Office review only</strong></div>
+  </div>
+</div>
+<div class="card">
+  <div class="ctitle mb8">🧾 BPCL Receipts History</div>
+  ${(D.bpclReceipts||[]).slice(-5).reverse().map(r=>`<div style="background:var(--bgp);border-radius:7px;padding:10px;margin-bottom:6px"><div style="display:flex;justify-content:space-between"><strong>${r.inv||'--'}</strong><span style="font-size:10px;color:var(--td)">${r.dt||'--'}</span></div><div style="font-size:12px;margin-top:4px">14.2 Filled: <strong style="color:var(--green)">${r.f14||0}</strong> | Empty: <strong>${r.e14||0}</strong> | Status: <span class="badge ${r.status==='complete'?'bg':'by'}">${r.status||'--'}</span></div></div>`).join('')||'<div class="al ali">No receipts yet.</div>'}
+</div></div>`;
+};
+
+PAGES.staff=function(){
+  const rIco={owner:'👑',office:'🏢',delivery:'🚚',loader:'⚓',truck:'🚛',helper:'🤝'};
+  return`<div class="pw">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px">
+  <div style="font-size:20px;font-weight:700">👥 Staff (${D.staff.length})</div>
+  ${isOwner()?`<button class="btn byl" onclick="openM('MN_STAFF')">+ Add Staff</button>`:''}
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+  ${D.staff.map(s=>`<div class="card" style="border-top:3px solid ${s.role==='owner'?'var(--yellow)':s.role==='delivery'?'var(--green)':s.role==='loader'?'var(--orange)':s.role==='office'?'var(--accent)':'var(--bdr)'}">
+    <div style="display:flex;gap:10px;margin-bottom:11px;align-items:center">
+      <div style="width:40px;height:40px;background:var(--bgp);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">${rIco[s.role]||'👤'}</div>
+      <div><div style="font-size:15px;font-weight:700">${s.name}</div><div style="font-size:10px;color:var(--td)">${s.role.toUpperCase()}</div></div>
+      <span class="badge ${s.active?'bg':'br'}" style="margin-left:auto">${s.active?'ON':'OFF'}</span>
+    </div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+      <a class="cbtn" href="tel:${s.m1}">📞 ${s.m1}</a>
+      ${s.m2?`<a class="cbtn" href="tel:${s.m2}" style="margin-top:3px">📞 ${s.m2}</a>`:''}
+      ${s.role==='delivery'?`<div style="margin-top:3px">Urban ₹${s.wu}/cyl | Rural ₹${s.wr}/cyl</div>`:''}
+      ${s.role==='loader'?`<div style="color:var(--orange)">₹400 per BPCL truck</div>`:''}
+      ${s.sal?`<div>Salary: <strong style="color:var(--yellow)">${fmt(s.sal)}</strong></div>`:''}
+      ${(s.adv||0)>0?`<div>Advance: <strong style="color:var(--orange)">${fmt(s.adv)}</strong> | Rec: ${fmt(s.mrec||0)}/mo</div>`:''}
+      <div style="color:var(--td)">Login: <code style="background:var(--bgp);padding:2px 5px;border-radius:4px">${s.un}</code></div>
+    </div>
+    ${isOwner()?`<button class="btn bg2 bsm" onclick="openAdvModal('${s.id}')">💸 Advance</button>`:''}
+  </div>`).join('')}
+</div></div>`;
+};
+
+PAGES.settings=function(){
+  return`<div class="pw">
+<div class="g2">
+  <div class="card">
+    <div class="ctitle mb12">⚙️ System Settings</div>
+    ${[['Distributor Name','Shourya Bharat Gas'],['Dist Code','187618'],['Location','Jaysingpur, Kolhapur, MH'],['14.2 Kg Rate ₹','856'],['5 Kg Rate ₹','352.50'],['19 Kg Rate ₹','2132'],['Urban Wage ₹/Cyl','8'],['Rural Wage ₹/Cyl','7'],['Loader Wages/Truck ₹','400']].map(([l,v])=>`<div class="fg mb9"><div class="fl">${l}</div><input value="${v}"></div>`).join('')}
+    <button class="btn bpri" onclick="toast('Settings saved','s')">💾 Save</button>
+    <div class="sep"></div>
+    <div style="font-size:13px;color:var(--t);line-height:1.8">
+      <div>📦 <strong>Data:</strong> localStorage key: <code>${STORE_KEY}</code></div>
+      <div>Auto-save: every 30 seconds</div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn bpri bsm" onclick="saveData();toast('Saved!','s')">💾 Save Now</button>
+        <button class="btn brd bsm" onclick="resetToBlank()">🗑️ Reset to Blank</button>
+        <button class="btn bg2 bsm" onclick="exportFullBackup()">📤 Backup JSON</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle mb10">👥 User Accounts</div>
+    <div class="tw"><table><thead><tr><th>Username</th><th>Name</th><th>Role</th></tr></thead><tbody>
+      ${D.staff.filter(s=>s.un).map(s=>`<tr><td style="font-family:var(--fmn);font-size:10px">${s.un}</td><td style="font-size:12px">${s.name}</td><td><span class="badge bdm" style="font-size:9px">${s.role}</span></td></tr>`).join('')}
+      ${D.bda.map(b=>`<tr><td style="font-family:var(--fmn);font-size:10px">${b.un}</td><td style="font-size:12px">${b.name}</td><td><span class="badge by" style="font-size:9px">BDA</span></td></tr>`).join('')}
+    </tbody></table></div>
+  </div>
+</div></div>`;
+};
+
+PAGES.bdamy=function(){
+  const b=D.bda.find(x=>x.id===D.currentBDAId)||D.bda[0];
+  return`<div class="pw"><div class="g3 mb12"><div class="stat sgr"><div class="slb">Full Stock</div><div class="sv">${b?.f14||0}</div></div><div class="stat sbl"><div class="slb">Empty</div><div class="sv">${b?.e14||0}</div></div><div class="stat sgy"><div class="slb">OTPs</div><div class="sv">${D.otpStore.filter(o=>o.area===b?.area).length}</div></div></div>
+<div class="card"><div class="ctitle mb10">${b?.name} | 📍 ${b?.area}</div><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn bpri" onclick="openBDA('${b?.id}','stock')">🛢️ Stock</button><button class="btn bg2" onclick="openBDA('${b?.id}','cash')">💵 Cash</button><button class="btn bg2" onclick="setPage('bdaotp')">🔑 OTP</button><button class="btn bor" onclick="setPage('bdasspot')">⚡ Spot</button></div></div></div>`;
+};
+PAGES.bdaotp=function(){
+  const b=D.bda.find(x=>x.id===D.currentBDAId)||D.bda[0];
+  return`<div class="pw"><div class="card">
+<div class="ctitle mb10">🔑 OTP Collection — ${b?.area}</div>
+<div class="fr"><div class="fg"><div class="fl">Consumer No.</div><input id="OTP_C" placeholder="Consumer No."></div><div class="fg"><div class="fl">Name</div><input id="OTP_N"></div></div>
+<div class="fr"><div class="fg"><div class="fl">OTP</div><input type="text" id="OTP_V" maxlength="6" placeholder="______" style="letter-spacing:8px;font-size:24px;text-align:center;font-family:var(--fmn)"></div><div class="fg"><div class="fl">Area</div><input id="OTP_A" value="${b?.area||''}"></div></div>
+<button class="btn byl mb10" onclick="saveOTPDirect()">✅ Save OTP</button>
+<div id="OTP_LIST_D">${renderOTPList(b?.area)}</div>
+<button class="btn bg2 bsm" onclick="printOTP()">🖨️ Print Area OTP List</button>
+</div></div>`;
+};
+PAGES.bdasspot=function(){
+  return`<div class="pw"><div class="card">
+<div class="ctitle mb10">⚡ Spot Booking / स्पॉट बुकिंग</div>
+<div class="fr"><div class="fg"><div class="fl">Consumer No. *</div><input type="number" id="BSSP_C" placeholder="Required *"></div><div class="fg"><div class="fl">Mobile</div><input type="tel" id="BSSP_M"></div></div>
+<div class="fr"><div class="fg"><div class="fl">Cylinder</div><select id="BSSP_CY"><option value="14.2">14.2 Kg (₹856)</option><option value="5">5 Kg (₹352.50)</option></select></div><div class="fg" style="max-width:100px"><div class="fl">Amount ₹</div><input type="number" id="BSSP_A" value="856"></div></div>
+<button class="btn bor blg" style="width:100%" onclick="saveBDASpotDirect()">⚡ Confirm Spot</button>
+</div></div>`;
+};
+</script>
+
+
+<script>
+// ── MAP ──
+function initMap(){
+  const el=document.getElementById('dmap');if(!el)return;
+  if(window.mapInst){window.mapInst.remove();window.mapInst=null;}
+  window.mapInst=L.map('dmap',{zoomControl:true}).setView([16.8118,74.5546],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(window.mapInst);
+  const mkIco=(color,label)=>L.divIcon({html:`<div style="background:${color};color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid rgba(255,255,255,.5)">${label}</div>`,iconSize:[32,32],className:''});
+  const stColors={'delivered_otp':'#00e676','delivered_nootp':'#ff9800','not_home':'#ff1744','scheduled':'#0090ff','delivered_doorstep_first':'#00bcd4','delivered_vehicle':'#9c27b0'};
+  let cnt=0;
+  D.deliveries.forEach((d,i)=>{
+    const lat=16.81+Math.random()*0.03,lng=74.54+Math.random()*0.04;
+    if(D.customerPins[d.cid]){const p=D.customerPins[d.cid];const m=L.marker([p.lat,p.lng],{icon:mkIco(stColors[d.st||'scheduled'],String(i+1))}).addTo(window.mapInst);m.bindPopup(`<b>${d.name}</b><br>📍 ${d.area}<br>Status: ${d.st||'Pending'}${d.mob?'<br>📞 '+d.mob:''}`)}
+    else if(cnt<30){const m=L.marker([lat,lng],{icon:mkIco(i===0?'#9c27b0':stColors[d.st||'scheduled'],String(i+1))}).addTo(window.mapInst);m.bindPopup(`<b>${d.name||d.cid}</b><br>${d.area}${d.mob?'<br>📞 '+d.mob:''}`);cnt++;}
+  });
+  D.staff.filter(s=>s.role==='delivery').forEach((s,i)=>{L.marker([16.8118+i*0.003,74.5546+i*0.003],{icon:L.divIcon({html:`<div style="background:#ff9800;border-radius:5px;padding:3px 6px;color:#fff;font-size:10px;font-weight:700;border:2px solid #fff">🚐 ${s.name.split(' ')[0]}</div>`,className:''})}).addTo(window.mapInst).bindPopup(s.name);});
+}
+function openGoogleMaps(lat,lng){window.open(`https://www.google.com/maps/dir//${lat},${lng}`);}
+
+// ── CHAT ──
+function initChat(){
+  buildChatContactList();
+  const c=D.activeChatContact||'All Staff';
+  renderChatMsgs(c);
+}
+function buildChatContactList(){
+  const el=document.getElementById('CHAT_CL');if(!el)return;
+  const contacts=['All Staff','Office',...D.staff.filter(s=>s.role==='delivery').map(s=>s.name.split(' ')[0]),...D.bda.slice(0,4).map(b=>b.name.split(' ')[0])];
+  el.innerHTML=contacts.map(c=>`<div class="chatc ${D.activeChatContact===c?'act':''}" onclick="switchChat('${c}',this)">${c}</div>`).join('');
+}
+function switchChat(contact,el){
+  document.querySelectorAll('.chatc').forEach(c=>c.classList.remove('act'));
+  if(el)el.classList.add('act');
+  D.activeChatContact=contact;
+  if(!D.chatMsg[contact])D.chatMsg[contact]=[];
+  renderChatMsgs(contact);
+}
+function renderChatMsgs(contact){
+  const wh=document.getElementById('CHAT_WHO');if(wh)wh.textContent='Chat: '+contact;
+  const el=document.getElementById('CHAT_MS');if(!el)return;
+  const msgs=D.chatMsg[contact]||[];
+  el.innerHTML=msgs.map(m=>`<div class="chatmsg ${m.mine?'mine':''}"><div class="chatbub">${m.msg}</div><div class="chatmeta">${m.from} ${m.ts}</div></div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function toggleChat(){
+  const cp=document.getElementById('CP');if(cp)cp.classList.toggle('open');
+  if(document.getElementById('CP').classList.contains('open'))renderChatMsgs(D.activeChatContact||'All Staff');
+}
+function sendMsg(){
+  const inp=document.getElementById('CHAT_INP');if(!inp||!inp.value.trim())return;
+  const contact=D.activeChatContact||'All Staff';
+  if(!D.chatMsg[contact])D.chatMsg[contact]=[];
+  const msg={from:D.userName,msg:inp.value.trim(),ts:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),mine:true};
+  D.chatMsg[contact].push(msg);
+  inp.value='';
+  renderChatMsgs(contact);
+  saveData();
+  // Auto-reply
+  setTimeout(()=>{
+    const replies={'All Staff':['Noted! समजले ✓','OK 👍','Will do / करतो'],'Office':['Understood / समजले','Done / झाले','OK sir']};
+    const rList=replies[contact]||['👍','Noted','OK'];
+    D.chatMsg[contact].push({from:contact,msg:rList[Math.floor(Math.random()*rList.length)],ts:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),mine:false});
+    renderChatMsgs(contact);saveData();
+  },1500);
+}
+
+// ── TOAST ──
+function toast(msg,type){
+  const t=document.createElement('div');
+  t.className='toast t'+type;t.textContent=msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(()=>{t.classList.add('show');});
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3000);
+}
+
+// ── MODAL HELPERS ──
+function openM(id){const el=document.getElementById(id);if(el){el.style.display='flex';setTimeout(()=>el.classList.add('show'),10);}}
+function closeM(id){const el=document.getElementById(id);if(el){el.classList.remove('show');setTimeout(()=>el.style.display='none',200);}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mov.show').forEach(m=>{m.classList.remove('show');setTimeout(()=>m.style.display='none',200);});const cp=document.getElementById('CP');if(cp&&cp.classList.contains('open'))cp.classList.remove('open');}});
+
+// ── EXPAND TOGGLE ──
+function toggleEx2(id){
+  const el=document.getElementById(id);if(!el)return;
+  el.classList.toggle('open');
+  const hd=el.previousElementSibling;if(hd)hd.classList.toggle('open');
+}
+
+// ── CLOCK ──
+function startClock(){
+  function tick(){
+    const clk=document.getElementById('CLK');
+    if(clk)clk.textContent=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+  tick();setInterval(tick,1000);
+}
+
+// ── BPCL COMPARE ──
+function calcBPCLDiff(code,erp){
+  const sap=parseInt(document.getElementById('sap_'+code)?.value)||0;
+  const diff=erp-sap;
+  const el=document.getElementById('diff_'+code);
+  if(el){el.textContent=diff===0?'✅ OK':diff>0?'+'+diff+' ⚠️':diff+' ⚠️';el.style.color=diff===0?'var(--green)':'var(--red)';}
+}
+
+// ── EXPORT / PRINT OTP ──
+function printOTP(){
+  const win=window.open('','_blank');
+  win.document.write(`<html><head><title>OTP List — Shourya Bharat Gas</title><style>body{font-family:Arial,sans-serif;margin:20px}h2{margin-bottom:5px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px;text-align:left}th{background:#f0f0f0}tr:nth-child(even){background:#f9f9f9}.area{background:#e8f0fe;font-weight:bold;font-size:16px}</style></head><body>`);
+  win.document.write(`<h2>Shourya Bharat Gas — Dist. 187618 | OTP List</h2><p>Date: ${D.erpDay} | Printed: ${new Date().toLocaleTimeString('en-IN')}</p>`);
+  const areas=[...new Set((D.otpStore||[]).map(o=>o.area))];
+  areas.forEach(area=>{
+    const otps=(D.otpStore||[]).filter(o=>o.area===area);
+    win.document.write(`<tr class="area"><td colspan="4">📍 ${area} (${otps.length} OTPs)</td></tr>`);
+    win.document.write('<table><thead><tr><th>Consumer No.</th><th>Name</th><th>OTP</th><th>Saved By</th><th>Time</th></tr></thead><tbody>');
+    otps.forEach(o=>win.document.write(`<tr><td>${o.cid}</td><td>${o.nm||'--'}</td><td style="font-size:20px;font-weight:bold;letter-spacing:5px">${o.otp}</td><td>${o.by}</td><td>${o.ts}</td></tr>`));
+    win.document.write('</tbody></table>');
+  });
+  win.document.write('</body></html>');
+  win.print();
+}
+function exportOTPCSV(){
+  const rows=[['Consumer No.','Name','OTP','Area','Saved By','Time'],...(D.otpStore||[]).map(o=>[o.cid,o.nm||'',o.otp,o.area,o.by,o.ts])];
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv,'+encodeURIComponent(csv);a.download='OTP_List_'+D.erpDay+'.csv';a.click();
+}
+function exportFullBackup(){
+  const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(JSON.stringify(D,null,2));a.download='ERP_Backup_'+D.erpDay+'.json';a.click();
+  toast('📤 Backup downloaded','s');
+}
+
+// ── DAY END ──
+function lockDayEnd(){
+  if(!confirm('Lock Day End? / दिवस बंद करायचा?'))return;
+  D.dayEndLocked=true;
+  D.dayEndTime=new Date().toISOString();
+  saveData();
+  toast('🔒 Day End Locked! / दिवस बंद झाला','s');
+  setTimeout(()=>setPage('dayend'),300);
+}
+
+// ── ADVANCE STAFF SELECTOR ──
+function buildAdvStaffSel(){if(document.getElementById('ADV_ST'))document.getElementById('ADV_ST').innerHTML=D.staff.map(s=>`<option value="${s.id}">${s.name} (${s.role})</option>`).join('');}
+function refreshAdvBal(){const s=D.staff.find(x=>x.id===document.getElementById('ADV_ST')?.value);if(document.getElementById('ADV_BAL'))document.getElementById('ADV_BAL').textContent='₹'+(s?.adv||0);}
+function openAdvModal(sid){buildAdvStaffSel();if(document.getElementById('ADV_ST'))document.getElementById('ADV_ST').value=sid;refreshAdvBal();openM('MN_ADV');}
+
+window.addEventListener('load',()=>{
+  const ls=document.getElementById('LS');
+  const app=document.getElementById('APP');
+  if(ls)ls.style.display='flex';
+  if(app)app.style.display='none';
+});
+</script>
+
+
+</html>

@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#00205B">
+<title>Shourya LPG ERP — Bharat Gas</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── BPCL COLOUR PALETTE ─────────────────────────────── */
+:root{
+  --bpcl-navy:  #00205B;   /* BPCL primary dark blue  */
+  --bpcl-red:   #C8102E;   /* BPCL red                */
+  --bpcl-gold:  #F0A500;   /* BPCL gold/amber         */
+  --bpcl-ltblue:#0072CE;   /* BPCL light blue         */
+  --bg:         #0A1628;
+  --bg2:        #0E1E38;
+  --bg3:        #132540;
+  --card:       #162C4A;
+  --card2:      #1A3456;
+  --border:     rgba(255,255,255,0.09);
+  --green:      #00C07F;
+  --orange:     #F59E0B;
+  --red:        #EF4444;
+  --text:       #D8E8F8;
+  --muted:      #5A82AD;
+  --white:      #F0F6FF;
+  --radius:     12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Noto Sans',sans-serif;color:var(--text);font-size:14px;}
+
+/* ─── SCREENS ─── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden;background:var(--bg);}
+.screen.active{display:flex;}
+
+/* ─── LOGIN ─── */
+#screen-login{
+  background:linear-gradient(155deg,#00205B 0%,#0A1628 45%,#1a0010 100%);
+  align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto;
+}
+.lglow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(200,16,46,0.12) 0%,transparent 65%);pointer-events:none;top:40%;left:50%;transform:translate(-50%,-50%);}
+.lglow2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(0,114,206,0.1) 0%,transparent 65%);pointer-events:none;top:60%;left:30%;transform:translate(-50%,-50%);}
+.lbox{width:100%;max-width:380px;background:rgba(14,30,56,0.9);border:1px solid rgba(0,114,206,0.25);border-radius:18px;padding:2rem 1.8rem;backdrop-filter:blur(16px);position:relative;z-index:1;box-shadow:0 0 80px rgba(0,32,91,0.6),0 8px 32px rgba(0,0,0,0.6);}
+.lhead{text-align:center;margin-bottom:1.8rem;}
+.bpcl-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--bpcl-navy);border:2px solid var(--bpcl-gold);border-radius:10px;padding:0.5rem 1.1rem;margin-bottom:0.9rem;}
+.bpcl-flame{font-size:1.6rem;}
+.bpcl-name{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--bpcl-gold);letter-spacing:0.06em;}
+.ltitle{font-family:'Rajdhani',sans-serif;font-size:1.9rem;font-weight:700;color:var(--white);letter-spacing:0.04em;line-height:1.1;}
+.ltitle span{color:var(--bpcl-red);}
+.lsub{font-size:0.75rem;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-top:0.3rem;}
+.fg{margin-bottom:0.85rem;}
+.fg label{display:block;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.28rem;}
+.fg input{width:100%;background:rgba(10,22,40,0.8);border:1px solid var(--border);border-radius:9px;padding:0.72rem 0.9rem;color:var(--white);font-family:'Noto Sans',sans-serif;font-size:0.92rem;outline:none;transition:border-color 0.2s;}
+.fg input:focus{border-color:var(--bpcl-ltblue);}
+.lbtn{width:100%;padding:0.82rem;border:none;border-radius:9px;background:linear-gradient(135deg,var(--bpcl-red),#A30D26);color:white;font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 20px rgba(200,16,46,0.35);transition:all 0.2s;margin-top:0.2rem;}
+.lbtn:active{transform:scale(0.97);}
+.lerr{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.55rem 0.8rem;font-size:0.82rem;color:#FCA5A5;margin-bottom:0.8rem;display:none;}
+.dhint{margin-top:1.1rem;background:rgba(0,32,91,0.4);border:1px solid rgba(0,114,206,0.2);border-radius:10px;padding:0.8rem;}
+.dhint p{font-size:0.7rem;color:var(--muted);margin-bottom:0.45rem;text-transform:uppercase;letter-spacing:0.06em;}
+.du{display:flex;justify-content:space-between;font-size:0.78rem;cursor:pointer;padding:0.28rem 0;color:var(--text);border-bottom:1px solid var(--border);transition:color 0.15s;}
+.du:last-child{border-bottom:none;}
+.du span:last-child{color:var(--bpcl-gold);font-family:monospace;}
+.du:hover{color:var(--white);}
+
+/* ─── TOPBAR ─── */
+.topbar{height:54px;background:var(--bpcl-navy);border-bottom:2px solid var(--bpcl-red);display:flex;align-items:center;padding:0 1rem;flex-shrink:0;z-index:100;}
+.mbtn{background:none;border:none;color:var(--white);font-size:1.35rem;cursor:pointer;padding:0.25rem;display:flex;align-items:center;line-height:1;}
+.tbrand{display:flex;align-items:center;gap:0.5rem;margin-left:0.5rem;}
+.tbrand-flame{font-size:1.1rem;}
+.tbrand-text{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;color:var(--white);letter-spacing:0.04em;}
+.tbrand-text span{color:var(--bpcl-gold);}
+.tright{margin-left:auto;display:flex;align-items:center;gap:0.55rem;}
+.tav{width:32px;height:32px;border-radius:6px;background:var(--bpcl-red);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:white;flex-shrink:0;font-family:'Rajdhani',sans-serif;letter-spacing:0.03em;}
+.tname{font-size:0.8rem;color:var(--white);font-weight:600;}
+.tdate{font-size:0.69rem;color:rgba(255,255,255,0.55);}
+
+/* ─── SIDEBAR ─── */
+.sov{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;opacity:0;transition:opacity 0.2s;}
+.sov.open{display:block;opacity:1;}
+.sb{position:fixed;top:0;left:-280px;bottom:0;width:268px;background:var(--bg2);border-right:1px solid rgba(0,114,206,0.2);z-index:201;transition:left 0.28s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;}
+.sb.open{left:0;}
+.sbh{padding:1rem 1.1rem;border-bottom:1px solid rgba(0,114,206,0.2);flex-shrink:0;background:var(--bpcl-navy);}
+.sbbrand{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;color:var(--bpcl-gold);letter-spacing:0.04em;}
+.sbrole{font-size:0.69rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.07em;margin-top:0.08rem;}
+.sbuser{display:flex;align-items:center;gap:0.65rem;margin-top:0.7rem;}
+.sbnm{font-size:0.85rem;color:var(--white);font-weight:600;}
+.sbnav{flex:1;overflow-y:auto;padding:0.5rem 0;}
+.nsec{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;padding:0.65rem 1.1rem 0.2rem;margin-top:0.3rem;}
+.ni{display:flex;align-items:center;gap:0.7rem;padding:0.68rem 1.1rem;cursor:pointer;font-size:0.87rem;color:var(--text);transition:background 0.15s,color 0.15s;position:relative;}
+.ni:hover{background:rgba(0,114,206,0.1);color:var(--white);}
+.ni.active{background:rgba(0,114,206,0.18);color:var(--bpcl-gold);font-weight:600;}
+.ni.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--bpcl-red);border-radius:0 2px 2px 0;}
+.nico{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.nbadge{margin-left:auto;background:var(--bpcl-red);color:white;font-size:0.6rem;font-weight:700;padding:0.08rem 0.38rem;border-radius:99px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.sbft{padding:0.85rem 1.1rem;border-top:1px solid var(--border);flex-shrink:0;}
+.lout{display:flex;align-items:center;gap:0.65rem;cursor:pointer;color:var(--muted);font-size:0.85rem;padding:0.4rem 0;transition:color 0.2s;}
+.lout:hover{color:var(--red);}
+
+/* ─── PAGE AREA ─── */
+.pa{flex:1;overflow-y:auto;padding:1.1rem;display:flex;flex-direction:column;gap:0.9rem;}
+.ph{display:flex;align-items:flex-start;gap:0.65rem;margin-bottom:0.1rem;}
+.phi{font-size:1.45rem;margin-top:0.1rem;}
+.pht{font-family:'Rajdhani',sans-serif;font-size:1.65rem;font-weight:700;color:var(--white);letter-spacing:0.03em;line-height:1;}
+.phs{font-size:0.74rem;color:var(--muted);margin-top:0.1rem;}
+
+/* ─── CARDS ─── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;}
+.card.bpcl-card{border-top:2px solid var(--bpcl-ltblue);}
+.ctitle{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.72rem;display:flex;align-items:center;gap:0.4rem;}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.7rem;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.85rem 0.95rem;position:relative;overflow:hidden;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc.or::before{background:linear-gradient(to right,var(--bpcl-gold),#FCD34D);}
+.sc.gr::before{background:linear-gradient(to right,var(--green),#34D399);}
+.sc.bl::before{background:linear-gradient(to right,var(--bpcl-ltblue),#60A5FA);}
+.sc.re::before{background:linear-gradient(to right,var(--bpcl-red),#F87171);}
+.sc.ny::before{background:linear-gradient(to right,var(--bpcl-navy),var(--bpcl-ltblue));}
+.slbl{font-size:0.69rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+.sval{font-family:'Rajdhani',sans-serif;font-size:1.85rem;font-weight:700;color:var(--white);line-height:1.1;margin-top:0.08rem;}
+.ssub{font-size:0.68rem;color:var(--muted);margin-top:0.1rem;}
+.sico{position:absolute;right:0.75rem;top:0.75rem;font-size:1.4rem;opacity:0.18;}
+
+/* ─── FORM ─── */
+.fl{margin-bottom:0.82rem;}
+.fl label{display:block;font-size:0.71rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.27rem;}
+.fi,.fs{width:100%;background:rgba(10,22,40,0.7);border:1px solid var(--border);border-radius:8px;padding:0.68rem 0.85rem;color:var(--white);font-family:'Noto Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.fi:focus,.fs:focus{border-color:var(--bpcl-ltblue);}
+.fs option{background:var(--bg2);}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.bsub{width:100%;padding:0.78rem;border:none;border-radius:9px;background:linear-gradient(135deg,var(--bpcl-red),#A30D26);color:white;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 14px rgba(200,16,46,0.25);transition:all 0.2s;margin-top:0.4rem;}
+.bsub:active{transform:scale(0.98);}
+.bsec{background:rgba(0,114,206,0.15);border:1px solid rgba(0,114,206,0.3);color:#60A5FA;box-shadow:none;}
+.bgold{background:linear-gradient(135deg,var(--bpcl-gold),#D97706);color:#00205B;box-shadow:0 4px 14px rgba(240,165,0,0.25);}
+.bsm{padding:0.35rem 0.75rem;font-size:0.76rem;border-radius:6px;border:none;cursor:pointer;font-family:'Noto Sans',sans-serif;font-weight:600;transition:all 0.2s;}
+.bsm.bl{background:rgba(0,114,206,0.2);color:#60A5FA;}
+.bsm.gr{background:rgba(0,192,127,0.18);color:var(--green);}
+.bsm.re{background:rgba(239,68,68,0.15);color:var(--red);}
+.bsm.or{background:rgba(240,165,0,0.15);color:var(--bpcl-gold);}
+
+/* ─── TABLE ─── */
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:0.81rem;}
+thead tr{background:rgba(0,32,91,0.5);}
+th{padding:0.6rem 0.85rem;text-align:left;font-size:0.67rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:0.6rem 0.85rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(0,114,206,0.05);}
+.tb{font-weight:600;color:var(--white);}
+.tg{color:var(--green);}
+.to{color:var(--bpcl-gold);}
+.tr{color:var(--red);}
+.tbl{color:#60A5FA;}
+
+/* ─── BADGES ─── */
+.bdg{display:inline-flex;align-items:center;gap:0.22rem;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.67rem;font-weight:600;letter-spacing:0.03em;}
+.bdg.gr{background:rgba(0,192,127,0.15);color:var(--green);}
+.bdg.or{background:rgba(240,165,0,0.15);color:var(--bpcl-gold);}
+.bdg.re{background:rgba(239,68,68,0.15);color:var(--red);}
+.bdg.bl{background:rgba(0,114,206,0.15);color:#60A5FA;}
+.bdg.ny{background:rgba(0,32,91,0.5);color:#93C5FD;}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:0.2rem;background:rgba(0,0,0,0.3);border-radius:9px;padding:0.2rem;}
+.tab{flex:1;text-align:center;padding:0.5rem;border-radius:7px;font-size:0.77rem;cursor:pointer;color:var(--muted);transition:all 0.2s;font-weight:500;white-space:nowrap;font-family:'Noto Sans',sans-serif;}
+.tab.active{background:var(--bpcl-red);color:white;font-weight:600;box-shadow:0 2px 10px rgba(200,16,46,0.3);}
+
+/* ─── ALERTS ─── */
+.alt{border-radius:9px;padding:0.7rem 0.9rem;font-size:0.8rem;display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;}
+.alt.or{background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.25);color:#FDE68A;}
+.alt.gr{background:rgba(0,192,127,0.1);border:1px solid rgba(0,192,127,0.25);color:#6EE7B7;}
+.alt.re{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#FCA5A5;}
+.alt.bl{background:rgba(0,114,206,0.1);border:1px solid rgba(0,114,206,0.25);color:#93C5FD;}
+
+/* ─── DELIVERY MAN CARD ─── */
+.dmc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem;display:flex;align-items:flex-start;gap:0.8rem;}
+.dmav{width:40px;height:40px;border-radius:6px;background:var(--bpcl-navy);border:1px solid rgba(0,114,206,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--bpcl-gold);flex-shrink:0;}
+.dmi{flex:1;min-width:0;}
+.dmn{font-weight:600;color:var(--white);font-size:0.9rem;}
+.dmd{font-size:0.71rem;color:var(--muted);margin-top:0.06rem;}
+.dmnums{display:flex;gap:0.85rem;margin-top:0.3rem;flex-wrap:wrap;}
+.dmnum{font-size:0.72rem;color:var(--muted);}
+.dmnum b{color:var(--bpcl-gold);}
+
+/* ─── DELIVERY LIST (UBER STYLE) ─── */
+.deliv-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.85rem;margin-bottom:0.6rem;position:relative;}
+.deliv-item.done{border-left:3px solid var(--green);opacity:0.7;}
+.deliv-item.pending{border-left:3px solid var(--bpcl-gold);}
+.deliv-item.rescheduled{border-left:3px solid var(--red);}
+.deliv-sr{position:absolute;top:0.7rem;right:0.85rem;font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--muted);}
+.deliv-name{font-weight:600;color:var(--white);font-size:0.9rem;margin-bottom:0.18rem;}
+.deliv-meta{display:flex;gap:0.7rem;flex-wrap:wrap;margin-bottom:0.5rem;}
+.deliv-meta span{font-size:0.72rem;color:var(--muted);}
+.deliv-meta span b{color:var(--text);}
+.call-btn{display:inline-flex;align-items:center;gap:0.3rem;background:rgba(0,192,127,0.15);border:1px solid rgba(0,192,127,0.3);border-radius:6px;padding:0.25rem 0.6rem;font-size:0.75rem;color:var(--green);cursor:pointer;text-decoration:none;}
+.call-btn:hover{background:rgba(0,192,127,0.25);}
+.otp-row{display:flex;gap:0.5rem;margin-top:0.5rem;align-items:center;}
+.otp-inp{flex:1;background:rgba(10,22,40,0.8);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.7rem;color:var(--white);font-family:monospace;font-size:1rem;font-weight:700;letter-spacing:0.15em;outline:none;text-align:center;}
+.otp-inp:focus{border-color:var(--bpcl-gold);}
+.otp-inp.filled{border-color:var(--green);background:rgba(0,192,127,0.08);}
+.loc-btn{background:rgba(0,114,206,0.15);border:1px solid rgba(0,114,206,0.3);border-radius:6px;padding:0.35rem 0.6rem;font-size:0.72rem;color:#60A5FA;cursor:pointer;white-space:nowrap;}
+.loc-saved{font-size:0.7rem;color:var(--green);display:flex;align-items:center;gap:0.25rem;}
+
+/* ─── MAP BOX ─── */
+.mapbox{height:200px;background:linear-gradient(135deg,rgba(0,32,91,0.7),rgba(10,22,40,1));border:1px solid rgba(0,114,206,0.2);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;position:relative;overflow:hidden;}
+.mapgrid{position:absolute;inset:0;opacity:0.04;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,1) 28px,rgba(255,255,255,1) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(255,255,255,1) 28px,rgba(255,255,255,1) 29px);}
+.mdot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--bpcl-gold);}
+.mdot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--bpcl-gold);animation:mp 2s ease-in-out infinite;}
+@keyframes mp{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(2);opacity:0;}}
+
+/* ─── BPCL DAY END TABLE ─── */
+.bpcl-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.bpcl-table th{background:var(--bpcl-navy);color:var(--bpcl-gold);padding:0.55rem 0.75rem;text-align:center;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.05em;border:1px solid rgba(0,114,206,0.2);}
+.bpcl-table td{padding:0.5rem 0.75rem;text-align:center;border:1px solid rgba(255,255,255,0.05);color:var(--text);}
+.bpcl-table tr:nth-child(even) td{background:rgba(0,32,91,0.3);}
+.bpcl-table .match{color:var(--green);font-weight:700;}
+.bpcl-table .mismatch{color:var(--red);font-weight:700;background:rgba(239,68,68,0.1)!important;}
+.bpcl-table .highlight{background:rgba(240,165,0,0.08)!important;}
+
+/* ─── FILE UPLOAD ─── */
+.upload-area{border:2px dashed rgba(0,114,206,0.3);border-radius:var(--radius);padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(0,32,91,0.15);}
+.upload-area:hover{border-color:var(--bpcl-ltblue);background:rgba(0,114,206,0.08);}
+.upload-area input[type=file]{display:none;}
+.upload-icon{font-size:2rem;margin-bottom:0.4rem;}
+.upload-text{font-size:0.85rem;color:var(--muted);}
+.upload-text b{color:var(--bpcl-ltblue);}
+.upload-success{background:rgba(0,192,127,0.1);border:1px solid rgba(0,192,127,0.3);border-radius:8px;padding:0.65rem 0.9rem;font-size:0.82rem;color:var(--green);display:flex;align-items:center;gap:0.5rem;}
+
+/* ─── DENOM ─── */
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.45rem;}
+.di{background:rgba(10,22,40,0.7);border:1px solid var(--border);border-radius:7px;padding:0.5rem;text-align:center;}
+.dnote{font-size:0.65rem;color:var(--muted);margin-bottom:0.2rem;}
+.dinp{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);text-align:center;font-size:0.92rem;font-family:'Rajdhani',sans-serif;font-weight:700;padding:0.1rem;outline:none;}
+.dtot{background:rgba(0,32,91,0.4);border:1px solid rgba(0,114,206,0.2);border-radius:8px;padding:0.75rem;display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;}
+.dtlbl{font-size:0.75rem;color:var(--muted);}
+.dtval{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--bpcl-gold);}
+
+/* ─── BOTTOM NAV ─── */
+.bnav{height:58px;background:var(--bpcl-navy);border-top:1px solid rgba(200,16,46,0.3);display:flex;flex-shrink:0;}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.12rem;cursor:pointer;color:rgba(255,255,255,0.4);transition:color 0.2s;font-size:0.57rem;text-transform:uppercase;letter-spacing:0.04em;}
+.bni.active{color:var(--bpcl-gold);}
+.bnico{font-size:1.2rem;}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:66px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:0.58rem 1rem;font-size:0.82rem;color:var(--white);z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.s{border-color:rgba(0,192,127,0.4);background:rgba(0,192,127,0.15);color:#6EE7B7;}
+.toast.e{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.12);color:#FCA5A5;}
+
+/* ─── PRINT STYLES ─── */
+@media print{
+  .topbar,.sb,.bnav,.sov,.toast,button,.mbtn,#otp-print-btn,.tabs,.bsub{display:none!important;}
+  body{background:white;color:black;}
+  .card,.sc{background:white;border:1px solid #ccc;}
+  .bpcl-table th{background:#00205B;color:#F0A500;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .pht{color:#00205B;}
+}
+
+/* ─── DESKTOP ─── */
+@media(min-width:768px){
+  .sgrid{grid-template-columns:repeat(4,1fr);}
+  .dgrid{grid-template-columns:repeat(5,1fr);}
+  .fr{grid-template-columns:repeat(3,1fr);}
+  .pa{padding:1.4rem 2rem;max-width:1100px;margin:0 auto;width:100%;}
+  .bnav{display:none;}
+  .sb{left:0!important;position:relative;height:100%;flex-shrink:0;border-right:1px solid rgba(0,114,206,0.2);}
+  .sov{display:none!important;}
+  #screen-app{flex-direction:row;}
+  .amain{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+  .mbtn{display:none;}
+  .toast{bottom:20px;}
+}
+@media(max-width:767px){.amain{flex:1;display:flex;flex-direction:column;overflow:hidden;}}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:rgba(0,114,206,0.3);border-radius:99px;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LOGIN ═══════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="lglow"></div><div class="lglow2"></div>
+  <div class="lbox">
+    <div class="lhead">
+      <div class="bpcl-badge"><span class="bpcl-flame">🔥</span><span class="bpcl-name">BHARAT GAS</span></div>
+      <div class="ltitle">SHOURYA <span>LPG</span> ERP</div>
+      <div class="lsub">Distributor Code: 187618 · Jaysingpur</div>
+    </div>
+    <div id="lerr" class="lerr">❌ Wrong username or password</div>
+    <div class="fg"><label>Username</label><input type="text" id="iu" placeholder="Enter username" autocomplete="username"></div>
+    <div class="fg"><label>Password</label><input type="password" id="ip" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" onclick="doLogin()">SIGN IN →</button>
+    <div class="dhint">
+      <p>Tap any account to fill</p>
+      <div class="du" onclick="fill('vishal','1234')"><span>👑 Vishal Patil (Owner)</span><span>vishal/1234</span></div>
+      <div class="du" onclick="fill('mrinmayi','1234')"><span>👑 Mrinmayi Patil (Owner)</span><span>mrinmayi/1234</span></div>
+      <div class="du" onclick="fill('manager','1234')"><span>🏢 Office Manager</span><span>manager/1234</span></div>
+      <div class="du" onclick="fill('bhore','1234')"><span>🛵 Vishwas Bhore (Delivery)</span><span>bhore/1234</span></div>
+      <div class="du" onclick="fill('swapnil','1234')"><span>🛵 Swapnil Patil (Delivery)</span><span>swapnil/1234</span></div>
+      <div class="du" onclick="fill('shirolbda','1234')"><span>🏘 Shirol BDA</span><span>shirolbda/1234</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ APP ═══════════════════ -->
+<div id="screen-app" class="screen">
+  <div class="sov" id="sov" onclick="closeSB()"></div>
+  <div class="sb" id="sb">
+    <div class="sbh">
+      <div class="sbbrand">🔥 SHOURYA LPG ERP</div>
+      <div class="sbrole" id="sbrole">—</div>
+      <div class="sbuser">
+        <div class="tav" id="sbav">?</div>
+        <div><div class="sbnm" id="sbnm">—</div><div style="font-size:0.69rem;color:rgba(255,255,255,0.4)" id="sbdt">—</div></div>
+      </div>
+    </div>
+    <nav class="sbnav" id="sbnav"></nav>
+    <div class="sbft"><div class="lout" onclick="doLogout()">🚪 <span>Sign Out</span></div></div>
+  </div>
+  <div class="amain">
+    <div class="topbar">
+      <button class="mbtn" onclick="openSB()">☰</button>
+      <div class="tbrand"><span class="tbrand-flame">🔥</span><span class="tbrand-text">SHOURYA <span>LPG</span></span></div>
+      <div class="tright">
+        <div style="text-align:right"><div class="tname" id="tbnm">—</div><div class="tdate" id="tbdt">—</div></div>
+        <div class="tav" id="tbav">?</div>
+      </div>
+    </div>
+    <div class="pa" id="pa"></div>
+    <div class="bnav" id="bnav"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══ USERS ═══ */
+const USERS={
+  vishal:   {name:'Vishal Patil',   role:'owner',   av:'VP'},
+  mrinmayi: {name:'Mrinmayi Patil', role:'owner',   av:'MP'},
+  manager:  {name:'Office Manager', role:'manager', av:'OM'},
+  bhore:    {name:'Vishwas Bhore',  role:'delivery',av:'VB'},
+  swapnil:  {name:'Swapnil Patil',  role:'delivery',av:'SP'},
+  shirolbda:{name:'Shirol BDA',     role:'bda',     av:'SB'},
+};
+
+/* ═══ APP DATA ═══ */
+const D={
+  today:new Date().toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}),
+  rate:956,
+  godown:{filled:187,empty:43,received:0,openingFilled:230,openingEmpty:28},
+  vehicles:[
+    {id:1,name:'Vishwas Bhore', vehicle:'Tata Ace',   filled:65,sold:12,empty:12,status:'On Route',cash:11472,loc:'Near Shirol Road',gpay:0,online:0},
+    {id:2,name:'Swapnil Patil', vehicle:'Mega XL',    filled:35,sold:0, empty:0, status:'At Godown',cash:0,   loc:'At Godown',gpay:0,online:0},
+    {id:3,name:'Rahul',         vehicle:'Bajaj RE',   filled:40,sold:8, empty:8, status:'On Route',cash:7648, loc:'Hupari Road',gpay:0,online:0},
+    {id:4,name:'Anil',          vehicle:'Pickup',     filled:30,sold:5, empty:5, status:'On Route',cash:4780, loc:'Near Uchgaon',gpay:0,online:0},
+    {id:5,name:'Dinesh',        vehicle:'Mini Truck', filled:20,sold:0, empty:0, status:'At Godown',cash:0,   loc:'At Godown',gpay:0,online:0},
+  ],
+  bda:[
+    {name:'Shirol BDA',  filled:7, empty:3, sold:5, cash:4780, bda_filled_stock:26},
+    {name:'Hupari BDA',  filled:5, empty:2, sold:3, cash:2868, bda_filled_stock:0},
+    {name:'Uchgaon BDA', filled:6, empty:1, sold:4, cash:3824, bda_filled_stock:0},
+  ],
+  sales:[
+    {time:'9:12 AM', by:'Office',   qty:5,  mode:'Cash',  amt:4780},
+    {time:'10:30 AM',by:'Bhore',    qty:12, mode:'GPay',  amt:11472},
+    {time:'11:45 AM',by:'Rahul',    qty:8,  mode:'Cash',  amt:7648},
+    {time:'2:15 PM', by:'Shirol',   qty:5,  mode:'Online',amt:4780},
+    {time:'3:00 PM', by:'Anil',     qty:5,  mode:'Cash',  amt:4780},
+  ],
+  office:{openCash:5000,expenses:[],advances:[]},
+  denom:{n2000:0,n500:4,n200:2,n100:5,n50:3,n20:2,n10:5,coins:3},
+  // BPCL day-end reference (from uploaded PDF)
+  bpcl_dayend:{
+    prod5350:{refills:88,svRefills:0,openBook:375,currBook:93,cancelBook:17,closeBook:363,
+              closeFull:120,closeEmpty:510,bdaFilled:26,delVehFilled:0},
+    prod5370:{refills:15,svRefills:0,openBook:27,currBook:19,cancelBook:0,closeBook:31,
+              closeFull:14,closeEmpty:186,bdaFilled:0,delVehFilled:0},
+  },
+  // Delivery list from CSV upload
+  deliveryList:[],
+  // Customer GPS locations (saved after 1st delivery)
+  customerLocations:{},
+};
+
+/* ═══ NAV ═══ */
+const NAV={
+  owner:[
+    {s:'Overview'},{id:'dashboard',i:'📊',l:'Dashboard'},
+    {id:'tracking',i:'📍',l:'Live Tracking',b:'LIVE'},
+    {s:'Daily Ops'},
+    {id:'deliveries',i:'🚚',l:'Delivery List',b:'NEW'},
+    {id:'stock',i:'📦',l:'Godown Stock'},
+    {id:'trips',i:'🛵',l:'Delivery Trips'},
+    {id:'office',i:'💵',l:'Office Cash'},
+    {id:'sales',i:'🧾',l:'Today Sales'},
+    {s:'BPCL Reports'},
+    {id:'dayend',i:'📋',l:'Day End Report'},
+    {id:'bpclmatch',i:'✅',l:'BPCL Verification'},
+    {s:'Admin'},
+    {id:'payroll',i:'💰',l:'Payroll'},
+    {id:'staff',i:'👥',l:'Staff & BDA'},
+  ],
+  manager:[
+    {s:'Today'},{id:'dashboard',i:'📊',l:'Dashboard'},{id:'tracking',i:'📍',l:'Live Tracking',b:'LIVE'},
+    {s:'Ops'},{id:'deliveries',i:'🚚',l:'Delivery List',b:'NEW'},
+    {id:'stock',i:'📦',l:'Stock'},{id:'trips',i:'🛵',l:'Trips'},
+    {id:'office',i:'💵',l:'Cash'},{id:'sales',i:'🧾',l:'Sales'},
+    {s:'Reports'},{id:'dayend',i:'📋',l:'Day End'},{id:'bpclmatch',i:'✅',l:'BPCL Check'},
+  ],
+  delivery:[
+    {s:'My Day'},{id:'mydeliveries',i:'🚚',l:'My Deliveries'},
+    {id:'mytrip',i:'🛵',l:'My Trip'},
+    {id:'mystock',i:'📦',l:'My Stock'},{id:'mysales',i:'💰',l:'My Sales'},
+  ],
+  bda:[
+    {s:'BDA Panel'},{id:'bdastock',i:'📦',l:'Stock'},
+    {id:'bdasales',i:'💰',l:'Sales'},{id:'bdacash',i:'💵',l:'Handover'},
+  ],
+};
+const BNAV={
+  owner:   [{id:'dashboard',i:'📊',l:'Home'},{id:'deliveries',i:'🚚',l:'Deliveries'},{id:'tracking',i:'📍',l:'Track'},{id:'dayend',i:'📋',l:'Report'}],
+  manager: [{id:'dashboard',i:'📊',l:'Home'},{id:'deliveries',i:'🚚',l:'Deliveries'},{id:'tracking',i:'📍',l:'Track'},{id:'office',i:'💵',l:'Cash'}],
+  delivery:[{id:'mydeliveries',i:'🚚',l:'Deliveries'},{id:'mytrip',i:'🛵',l:'Trip'},{id:'mystock',i:'📦',l:'Stock'},{id:'mysales',i:'💰',l:'Sales'}],
+  bda:     [{id:'bdastock',i:'📦',l:'Stock'},{id:'bdasales',i:'💰',l:'Sales'},{id:'bdacash',i:'💵',l:'Cash'}],
+};
+
+let S={user:null,role:null,page:null};
+
+/* ═══ AUTH ═══ */
+function fill(u,p){document.getElementById('iu').value=u;document.getElementById('ip').value=p;}
+function doLogin(){
+  const u=document.getElementById('iu').value.trim().toLowerCase();
+  const p=document.getElementById('ip').value;
+  if(!USERS[u]||p!=='1234'){document.getElementById('lerr').style.display='block';return;}
+  document.getElementById('lerr').style.display='none';
+  S.user=USERS[u];S.role=USERS[u].role;
+  const dt=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+  ['tbnm','sbnm'].forEach(id=>document.getElementById(id).textContent=S.user.name);
+  ['tbdt','sbdt'].forEach(id=>document.getElementById(id).textContent=dt);
+  ['tbav','sbav'].forEach(id=>document.getElementById(id).textContent=S.user.av);
+  document.getElementById('sbrole').textContent={owner:'Owner / Partner',manager:'Office Manager',delivery:'Delivery Man',bda:'BDA Owner'}[S.role];
+  buildNav();buildBNav();
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  navigate(NAV[S.role].find(n=>n.id).id);
+  showToast('Welcome, '+S.user.name+' 👋','s');
+}
+function doLogout(){
+  S={user:null,role:null,page:null};
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('ip').value='';closeSB();
+}
+
+/* ═══ SIDEBAR ═══ */
+function buildNav(){
+  const nav=document.getElementById('sbnav');nav.innerHTML='';
+  (NAV[S.role]||[]).forEach(item=>{
+    if(item.s){nav.innerHTML+=`<div class="nsec">${item.s}</div>`;return;}
+    nav.innerHTML+=`<div class="ni" id="ni-${item.id}" onclick="navigate('${item.id}');closeSB()">
+      <span class="nico">${item.i}</span><span>${item.l}</span>
+      ${item.b?`<span class="nbadge">${item.b}</span>`:''}
+    </div>`;
+  });
+}
+function buildBNav(){
+  const bn=document.getElementById('bnav');bn.innerHTML='';
+  (BNAV[S.role]||[]).forEach(item=>{
+    bn.innerHTML+=`<div class="bni" id="bn-${item.id}" onclick="navigate('${item.id}')">
+      <span class="bnico">${item.i}</span><span>${item.l}</span>
+    </div>`;
+  });
+}
+function setActive(id){
+  document.querySelectorAll('.ni,.bni').forEach(el=>el.classList.remove('active'));
+  const n=document.getElementById('ni-'+id);if(n)n.classList.add('active');
+  const b=document.getElementById('bn-'+id);if(b)b.classList.add('active');
+}
+function openSB(){document.getElementById('sb').classList.add('open');document.getElementById('sov').classList.add('open');}
+function closeSB(){document.getElementById('sb').classList.remove('open');document.getElementById('sov').classList.remove('open');}
+
+/* ═══ ROUTER ═══ */
+const PAGES={
+  dashboard:pgDash,tracking:pgTrack,deliveries:pgDeliveries,
+  stock:pgStock,trips:pgTrips,office:pgOffice,sales:pgSales,
+  dayend:pgDayend,bpclmatch:pgBpclMatch,payroll:pgPayroll,staff:pgStaff,
+  mydeliveries:pgMyDeliveries,mytrip:pgMyTrip,mystock:pgMyStock,mysales:pgMySales,
+  bdastock:pgBdaStock,bdasales:pgBdaSales,bdacash:pgBdaCash,
+};
+function navigate(id){
+  S.page=id;setActive(id);
+  const pa=document.getElementById('pa');pa.scrollTop=0;
+  pa.innerHTML=PAGES[id]?PAGES[id]():`<div class="ph"><span class="phi">🚧</span><div><div class="pht">${id}</div><div class="phs">Coming soon</div></div></div>`;
+}
+
+/* ═══ HELPERS ═══ */
+function st(tid,idx,fn){
+  document.querySelectorAll(`#${tid} .tab`).forEach((t,i)=>t.classList.toggle('active',i===idx));
+  const bid=tid.replace('-tabs','-body');
+  const b=document.getElementById(bid);if(b&&fn)b.innerHTML=fn();
+}
+let _tt;
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const today=()=>new Date().toISOString().split('T')[0];
+
+/* ═══════════════════════════════════════════
+   PAGE: DASHBOARD
+═══════════════════════════════════════════ */
+function pgDash(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const amt=D.sales.reduce((s,r)=>s+r.amt,0);
+  const onRoute=D.vehicles.filter(v=>v.status==='On Route').length;
+  const dlPending=D.deliveryList.filter(d=>!d.otp&&!d.done).length;
+  return`
+  <div class="ph"><span class="phi">📊</span><div><div class="pht">Dashboard</div><div class="phs">${D.today} · Distributor: 187618</div></div></div>
+  <div class="alt gr"><span>🌅</span><span>Day <b>Open</b> · Opening cash ₹${Number(D.office.openCash).toLocaleString('en-IN')} · ${onRoute} delivery men on route${dlPending>0?' · <b>'+dlPending+' deliveries pending OTP</b>':''}</span></div>
+  <div class="sgrid">
+    <div class="sc or"><div class="sico">🧾</div><div class="slbl">Cylinders Sold</div><div class="sval">${sold}</div><div class="ssub">14.2 kg · Code 5350</div></div>
+    <div class="sc gr"><div class="sico">💰</div><div class="slbl">Total Collection</div><div class="sval">${inr(amt)}</div><div class="ssub">Cash + GPay + Online</div></div>
+    <div class="sc bl"><div class="sico">📦</div><div class="slbl">Godown Filled</div><div class="sval">${D.godown.filled}</div><div class="ssub">${D.godown.empty} empty</div></div>
+    <div class="sc re"><div class="sico">🚚</div><div class="slbl">Pending OTPs</div><div class="sval">${dlPending}</div><div class="ssub">for BPCL app entry</div></div>
+  </div>
+  <div class="card bpcl-card">
+    <div class="ctitle">🛵 Delivery Men — Live Status</div>
+    ${D.vehicles.map(v=>`
+    <div class="dmc" style="margin-bottom:0.6rem">
+      <div class="dmav">${v.name.slice(0,2).toUpperCase()}</div>
+      <div class="dmi">
+        <div class="dmn">${v.name} <span style="font-size:0.7rem;font-weight:400;color:var(--muted)">· ${v.vehicle}</span></div>
+        <div style="font-size:0.69rem;color:var(--muted)">📍 ${v.loc}</div>
+        <div class="dmnums">
+          <div class="dmnum">Loaded <b>${v.filled}</b></div>
+          <div class="dmnum">Sold <b>${v.sold}</b></div>
+          <div class="dmnum">Left <b>${v.filled-v.sold}</b></div>
+          <div class="dmnum">Cash <b>${inr(v.cash)}</b></div>
+        </div>
+      </div>
+      <span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status==='On Route'?'🟢':'🟡'} ${v.status}</span>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="ctitle">🏘 BDA Live Stock</div>
+    ${D.bda.map(b=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-weight:600;color:var(--white);font-size:0.86rem">${b.name}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">Filled: ${b.filled} · Empty: ${b.empty}</div></div>
+      <div style="text-align:right"><div style="font-weight:600;color:var(--green)">${inr(b.cash)}</div>
+        <div style="font-size:0.68rem;color:var(--muted)">${b.sold} sold</div></div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: DELIVERY LIST (CSV UPLOAD + UBER VIEW)
+═══════════════════════════════════════════ */
+function pgDeliveries(){
+  return`
+  <div class="ph"><span class="phi">🚚</span><div>
+    <div class="pht">Delivery Schedule</div>
+    <div class="phs">Upload CSV from BPCL · Assign to delivery men · OTP capture</div>
+  </div></div>
+  <div class="tabs" id="dl-tabs">
+    <div class="tab active" onclick="st('dl-tabs',0,renderDlUpload)">Upload CSV</div>
+    <div class="tab" onclick="st('dl-tabs',1,renderDlAssign)">Assign Routes</div>
+    <div class="tab" onclick="st('dl-tabs',2,renderDlPrint)">Print OTP Sheet</div>
+  </div>
+  <div id="dl-body">${renderDlUpload()}</div>`;
+}
+function renderDlUpload(){return`
+  <div class="card bpcl-card">
+    <div class="ctitle">📂 Upload BPCL Cash Memo CSV</div>
+    <div class="alt bl" style="margin-bottom:0.8rem"><span>ℹ️</span><span>Download <b>CashMemoGeneratedList</b> CSV from BPCL eConnect portal → upload here → delivery men see their list on mobile</span></div>
+    <label class="upload-area" for="csvfile">
+      <input type="file" id="csvfile" accept=".csv" onchange="loadCSV(this)">
+      <div class="upload-icon">📋</div>
+      <div class="upload-text">Tap to upload <b>CashMemoGeneratedList.csv</b></div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">From BPCL eConnect → LpgNext → Cash Memo → Download CSV</div>
+    </label>
+    ${D.deliveryList.length>0?`
+    <div class="upload-success" style="margin-top:0.8rem">✅ ${D.deliveryList.length} deliveries loaded · ${[...new Set(D.deliveryList.map(d=>d.operator))].length} delivery men · ${D.deliveryList.filter(d=>d.rescheduled).length} rescheduled</div>
+    <div style="margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+      <button class="bsub" style="width:auto;padding:0.5rem 1rem" onclick="st('dl-tabs',1,renderDlAssign)">Assign Routes →</button>
+      <button class="bsub bsec" style="width:auto;padding:0.5rem 1rem" onclick="st('dl-tabs',2,renderDlPrint)">Print OTP Sheet</button>
+    </div>
+    `:''}
+  </div>
+  ${D.deliveryList.length>0?`
+  <div class="card">
+    <div class="ctitle">👁 Preview — First 5 Records</div>
+    <div class="tw"><table>
+      <thead><tr><th>Sr</th><th>Consumer No</th><th>Name</th><th>Area</th><th>Mobile</th><th>Operator</th><th>Rescheduled</th></tr></thead>
+      <tbody>
+        ${D.deliveryList.slice(0,5).map(d=>`<tr>
+          <td class="tb">${d.sl}</td>
+          <td class="tbl">${d.consumerNo}</td>
+          <td class="tb">${d.name}</td>
+          <td style="color:var(--muted)">${d.area}</td>
+          <td><a class="call-btn" href="tel:${d.mobile}">📞 ${d.mobile}</a></td>
+          <td style="color:var(--muted);font-size:0.72rem">${d.operator}</td>
+          <td>${d.rescheduled?'<span class="bdg re">⚠ Rescheduled</span>':''}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+  </div>`:''}`;
+}
+function renderDlAssign(){
+  if(!D.deliveryList.length)return`<div class="alt or"><span>⚠️</span><span>Upload CSV first from the Upload tab</span></div>`;
+  const operators=[...new Set(D.deliveryList.map(d=>d.operator))];
+  return`
+  <div class="card bpcl-card">
+    <div class="ctitle">🗺 Route Assignment — ${D.deliveryList.length} Total Deliveries</div>
+    ${operators.map(op=>{
+      const items=D.deliveryList.filter(d=>d.operator===op);
+      return`
+      <div style="margin-bottom:1rem;border:1px solid var(--border);border-radius:9px;overflow:hidden">
+        <div style="background:rgba(0,32,91,0.5);padding:0.65rem 0.9rem;display:flex;justify-content:space-between;align-items:center">
+          <div><b style="color:var(--bpcl-gold)">${op}</b> <span style="font-size:0.72rem;color:var(--muted)">· ${items.length} deliveries</span></div>
+          <button class="bsm bl" onclick="showToast('Route confirmed for ${op} ✅','s')">Confirm Route</button>
+        </div>
+        <div style="padding:0.5rem 0.9rem;font-size:0.78rem;color:var(--muted)">
+          Areas: ${[...new Set(items.map(i=>i.area))].slice(0,4).join(', ')}${items.length>4?' ...':''}
+        </div>
+      </div>`;
+    }).join('')}
+    <button class="bsub" onclick="showToast('All routes confirmed & sent to delivery men ✅','s')">✅ Confirm All Routes</button>
+  </div>`;
+}
+function renderDlPrint(){
+  if(!D.deliveryList.length)return`<div class="alt or"><span>⚠️</span><span>Upload CSV first from the Upload tab</span></div>`;
+  const otpDone=D.deliveryList.filter(d=>d.otp&&d.otp.length===6).length;
+  return`
+  <div class="card">
+    <div class="ctitle">🖨 OTP Collection Sheet — For BPCL App Entry</div>
+    <div class="alt bl" style="margin-bottom:0.8rem"><span>📌</span><span>At day end, office prints this sheet. Delivery man enters all OTPs in BPCL app in one go without calling customers again.</span></div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
+      <button class="bsub bgold" id="otp-print-btn" style="width:auto;padding:0.5rem 1.1rem" onclick="window.print()">🖨 Print OTP Sheet (${otpDone}/${D.deliveryList.length})</button>
+      <button class="bsub bsec" style="width:auto;padding:0.5rem 1rem" onclick="showToast('PDF download — needs server to generate','s')">📥 Download PDF</button>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Sr</th><th>Cash Memo</th><th>Consumer No</th><th>Customer Name</th><th>Mobile</th><th>OTP (6-digit)</th><th>Status</th></tr></thead>
+      <tbody>
+        ${D.deliveryList.slice(0,20).map((d,i)=>`<tr>
+          <td class="tb">${d.sl}</td>
+          <td class="tbl">${d.cashMemo}</td>
+          <td>${d.consumerNo}</td>
+          <td class="tb">${d.name}</td>
+          <td><a class="call-btn" href="tel:${d.mobile}">📞</a></td>
+          <td style="text-align:center">${d.otp?`<span style="font-family:monospace;font-weight:700;color:var(--green);letter-spacing:0.1em">${d.otp}</span>`:
+            `<input style="width:90px;background:rgba(10,22,40,0.8);border:1px solid var(--border);border-radius:5px;padding:0.3rem 0.4rem;color:var(--white);text-align:center;font-family:monospace;font-size:0.85rem;font-weight:700;outline:none;letter-spacing:0.1em" type="number" maxlength="6" placeholder="______" oninput="saveOtp(${i},this.value)">`}
+          </td>
+          <td>${d.otp?'<span class="bdg gr">✅ Done</span>':'<span class="bdg or">⏳ Pending</span>'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+    ${D.deliveryList.length>20?`<div style="text-align:center;padding:0.6rem;font-size:0.78rem;color:var(--muted)">${D.deliveryList.length-20} more records... Print to see all</div>`:''}
+  </div>`;
+}
+function saveOtp(idx,val){
+  if(val.length===6){
+    D.deliveryList[idx].otp=val;
+    showToast('OTP saved for '+D.deliveryList[idx].name,'s');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: MY DELIVERIES (Delivery Man — Uber Style)
+═══════════════════════════════════════════ */
+function pgMyDeliveries(){
+  // Filter for this delivery man
+  const myName=S.user?.name||'';
+  const myList=D.deliveryList.filter(d=>d.operator.toLowerCase().includes(myName.split(' ')[1]?.toLowerCase()||'bhore'));
+  const allList=myList.length>0?myList:D.deliveryList.slice(0,8); // demo fallback
+  const done=allList.filter(d=>d.done).length;
+  return`
+  <div class="ph"><span class="phi">🚚</span><div>
+    <div class="pht">My Deliveries</div>
+    <div class="phs">${done}/${allList.length} completed · ${D.today}</div>
+  </div></div>
+
+  <div class="alt ${done===allList.length&&allList.length>0?'gr':'bl'}">
+    <span>${done===allList.length&&allList.length>0?'✅':'🚚'}</span>
+    <span>${allList.length>0?done+' of '+allList.length+' deliveries done today'+'  · Tap 📍 to save first-visit GPS location':'No delivery list uploaded yet. Ask office to upload CSV.'}</span>
+  </div>
+
+  <div style="display:flex;gap:0.5rem;margin-bottom:0.3rem">
+    <div style="flex:1;background:rgba(0,32,91,0.4);border-radius:8px;padding:0.6rem;text-align:center">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--green)">${done}</div>
+      <div style="font-size:0.68rem;color:var(--muted)">Done</div>
+    </div>
+    <div style="flex:1;background:rgba(0,32,91,0.4);border-radius:8px;padding:0.6rem;text-align:center">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--bpcl-gold)">${allList.length-done}</div>
+      <div style="font-size:0.68rem;color:var(--muted)">Remaining</div>
+    </div>
+    <div style="flex:1;background:rgba(0,32,91,0.4);border-radius:8px;padding:0.6rem;text-align:center">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--bpcl-gold)">${allList.length}</div>
+      <div style="font-size:0.68rem;color:var(--muted)">Total</div>
+    </div>
+  </div>
+
+  ${allList.length===0?`<div class="card"><div style="text-align:center;padding:1.5rem;color:var(--muted)">
+    <div style="font-size:2rem;margin-bottom:0.5rem">📋</div>
+    <div>No delivery list loaded yet.</div>
+    <div style="font-size:0.78rem;margin-top:0.3rem">Ask office to upload the BPCL CSV file.</div>
+  </div></div>`:''}
+
+  ${allList.map((d,i)=>{
+    const hasSavedLoc=D.customerLocations[d.consumerNo];
+    const statusClass=d.done?'done':d.rescheduled?'rescheduled':'pending';
+    return`
+    <div class="deliv-item ${statusClass}" id="dlv-${i}">
+      <div class="deliv-sr">#${d.sl}</div>
+      <div class="deliv-name">${d.name}</div>
+      <div class="deliv-meta">
+        <span>🏷 <b>${d.consumerNo}</b></span>
+        <span>📍 ${d.area}</span>
+        ${d.rescheduled?'<span class="bdg re">⚠ Rescheduled</span>':''}
+        ${d.done?'<span class="bdg gr">✅ Delivered</span>':''}
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+        ${d.mobile&&d.mobile!=='0'?`<a class="call-btn" href="tel:${d.mobile}">📞 ${d.mobile}</a>`:'<span style="font-size:0.72rem;color:var(--muted)">No mobile</span>'}
+        ${hasSavedLoc
+          ?`<span class="loc-saved">📍 Location saved <a href="https://maps.google.com/?q=${hasSavedLoc.lat},${hasSavedLoc.lng}" target="_blank" style="color:var(--green);margin-left:0.25rem">Open Map</a></span>`
+          :`<button class="loc-btn" onclick="saveGPS(${i},'${d.consumerNo}','${d.name}')">📍 Save GPS Location</button>`
+        }
+      </div>
+      <div class="otp-row">
+        <input class="otp-inp ${d.otp?'filled':''}" type="number" placeholder="Enter OTP" id="otp-${i}"
+          value="${d.otp||''}" maxlength="6" oninput="captureOtp(${i},this.value)" ${d.done?'disabled':''}>
+        ${!d.done?`<button class="bsm gr" onclick="markDelivered(${i})">✅ Delivered</button>`:'<span class="bdg gr">✅</span>'}
+      </div>
+      ${d.cashMemo?`<div style="font-size:0.68rem;color:var(--muted);margin-top:0.35rem">Cash Memo: <b style="color:var(--text)">${d.cashMemo}</b></div>`:''}
+    </div>`;
+  }).join('')}
+
+  ${allList.length>0?`<div class="card" style="margin-top:0.5rem">
+    <div class="ctitle">📝 OTPs collected: ${allList.filter(d=>d.otp).length}/${allList.length} — Submit at day end</div>
+    <button class="bsub" onclick="showToast('OTP summary sent to office ✅','s')">📤 Submit OTPs to Office</button>
+  </div>`:''}`;
+}
+
+function saveGPS(idx,consNo,name){
+  if(!navigator.geolocation){showToast('GPS not available on this device','e');return;}
+  showToast('Getting GPS location...','');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    D.customerLocations[consNo]={lat:pos.coords.latitude,lng:pos.coords.longitude,name:name,savedAt:new Date().toLocaleTimeString('en-IN')};
+    showToast('📍 Location saved for '+name+' ✅','s');
+    navigate('mydeliveries');
+  },err=>{showToast('GPS error: allow location access','e');});
+}
+function captureOtp(idx,val){
+  if(D.deliveryList[idx]){
+    D.deliveryList[idx].otp=val;
+    const inp=document.getElementById('otp-'+idx);
+    if(inp){inp.classList.toggle('filled',val.length===6);}
+    if(val.length===6)showToast('OTP captured ✅','s');
+  }
+}
+function markDelivered(idx){
+  if(D.deliveryList[idx]){
+    const otp=document.getElementById('otp-'+idx)?.value;
+    if(!otp||otp.length!==6){showToast('Please enter 6-digit OTP first','e');return;}
+    D.deliveryList[idx].done=true;
+    D.deliveryList[idx].otp=otp;
+    showToast('Delivery marked complete ✅','s');
+    navigate('mydeliveries');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: LIVE TRACKING
+═══════════════════════════════════════════ */
+function pgTrack(){
+  return`
+  <div class="ph"><span class="phi">📍</span><div><div class="pht">Live Tracking</div><div class="phs">Uber-style delivery map · Real-time</div></div></div>
+  <div class="alt gr"><span>🟢</span><span>GPS active · ${D.vehicles.filter(v=>v.status==='On Route').length} delivery men on route · Updating every 30 seconds</span></div>
+  <div class="mapbox">
+    <div class="mapgrid"></div>
+    <div class="mdot" style="top:30%;left:35%"></div>
+    <div class="mdot" style="top:55%;left:60%;animation-delay:0.8s;background:var(--bpcl-ltblue)"></div>
+    <div class="mdot" style="top:42%;left:20%;animation-delay:1.5s;background:var(--green)"></div>
+    <div style="font-size:0.8rem;color:var(--muted);z-index:1">🗺 Jaysingpur · Shirol · Hupari · Uchgaon</div>
+    <div style="font-size:0.72rem;color:rgba(240,165,0,0.8);z-index:1;text-decoration:underline;cursor:pointer" onclick="showToast('Full GPS map activates on server deployment','s')">Open Full Screen Map →</div>
+  </div>
+  <div class="card bpcl-card">
+    <div class="ctitle">🛵 Delivery Men — Live Positions</div>
+    ${D.vehicles.map(v=>`
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0;border-bottom:1px solid var(--border)">
+      <div class="dmav" style="width:35px;height:35px;font-size:0.82rem">${v.name.slice(0,2).toUpperCase()}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;color:var(--white);font-size:0.86rem">${v.name}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">📍 ${v.loc}</div>
+      </div>
+      <div style="text-align:right">
+        <span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status}</span>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:0.2rem">Sold: ${v.sold}</div>
+      </div>
+    </div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="ctitle">📍 Customer GPS Locations Saved</div>
+    ${Object.keys(D.customerLocations).length===0
+      ?`<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:0.8rem">No locations saved yet. Delivery men save customer GPS on first visit.</div>`
+      :Object.entries(D.customerLocations).slice(0,5).map(([cNo,loc])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.45rem 0;border-bottom:1px solid var(--border)">
+          <div><div style="font-size:0.84rem;color:var(--white)">${loc.name}</div>
+            <div style="font-size:0.68rem;color:var(--muted)">Consumer: ${cNo} · Saved ${loc.savedAt}</div>
+          </div>
+          <a href="https://maps.google.com/?q=${loc.lat},${loc.lng}" target="_blank" class="bsm bl">Open Map</a>
+        </div>`).join('')
+    }
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: GODOWN STOCK
+═══════════════════════════════════════════ */
+function pgStock(){
+  return`
+  <div class="ph"><span class="phi">📦</span><div><div class="pht">Godown Stock</div><div class="phs">Physical stock · Transfers · BPCL Receipt</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc gr"><div class="slbl">Filled (5350)</div><div class="sval">${D.godown.filled}</div><div class="ssub">14.2 kg cylinders</div></div>
+    <div class="sc or"><div class="slbl">Empty (5370)</div><div class="sval">${D.godown.empty}</div><div class="ssub">to return to plant</div></div>
+    <div class="sc bl"><div class="slbl">Received Today</div><div class="sval">${D.godown.received}</div><div class="ssub">from BPCL plant</div></div>
+  </div>
+  <div class="tabs" id="stock-tabs">
+    <div class="tab active" onclick="st('stock-tabs',0,sStkOp)">Morning Opening</div>
+    <div class="tab" onclick="st('stock-tabs',1,sStkTr)">Transfer</div>
+    <div class="tab" onclick="st('stock-tabs',2,sStkRcv)">BPCL Receipt</div>
+  </div>
+  <div id="stock-body">${sStkOp()}</div>`;
+}
+function sStkOp(){return`<div class="card bpcl-card"><div class="ctitle">📋 Morning Physical Stock Count</div>
+  <div class="alt or" style="margin-bottom:0.75rem"><span>⚠️</span><span>First delivery man enters this. Must match previous day BPCL closing stock (Code 5350 Filled: 120, Empty: 510)</span></div>
+  <div class="fr">
+    <div class="fl"><label>Filled 14.2 kg (Code 5350)</label><input class="fi" type="number" id="gf" value="${D.godown.filled}"></div>
+    <div class="fl"><label>Empty 14.2 kg (Code 5370)</label><input class="fi" type="number" id="ge" value="${D.godown.empty}"></div>
+  </div>
+  <div class="fl"><label>Entered By</label>
+    <select class="fs"><option>Vishwas Bhore</option><option>Swapnil Patil</option><option>Sandeep</option><option>Sagar</option><option>Ajinath (Driver)</option></select></div>
+  <div class="fl"><label>Remarks / Discrepancy</label><input class="fi" placeholder="Any shortage, damage, or mismatch notes..."></div>
+  <button class="bsub" onclick="saveStk()">✅ Save Opening Stock</button>
+</div>`;}
+function sStkTr(){return`<div class="card"><div class="ctitle">🔄 Stock Transfer</div>
+  <div class="fl"><label>From Location</label>
+    <select class="fs"><option>Godown</option><option>Vishwas Bhore Vehicle</option><option>Swapnil Patil Vehicle</option><option>Shirol BDA</option><option>Hupari BDA</option><option>Uchgaon BDA</option><option>Office</option></select></div>
+  <div class="fl"><label>To Location</label>
+    <select class="fs"><option>Vishwas Bhore Vehicle</option><option>Swapnil Patil Vehicle</option><option>Godown</option><option>Shirol BDA</option><option>Hupari BDA</option><option>Uchgaon BDA</option><option>Office</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Filled Qty (5350)</label><input class="fi" type="number" placeholder="0"></div>
+    <div class="fl"><label>Empty Qty (5370)</label><input class="fi" type="number" placeholder="0"></div>
+  </div>
+  <button class="bsub" onclick="showToast('Transfer recorded ✅ Stock updated','s')">Record Transfer</button>
+</div>`;}
+function sStkRcv(){return`<div class="card bpcl-card"><div class="ctitle">🚛 BPCL Plant Receipt (Typical: 342 cylinders)</div>
+  <div class="fl"><label>DO / Invoice Number</label><input class="fi" placeholder="BPCL delivery order number"></div>
+  <div class="fr">
+    <div class="fl"><label>14.2 kg Filled Received</label><input class="fi" type="number" placeholder="342"></div>
+    <div class="fl"><label>Empty Returned to Plant</label><input class="fi" type="number" placeholder="300"></div>
+  </div>
+  <div class="fl"><label>Truck Driver</label>
+    <select class="fs"><option>Ajinath</option><option>Other Driver</option></select></div>
+  <button class="bsub" onclick="showToast('BPCL receipt saved ✅ Godown stock updated','s')">Save Receipt</button>
+</div>`;}
+function saveStk(){
+  D.godown.filled=parseInt(document.getElementById('gf').value)||D.godown.filled;
+  D.godown.empty=parseInt(document.getElementById('ge').value)||D.godown.empty;
+  showToast('Opening stock saved ✅','s');
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: DELIVERY TRIPS
+═══════════════════════════════════════════ */
+function pgTrips(){
+  return`
+  <div class="ph"><span class="phi">🛵</span><div><div class="pht">Delivery Trips</div><div class="phs">All delivery men trips today</div></div></div>
+  <div class="tabs" id="trip-tabs">
+    <div class="tab active" onclick="st('trip-tabs',0,sTripAct)">Active Trips</div>
+    <div class="tab" onclick="st('trip-tabs',1,sTripNew)">Start New Trip</div>
+    <div class="tab" onclick="st('trip-tabs',2,sTripHist)">Sales Log</div>
+  </div>
+  <div id="trip-body">${sTripAct()}</div>`;
+}
+function sTripAct(){return D.vehicles.map(v=>`
+  <div class="dmc" style="margin-bottom:0.75rem">
+    <div class="dmav">${v.name.slice(0,2).toUpperCase()}</div>
+    <div class="dmi">
+      <div class="dmn">${v.name} <span style="font-size:0.7rem;font-weight:400;color:var(--muted)">· ${v.vehicle}</span></div>
+      <div style="font-size:0.7rem;color:var(--muted)">📍 ${v.loc}</div>
+      <div class="dmnums">
+        <div class="dmnum">Loaded <b>${v.filled}</b></div>
+        <div class="dmnum">Sold <b>${v.sold}</b></div>
+        <div class="dmnum">Left <b>${v.filled-v.sold}</b></div>
+        <div class="dmnum">Cash <b>${inr(v.cash)}</b></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.35rem;align-items:flex-end">
+      <span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status==='On Route'?'🟢':'🟡'} ${v.status}</span>
+      <button class="bsm bl" onclick="showToast('Sale entry for ${v.name}','s')">+ Sale</button>
+    </div>
+  </div>`).join('');}
+function sTripNew(){return`<div class="card"><div class="ctitle">🆕 Start New Trip</div>
+  <div class="fl"><label>Delivery Man</label><select class="fs"><option>Vishwas Bhore</option><option>Swapnil Patil</option><option>Rahul</option><option>Anil</option><option>Dinesh</option></select></div>
+  <div class="fl"><label>Vehicle</label><select class="fs"><option>Tata Ace</option><option>Mega XL</option><option>Bajaj RE</option><option>Pickup</option><option>Mini Truck</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Filled Loaded</label><input class="fi" type="number" placeholder="65"></div>
+    <div class="fl"><label>Empty Collected</label><input class="fi" type="number" placeholder="0"></div>
+  </div>
+  <div class="fl"><label>Loading From</label><select class="fs"><option>Godown</option><option>Office</option><option>BDA</option></select></div>
+  <button class="bsub" onclick="showToast('Trip started ✅ GPS tracking enabled 🛵','s')">🚀 Start Trip</button>
+</div>`;}
+function sTripHist(){
+  const tot=D.sales.reduce((s,r)=>s+r.qty,0);
+  return`<div class="card"><div class="ctitle">📜 Today Sales Log</div>
+  <div class="tw"><table>
+    <thead><tr><th>Time</th><th>By</th><th>Qty</th><th>Mode</th><th>Amount</th></tr></thead>
+    <tbody>
+      ${D.sales.map(s=>`<tr>
+        <td style="color:var(--muted)">${s.time}</td><td class="tb">${s.by}</td>
+        <td><b>${s.qty}</b></td>
+        <td><span class="bdg ${s.mode==='Cash'?'gr':s.mode==='GPay'?'bl':'or'}">${s.mode}</span></td>
+        <td class="tg tb">${inr(s.amt)}</td>
+      </tr>`).join('')}
+      <tr style="background:rgba(0,32,91,0.4)">
+        <td colspan="2"><b style="color:var(--white)">TOTAL</b></td>
+        <td><b class="to">${tot}</b></td><td></td>
+        <td><b class="tg">${inr(D.sales.reduce((s,r)=>s+r.amt,0))}</b></td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>`;}
+
+/* ═══════════════════════════════════════════
+   PAGE: OFFICE CASH
+═══════════════════════════════════════════ */
+function pgOffice(){
+  return`
+  <div class="ph"><span class="phi">💵</span><div><div class="pht">Office Cash</div><div class="phs">Daily cash management</div></div></div>
+  <div class="sgrid">
+    <div class="sc gr"><div class="slbl">Opening Cash</div><div class="sval">${inr(D.office.openCash)}</div></div>
+    <div class="sc or"><div class="slbl">Expenses</div><div class="sval">${inr(D.office.expenses.reduce((a,e)=>a+e.amt,0))}</div></div>
+    <div class="sc bl"><div class="slbl">Advances</div><div class="sval">${inr(D.office.advances.reduce((a,e)=>a+e.amt,0))}</div></div>
+    <div class="sc ny"><div class="slbl">Denom Total</div><div class="sval">${inr(calcDenomTotal())}</div></div>
+  </div>
+  <div class="tabs" id="off-tabs">
+    <div class="tab active" onclick="st('off-tabs',0,sOffOpen)">Open Day</div>
+    <div class="tab" onclick="st('off-tabs',1,sOffExp)">Expenses</div>
+    <div class="tab" onclick="st('off-tabs',2,sOffDenom)">Cash Count</div>
+    <div class="tab" onclick="st('off-tabs',3,sOffClose)">Close Day</div>
+  </div>
+  <div id="off-body">${sOffOpen()}</div>`;
+}
+function calcDenomTotal(){const d=D.denom;return(d.n2000*2000)+(d.n500*500)+(d.n200*200)+(d.n100*100)+(d.n50*50)+(d.n20*20)+(d.n10*10)+d.coins;}
+function sOffOpen(){return`<div class="card"><div class="ctitle">🌅 Open Office Day</div>
+  <div class="fr">
+    <div class="fl"><label>Opening Cash (₹)</label><input class="fi" type="number" value="${D.office.openCash}"></div>
+    <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+  </div>
+  <div class="fl"><label>Opened By</label><select class="fs"><option>Office Manager</option><option>Vishal Patil</option><option>Mrinmayi Patil</option></select></div>
+  <button class="bsub" onclick="showToast('Office day opened ✅','s')">Open Day</button>
+</div>`;}
+function sOffExp(){return`
+  <div class="card"><div class="ctitle">➕ Add Expense</div>
+    <div class="fl"><label>Head</label><select class="fs"><option>Fuel/Petrol</option><option>Stationary</option><option>Vehicle Repair</option><option>Electricity</option><option>Tea/Food</option><option>Other</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="0"></div>
+      <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <div class="fl"><label>Remark</label><input class="fi" placeholder="Description"></div>
+    <button class="bsub" onclick="showToast('Expense added ✅','s')">Add Expense</button>
+  </div>
+  <div class="card"><div class="ctitle">💰 Staff Advance</div>
+    <div class="fl"><label>Staff</label><select class="fs"><option>Vishwas Bhore</option><option>Swapnil Patil</option><option>Sandeep</option><option>Sagar</option><option>Ajinath</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="0"></div>
+      <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <button class="bsub bsec" onclick="showToast('Advance recorded ✅','s')">Pay Advance</button>
+  </div>`;}
+function sOffDenom(){
+  const d=D.denom;
+  const notes=[{k:'n2000',v:2000,l:'₹2000'},{k:'n500',v:500,l:'₹500'},{k:'n200',v:200,l:'₹200'},
+    {k:'n100',v:100,l:'₹100'},{k:'n50',v:50,l:'₹50'},{k:'n20',v:20,l:'₹20'},{k:'n10',v:10,l:'₹10'},{k:'coins',v:1,l:'Coins'}];
+  return`<div class="card"><div class="ctitle">💵 Cash Denomination Count</div>
+    <div class="dgrid">${notes.map(n=>`
+      <div class="di"><div class="dnote">${n.l}</div>
+        <input class="dinp" type="number" id="dn-${n.k}" value="${d[n.k]||0}" oninput="updDenom()" min="0">
+      </div>`).join('')}
+    </div>
+    <div class="dtot"><span class="dtlbl">Total Cash in Hand</span><span class="dtval" id="dtval">${inr(calcDenomTotal())}</span></div>
+    <button class="bsub" style="margin-top:0.7rem" onclick="showToast('Cash count saved ✅','s')">Save Count</button>
+  </div>`;}
+function updDenom(){
+  const keys={n2000:2000,n500:500,n200:200,n100:100,n50:50,n20:20,n10:10,coins:1};
+  let total=0;Object.entries(keys).forEach(([k,v])=>{const el=document.getElementById('dn-'+k);if(el)total+=parseInt(el.value||0)*v;});
+  const el=document.getElementById('dtval');if(el)el.textContent=inr(total);
+}
+function sOffClose(){return`<div class="card"><div class="ctitle">🌙 Close Day</div>
+  <div class="alt or" style="margin-bottom:0.75rem"><span>⚠️</span><span>All delivery men must submit cash before closing. Action locks the day and generates report.</span></div>
+  <div class="fl"><label>Closing Cash (₹)</label><input class="fi" type="number" placeholder="Enter closing cash"></div>
+  <div class="fl"><label>Remarks</label><input class="fi" placeholder="Notes for today..."></div>
+  <button class="bsub" onclick="showToast('Day closed ✅ Report ready','s')">🔒 Close Day</button>
+</div>`;}
+
+/* ═══════════════════════════════════════════
+   PAGE: TODAY SALES
+═══════════════════════════════════════════ */
+function pgSales(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const cash=D.sales.filter(s=>s.mode==='Cash').reduce((a,r)=>a+r.amt,0);
+  const gpay=D.sales.filter(s=>s.mode==='GPay').reduce((a,r)=>a+r.amt,0);
+  const onl=D.sales.filter(s=>s.mode==='Online').reduce((a,r)=>a+r.amt,0);
+  return`
+  <div class="ph"><span class="phi">🧾</span><div><div class="pht">Today's Sales</div><div class="phs">${D.today}</div></div></div>
+  <div class="sgrid">
+    <div class="sc or"><div class="slbl">Total Sold</div><div class="sval">${sold}</div><div class="ssub">@ ₹${D.rate}/cyl</div></div>
+    <div class="sc gr"><div class="slbl">Cash</div><div class="sval">${inr(cash)}</div></div>
+    <div class="sc bl"><div class="slbl">GPay</div><div class="sval">${inr(gpay)}</div></div>
+    <div class="sc ny"><div class="slbl">Online</div><div class="sval">${inr(onl)}</div></div>
+  </div>
+  <div class="card"><div class="ctitle">➕ Record Office Sale</div>
+    <div class="fr">
+      <div class="fl"><label>Cylinders Sold</label><input class="fi" type="number" id="sq" placeholder="Qty"></div>
+      <div class="fl"><label>Mode</label><select class="fs" id="sm"><option>Cash</option><option>GPay</option><option>Online</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" id="sa" placeholder="Qty × 956"></div>
+      <div class="fl"><label>Customer</label><input class="fi" id="sc2" placeholder="Optional"></div>
+    </div>
+    <button class="bsub" onclick="recSale()">Record Sale</button>
+  </div>
+  <div class="card"><div class="ctitle">📜 All Sales Today</div>
+    <div class="tw"><table>
+      <thead><tr><th>Time</th><th>By</th><th>Qty</th><th>Mode</th><th>Amount</th></tr></thead>
+      <tbody>
+        ${D.sales.map(s=>`<tr>
+          <td style="color:var(--muted)">${s.time}</td><td class="tb">${s.by}</td>
+          <td><b>${s.qty}</b></td>
+          <td><span class="bdg ${s.mode==='Cash'?'gr':s.mode==='GPay'?'bl':'or'}">${s.mode}</span></td>
+          <td class="tg tb">${inr(s.amt)}</td>
+        </tr>`).join('')}
+        <tr style="background:rgba(0,32,91,0.4)">
+          <td colspan="2"><b style="color:var(--white)">TOTAL</b></td>
+          <td><b class="to">${sold}</b></td><td></td>
+          <td><b class="tg">${inr(D.sales.reduce((s,r)=>s+r.amt,0))}</b></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>`;
+}
+function recSale(){
+  const qty=parseInt(document.getElementById('sq')?.value||0);
+  if(!qty){showToast('Please enter quantity','e');return;}
+  const mode=document.getElementById('sm')?.value||'Cash';
+  const amt=parseInt(document.getElementById('sa')?.value||qty*D.rate);
+  D.sales.push({time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),by:'Office',qty,mode,amt});
+  showToast(`${qty} cylinders sold — ${inr(amt)} recorded ✅`,'s');
+  navigate('sales');
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: DAY END REPORT
+═══════════════════════════════════════════ */
+function pgDayend(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const amt=D.sales.reduce((s,r)=>s+r.amt,0);
+  const cash=D.sales.filter(s=>s.mode==='Cash').reduce((a,r)=>a+r.amt,0);
+  const digi=amt-cash;
+  return`
+  <div class="ph"><span class="phi">📋</span><div><div class="pht">Day End Report</div><div class="phs">BPCL SAP Format · ${D.today} · Dist: 187618</div></div></div>
+  <div class="alt gr"><span>✅</span><span>All data collected. Generate BPCL-style report below. Compare with BPCL eConnect PDF.</span></div>
+  <div class="card bpcl-card">
+    <div class="ctitle">📦 Product Wise Stock — Day End</div>
+    <div class="tw">
+    <table class="bpcl-table">
+      <thead><tr><th>Product Code</th><th>Description</th><th>Closing Full</th><th>Closing Empty</th><th>BDA Filled</th><th>Veh Filled</th></tr></thead>
+      <tbody>
+        <tr class="highlight"><td>5350</td><td>14.2 kg Domestic</td><td class="match">${D.godown.filled}</td><td>${D.godown.empty}</td><td>${D.bda.reduce((a,b)=>a+b.filled,0)}</td><td>${D.vehicles.reduce((a,v)=>a+(v.filled-v.sold),0)}</td></tr>
+        <tr><td>5370</td><td>14.2 kg Empty</td><td>—</td><td class="match">${D.godown.empty+sold}</td><td>—</td><td>—</td></tr>
+        <tr><td>5400</td><td>19 kg Commercial</td><td>65</td><td>8</td><td>—</td><td>—</td></tr>
+        <tr><td>5240</td><td>5 kg Domestic</td><td>66</td><td>0</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card bpcl-card">
+    <div class="ctitle">📊 Transaction Summary — Day End</div>
+    <div class="tw">
+    <table class="bpcl-table">
+      <thead><tr><th>Product</th><th>Refills (Our ERP)</th><th>BPCL eConnect</th><th>Match?</th><th>Opening Bookings</th><th>Closing Bookings</th></tr></thead>
+      <tbody>
+        <tr class="highlight"><td>5350 (14.2 kg)</td><td class="tb">${sold}</td><td>88</td><td class="${sold===88?'match':'mismatch'}">${sold===88?'✅ Match':'⚠ Check'}</td><td>375</td><td>363</td></tr>
+        <tr><td>5370 (14.2 kg Empty)</td><td class="tb">15</td><td>15</td><td class="match">✅ Match</td><td>27</td><td>31</td></tr>
+        <tr><td>5400 (19 kg)</td><td class="tb">1</td><td>1</td><td class="match">✅ Match</td><td>1</td><td>0</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">💰 Financial Summary</div>
+    <div class="tw"><table>
+      <thead><tr><th>Head</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>14.2 kg Sold</td><td class="tb">${sold} units</td></tr>
+        <tr><td>Gross Sales @ ₹${D.rate}</td><td class="tg tb">${inr(amt)}</td></tr>
+        <tr><td>Cash</td><td class="tg">${inr(cash)}</td></tr>
+        <tr><td>GPay + Online</td><td>${inr(digi)}</td></tr>
+        <tr><td>Office Expenses</td><td class="tr">−${inr(D.office.expenses.reduce((a,e)=>a+e.amt,0))}</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">🏘 BDA Summary</div>
+    <div class="tw"><table>
+      <thead><tr><th>BDA</th><th>Sold</th><th>Cash Collected</th><th>Stock Remaining</th></tr></thead>
+      <tbody>
+        ${D.bda.map(b=>`<tr>
+          <td class="tb">${b.name}</td><td>${b.sold}</td>
+          <td class="tg">${inr(b.cash)}</td><td>${b.filled}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+  </div>
+  <button class="bsub" onclick="window.print()">🖨 Print / Save Day End Report</button>
+  <button class="bsub bgold" style="margin-top:0.5rem" onclick="navigate('bpclmatch')">✅ Verify vs BPCL PDF →</button>`;
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: BPCL VERIFICATION
+═══════════════════════════════════════════ */
+function pgBpclMatch(){
+  const sold=D.sales.reduce((s,r)=>s+r.qty,0);
+  const bpcl=D.bpcl_dayend.prod5350;
+  return`
+  <div class="ph"><span class="phi">✅</span><div>
+    <div class="pht">BPCL Verification</div>
+    <div class="phs">Cross-check our ERP vs BPCL eConnect PDF · ${D.today}</div>
+  </div></div>
+  <div class="alt bl"><span>📌</span><span>This page compares <b>your ERP data</b> with the <b>BPCL eConnect day-end PDF</b>. Any mismatch shown in red must be investigated.</span></div>
+  <div class="card bpcl-card">
+    <div class="ctitle">📊 Transaction Summary Comparison — 14.2 kg (Code 5350)</div>
+    <div class="tw">
+    <table class="bpcl-table">
+      <thead><tr><th>Field</th><th>Our ERP</th><th>BPCL eConnect</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Refills (Deliveries)</td><td class="tb">${sold}</td><td>${bpcl.refills}</td><td class="${sold===bpcl.refills?'match':'mismatch'}">${sold===bpcl.refills?'✅ Match':'❌ Mismatch'}</td></tr>
+        <tr><td>Opening Bookings</td><td class="tb">375</td><td>${bpcl.openBook}</td><td class="match">✅ Match</td></tr>
+        <tr><td>Current Bookings</td><td class="tb">93</td><td>${bpcl.currBook}</td><td class="match">✅ Match</td></tr>
+        <tr><td>Cancelled Bookings</td><td class="tb">17</td><td>${bpcl.cancelBook}</td><td class="match">✅ Match</td></tr>
+        <tr class="highlight"><td>Closing Bookings</td><td class="tb">363</td><td>${bpcl.closeBook}</td><td class="match">✅ Match</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card bpcl-card">
+    <div class="ctitle">📦 Stock Comparison — Closing Stock (Code 5350)</div>
+    <div class="tw">
+    <table class="bpcl-table">
+      <thead><tr><th>Field</th><th>Our ERP</th><th>BPCL PDF</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Closing Full (Godown)</td><td class="tb">${D.godown.filled}</td><td>${bpcl.closeFull}</td>
+          <td class="${D.godown.filled===bpcl.closeFull?'match':'mismatch'}">${D.godown.filled===bpcl.closeFull?'✅ Match':'❌ Mismatch — Diff: '+(D.godown.filled-bpcl.closeFull)}</td></tr>
+        <tr><td>Closing Empty</td><td class="tb">${D.godown.empty+sold}</td><td>${bpcl.closeEmpty}</td>
+          <td class="${(D.godown.empty+sold)===bpcl.closeEmpty?'match':'mismatch'}">${(D.godown.empty+sold)===bpcl.closeEmpty?'✅ Match':'⚠ Check'}</td></tr>
+        <tr class="highlight"><td>BDA Filled Stock</td><td class="tb">${D.bda.reduce((a,b)=>a+b.filled,0)}</td><td>${bpcl.bdaFilled}</td>
+          <td class="${D.bda.reduce((a,b)=>a+b.filled,0)===bpcl.bdaFilled?'match':'mismatch'}">${D.bda.reduce((a,b)=>a+b.filled,0)===bpcl.bdaFilled?'✅ Match':'⚠ BDA Stock Mismatch'}</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">📝 How to Use This Page</div>
+    <div style="font-size:0.8rem;color:var(--muted);line-height:1.8">
+      1. At end of day, download your BPCL eConnect PDF (as you showed us)<br>
+      2. Compare numbers in this table — <span style="color:var(--green)">✅ green = perfect match</span>, <span style="color:var(--red)">❌ red = difference to investigate</span><br>
+      3. Common differences: BDA stock overrides, delivery man OTP not entered, cancelled after entry<br>
+      4. After reconciliation, print day end report and submit to BPCL SAP
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">📅 Reference — BPCL PDF Data (22-Jan-2026 uploaded)</div>
+    <div style="font-size:0.78rem;color:var(--muted)">Dist Code: <b style="color:var(--white)">187618</b> · Day End: <b style="color:var(--white)">22/01/2026 06:43 PM</b></div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem">5350 Refills: 88 · Closing Full: 120 · BDA: 26 · 5370 Refills: 15</div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   PAGE: PAYROLL
+═══════════════════════════════════════════ */
+function pgPayroll(){return`
+  <div class="ph"><span class="phi">💰</span><div><div class="pht">Payroll</div><div class="phs">Staff wages & salary</div></div></div>
+  <div class="tabs" id="pay-tabs">
+    <div class="tab active" onclick="st('pay-tabs',0,sPayDel)">Delivery Men</div>
+    <div class="tab" onclick="st('pay-tabs',1,sPayLoad)">Loading Staff</div>
+    <div class="tab" onclick="st('pay-tabs',2,sPayOff)">Office Staff</div>
+  </div>
+  <div id="pay-body">${sPayDel()}</div>`;}
+function sPayDel(){return`
+  <div class="card"><div class="ctitle">📊 Monthly Summary</div>
+    <div class="tw"><table>
+      <thead><tr><th>Name</th><th>Days</th><th>Gross</th><th>Advance</th><th>Net Pay</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="tb">Vishwas Bhore</td><td>24</td><td>₹16,800</td><td class="tr">₹2,000</td><td class="tg tb">₹14,800</td><td><span class="bdg or">Pending</span></td></tr>
+        <tr><td class="tb">Swapnil Patil</td><td>26</td><td>₹18,200</td><td>₹0</td><td class="tg tb">₹18,200</td><td><span class="bdg gr">Paid</span></td></tr>
+        <tr><td class="tb">Rahul</td><td>22</td><td>₹15,400</td><td class="tr">₹1,500</td><td class="tg tb">₹13,900</td><td><span class="bdg or">Pending</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card"><div class="ctitle">💰 Pay Salary</div>
+    <div class="fl"><label>Delivery Man</label><select class="fs"><option>Vishwas Bhore</option><option>Swapnil Patil</option><option>Rahul</option><option>Anil</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Month</label><select class="fs"><option>February 2026</option><option>January 2026</option></select></div>
+      <div class="fl"><label>Days Worked</label><input class="fi" type="number" placeholder="26"></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Daily Wage (₹)</label><input class="fi" type="number" value="700"></div>
+      <div class="fl"><label>Deduct Advance (₹)</label><input class="fi" type="number" placeholder="0"></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Pay Mode</label><select class="fs"><option>Cash</option><option>Bank Transfer</option><option>GPay</option></select></div>
+      <div class="fl"><label>Pay Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Salary paid & recorded ✅','s')">Pay Salary</button>
+  </div>`;}
+function sPayLoad(){return`<div class="card"><div class="ctitle">🏗 Sandeep / Sagar — Loading Staff</div>
+  <div class="fl"><label>Staff</label><select class="fs"><option>Sandeep</option><option>Sagar</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Days</label><input class="fi" type="number"></div>
+    <div class="fl"><label>Daily Wage (₹)</label><input class="fi" type="number" value="600"></div>
+  </div>
+  <button class="bsub" onclick="showToast('Loading staff paid ✅','s')">Pay</button>
+</div>`;}
+function sPayOff(){return`<div class="card"><div class="ctitle">🏢 Office Staff</div>
+  <div class="fl"><label>Name</label><input class="fi" placeholder="Staff name"></div>
+  <div class="fr">
+    <div class="fl"><label>Days</label><input class="fi" type="number"></div>
+    <div class="fl"><label>Wage/day</label><input class="fi" type="number"></div>
+  </div>
+  <button class="bsub" onclick="showToast('Staff paid ✅','s')">Pay</button>
+</div>`;}
+
+/* ═══════════════════════════════════════════
+   PAGE: STAFF & BDA
+═══════════════════════════════════════════ */
+function pgStaff(){return`
+  <div class="ph"><span class="phi">👥</span><div><div class="pht">Staff & BDA</div><div class="phs">Manage all people</div></div></div>
+  <div class="tabs" id="staff-tabs">
+    <div class="tab active" onclick="st('staff-tabs',0,sStaffDM)">Delivery Men</div>
+    <div class="tab" onclick="st('staff-tabs',1,sStaffBDA)">BDA Owners</div>
+    <div class="tab" onclick="st('staff-tabs',2,sStaffAdd)">Add New</div>
+  </div>
+  <div id="staff-body">${sStaffDM()}</div>`;}
+function sStaffDM(){return D.vehicles.map(v=>`
+  <div class="dmc" style="margin-bottom:0.7rem">
+    <div class="dmav">${v.name.slice(0,2).toUpperCase()}</div>
+    <div class="dmi"><div class="dmn">${v.name}</div>
+      <div class="dmd">${v.vehicle} · ₹700/day</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.35rem">
+      <span class="bdg gr">Active</span>
+      <button class="bsm re" onclick="showToast('${v.name} deactivated','e')">Remove</button>
+    </div>
+  </div>`).join('');}
+function sStaffBDA(){return D.bda.map(b=>`
+  <div class="dmc" style="margin-bottom:0.7rem">
+    <div class="dmav" style="background:rgba(0,114,206,0.3)">${b.name.slice(0,2).toUpperCase()}</div>
+    <div class="dmi"><div class="dmn">${b.name}</div>
+      <div class="dmd">BDA Point · Max 7 cylinders BPCL</div>
+      <div class="dmnums"><div class="dmnum">Filled: <b>${b.filled}</b></div><div class="dmnum">Empty: <b>${b.empty}</b></div></div>
+    </div>
+    <span class="bdg gr">Active</span>
+  </div>`).join('');}
+function sStaffAdd(){return`<div class="card"><div class="ctitle">➕ Add New</div>
+  <div class="fl"><label>Type</label><select class="fs"><option>Delivery Man</option><option>BDA Owner</option><option>Loading Staff</option><option>Office Staff</option></select></div>
+  <div class="fr">
+    <div class="fl"><label>Full Name</label><input class="fi" placeholder="Name"></div>
+    <div class="fl"><label>Mobile</label><input class="fi" type="tel" placeholder="9876543210"></div>
+  </div>
+  <div class="fl"><label>Village / Address</label><input class="fi" placeholder="Area"></div>
+  <div class="fl"><label>Daily Wage (₹)</label><input class="fi" type="number" placeholder="700"></div>
+  <button class="bsub" onclick="showToast('Added ✅','s')">Add to System</button>
+</div>`;}
+
+/* ═══════════════════════════════════════════
+   DELIVERY MAN PAGES
+═══════════════════════════════════════════ */
+function pgMyTrip(){return`
+  <div class="ph"><span class="phi">🛵</span><div><div class="pht">My Trip</div><div class="phs">${S.user?.name} · ${D.today}</div></div></div>
+  <div class="alt gr"><span>🟢</span><span>Trip <b>Active</b> · GPS ON · Office can see your location</span></div>
+  <div class="sgrid">
+    <div class="sc or"><div class="slbl">Loaded</div><div class="sval">65</div></div>
+    <div class="sc gr"><div class="slbl">Sold</div><div class="sval">12</div></div>
+    <div class="sc bl"><div class="slbl">Remaining</div><div class="sval">53</div></div>
+    <div class="sc ny"><div class="slbl">Collected</div><div class="sval">₹11.5k</div></div>
+  </div>
+  <div class="card"><div class="ctitle">💰 Record Sale</div>
+    <div class="fr">
+      <div class="fl"><label>Qty</label><input class="fi" type="number" placeholder="1" value="1"></div>
+      <div class="fl"><label>Mode</label><select class="fs"><option>Cash</option><option>GPay</option><option>Online</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="956"></div>
+      <div class="fl"><label>From</label><select class="fs"><option>My Vehicle</option><option>Shirol BDA</option><option>Hupari BDA</option></select></div>
+    </div>
+    <div class="fl"><label>Customer OTP (BPCL)</label><input class="fi" type="number" placeholder="6-digit OTP" maxlength="6"></div>
+    <button class="bsub" onclick="showToast('Sale recorded ✅','s')">Record Sale</button>
+  </div>
+  <div class="card"><div class="ctitle">💵 Cash Handover</div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="0"></div>
+      <div class="fl"><label>Handover To</label><select class="fs"><option>Office</option><option>Vishal Patil</option><option>Mrinmayi Patil</option><option>Pundalik Patil</option></select></div>
+    </div>
+    <button class="bsub bsec" onclick="showToast('Cash handover recorded ✅','s')">Handover Cash</button>
+  </div>
+  <button class="bsub" style="background:linear-gradient(135deg,#7F1D1D,var(--red));box-shadow:0 4px 14px rgba(239,68,68,0.22)" onclick="showToast('Trip ended. Final stock recorded.','s')">🏁 End Trip</button>`;}
+function pgMyStock(){return`
+  <div class="ph"><span class="phi">📦</span><div><div class="pht">My Stock</div><div class="phs">Vehicle physical count</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc gr"><div class="slbl">Filled</div><div class="sval">53</div></div>
+    <div class="sc or"><div class="slbl">Empty</div><div class="sval">12</div></div>
+    <div class="sc bl"><div class="slbl">Trips</div><div class="sval">1</div></div>
+  </div>
+  <div class="card"><div class="ctitle">📋 Update Physical Count</div>
+    <div class="fr">
+      <div class="fl"><label>Filled</label><input class="fi" type="number" value="53"></div>
+      <div class="fl"><label>Empty</label><input class="fi" type="number" value="12"></div>
+    </div>
+    <div class="fl"><label>Remarks</label><input class="fi" placeholder="Shortage / excess..."></div>
+    <button class="bsub" onclick="showToast('Stock count updated ✅','s')">Save Count</button>
+  </div>`;}
+function pgMySales(){return`
+  <div class="ph"><span class="phi">💰</span><div><div class="pht">My Sales</div><div class="phs">${S.user?.name}</div></div></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc or"><div class="slbl">Sold</div><div class="sval">12</div></div>
+    <div class="sc gr"><div class="slbl">Collected</div><div class="sval">₹11.5k</div></div>
+    <div class="sc ny"><div class="slbl">Handed Over</div><div class="sval">₹0</div></div>
+  </div>
+  <div class="card"><div class="ctitle">📜 My Sales Log</div>
+    <div class="tw"><table>
+      <thead><tr><th>Time</th><th>Qty</th><th>Mode</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--muted)">9:45 AM</td><td>3</td><td><span class="bdg gr">Cash</span></td><td class="tg">₹2,868</td></tr>
+        <tr><td style="color:var(--muted)">11:20 AM</td><td>5</td><td><span class="bdg bl">GPay</span></td><td class="tg">₹4,780</td></tr>
+        <tr><td style="color:var(--muted)">2:00 PM</td><td>4</td><td><span class="bdg gr">Cash</span></td><td class="tg">₹3,824</td></tr>
+      </tbody>
+    </table></div>
+  </div>`;}
+
+/* ─── BDA ─── */
+function pgBdaStock(){return`
+  <div class="ph"><span class="phi">📦</span><div><div class="pht">My BDA Stock</div><div class="phs">${S.user?.name}</div></div></div>
+  <div class="alt or"><span>⚠️</span><span>BPCL regulation: max 7 filled cylinders at BDA. Update stock honestly.</span></div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc gr"><div class="slbl">Filled</div><div class="sval">7</div><div class="ssub">max 7 (BPCL)</div></div>
+    <div class="sc or"><div class="slbl">Empty</div><div class="sval">3</div></div>
+    <div class="sc bl"><div class="slbl">Sold Today</div><div class="sval">5</div></div>
+  </div>
+  <div class="card"><div class="ctitle">Update Stock</div>
+    <div class="fr">
+      <div class="fl"><label>Filled</label><input class="fi" type="number" value="7"></div>
+      <div class="fl"><label>Empty</label><input class="fi" type="number" value="3"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Stock updated ✅','s')">Save</button>
+  </div>`;}
+function pgBdaSales(){return`
+  <div class="ph"><span class="phi">💰</span><div><div class="pht">BDA Sales</div></div></div>
+  <div class="card"><div class="ctitle">💰 Record Sale</div>
+    <div class="fr">
+      <div class="fl"><label>Qty</label><input class="fi" type="number" placeholder="1"></div>
+      <div class="fl"><label>Mode</label><select class="fs"><option>Cash</option><option>GPay</option><option>Online</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="956"></div>
+      <div class="fl"><label>Customer OTP</label><input class="fi" type="number" placeholder="6-digit"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Sale recorded ✅','s')">Record Sale</button>
+  </div>`;}
+function pgBdaCash(){return`
+  <div class="ph"><span class="phi">💵</span><div><div class="pht">Cash Handover</div></div></div>
+  <div class="card"><div class="ctitle">💵 Handover to Delivery Man</div>
+    <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="Total cash"></div>
+    <div class="fl"><label>Delivery Man</label><select class="fs"><option>Vishwas Bhore</option><option>Swapnil Patil</option><option>Rahul</option></select></div>
+    <div class="fr">
+      <div class="fl"><label>Mode</label><select class="fs"><option>Cash</option><option>GPay</option></select></div>
+      <div class="fl"><label>Date</label><input class="fi" type="date" value="${today()}"></div>
+    </div>
+    <button class="bsub" onclick="showToast('Handover recorded ✅','s')">Confirm</button>
+  </div>`;}
+
+/* ═══════════════════════════════════════════
+   CSV LOADER
+═══════════════════════════════════════════ */
+function loadCSV(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const text=e.target.result;
+    const lines=text.split('\n');
+    let headerIdx=-1;
+    for(let i=0;i<lines.length;i++){
+      if(lines[i].includes('SLNo')){headerIdx=i;break;}
+    }
+    if(headerIdx===-1){showToast('Invalid CSV format — use BPCL CashMemoGeneratedList','e');return;}
+    const parsed=[];
+    for(let i=headerIdx+1;i<lines.length;i++){
+      const line=lines[i].trim();
+      if(!line)continue;
+      const cols=parseCSVLine(line);
+      if(cols.length<16)continue;
+      parsed.push({
+        sl:cols[0]?.trim(),
+        area:cols[1]?.trim(),
+        operatorId:cols[2]?.trim(),
+        operator:cols[3]?.trim(),
+        bookDate:cols[4]?.trim(),
+        status:cols[5]?.trim(),
+        cashMemoDate:cols[6]?.trim(),
+        cashMemo:cols[7]?.trim(),
+        ptdDay:cols[8]?.trim(),
+        consumerNo:cols[9]?.trim(),
+        name:cols[10]?.trim(),
+        addr1:cols[11]?.trim(),
+        addr2:cols[12]?.trim(),
+        addr3:cols[13]?.trim(),
+        mobile:cols[14]?.trim(),
+        rescheduled:cols[15]?.trim()==='Rescheduled',
+        otp:'',done:false,
+      });
+    }
+    D.deliveryList=parsed;
+    showToast(`✅ ${parsed.length} deliveries loaded from CSV`,'s');
+    navigate('deliveries');
+  };
+  reader.readAsText(file,'utf-8');
+}
+function parseCSVLine(line){
+  const result=[];let cur='';let inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){inQ=!inQ;}
+    else if(c===','&&!inQ){result.push(cur);cur='';}
+    else{cur+=c;}
+  }
+  result.push(cur);
+  return result;
+}
+</script>
+</body>
+</html>

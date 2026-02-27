@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1B3A6B">
+<title>Shourya Bharatgas ERP v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--nv:#1B3A6B;--nv2:#243F74;--red:#C8102E;--red2:#A8081F;--gold:#E8960A;--gold2:#F5B832;--bl:#0057A8;--bl2:#1976D2;--gr:#1A7A50;--gr2:#22C55E;--or:#D97706;--bg:#EDF1F8;--card:#FFF;--bdr:#D1D9E8;--bdr2:#BCC8DC;--tx:#1E2A3D;--tx2:#334155;--tx3:#64748B;--tx4:#94A3B8;--r:12px;--sh:0 2px 8px rgba(27,58,107,.10)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);font-family:'Noto Sans',sans-serif;color:var(--tx);font-size:14px;line-height:1.5}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+#scr-login{background:linear-gradient(145deg,#0d2244,#1B3A6B 45%,#243F74);align-items:center;justify-content:center;padding:1.2rem;overflow-y:auto}
+#scr-login::before{content:'';position:absolute;inset:0;opacity:.04;background-image:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:18px 18px;pointer-events:none}
+.lbox{width:100%;max-width:390px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.45);position:relative;z-index:1}
+.lhdr{background:linear-gradient(135deg,var(--nv),var(--nv2));padding:1.7rem;position:relative;text-align:center}
+.lhdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--red),var(--gold),var(--red))}
+.ltexts h1{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--gold2);letter-spacing:.06em}
+.ltexts p{font-size:.67rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem}
+.ldist{font-size:.65rem;color:rgba(255,255,255,.3);margin-top:.2rem}
+.lbody{padding:1.4rem 1.7rem 1.7rem}
+.lf label{display:block;font-size:.7rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem;margin-top:.7rem;font-weight:600}
+.lf input{width:100%;background:#F1F5F9;border:1px solid var(--bdr);border-radius:9px;padding:.65rem .85rem;color:var(--tx);font-family:'Noto Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s}
+.lf input:focus{border-color:var(--bl);background:#fff;box-shadow:0 0 0 3px rgba(0,87,168,.1)}
+.lerr{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:.5rem .75rem;font-size:.8rem;color:#991B1B;margin-bottom:.5rem;display:none}
+.lbtn{width:100%;padding:.75rem;border:none;border-radius:9px;margin-top:.85rem;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .2s}
+.lbtn:active{transform:scale(.98)}
+.dhint{margin-top:1rem;background:#F8FAFC;border:1px solid var(--bdr);border-radius:10px;padding:.7rem}
+.dhint p{font-size:.65rem;color:var(--tx4);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.06em}
+.du{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;cursor:pointer;padding:.25rem 0;color:var(--tx2);border-bottom:1px solid var(--bdr)}
+.du:last-child{border-bottom:none}.du span:last-child{color:var(--bl);font-family:monospace;font-size:.72rem}.du:hover{color:var(--nv)}
+.durl{font-size:.65rem;color:var(--tx4);margin-left:.2rem}
+.topbar{height:52px;background:var(--nv);border-bottom:3px solid var(--gold);display:flex;align-items:center;padding:0 1rem;flex-shrink:0;z-index:100}
+.mbtn{background:none;border:none;color:rgba(255,255,255,.85);font-size:1.3rem;cursor:pointer;padding:.2rem}
+.tbrand{display:flex;align-items:center;gap:.4rem;margin-left:.4rem}
+.tbrand-text{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold2);letter-spacing:.04em}
+.tbrand-text span{color:rgba(255,255,255,.55);font-weight:400;font-size:.85rem}
+.tright{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.tav{width:30px;height:30px;border-radius:6px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0}
+.tname{font-size:.78rem;color:rgba(255,255,255,.9);font-weight:600}.tdate{font-size:.65rem;color:rgba(255,255,255,.42)}
+.sov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;opacity:0;transition:opacity .2s}.sov.open{display:block;opacity:1}
+.sb{position:fixed;top:0;left:-272px;bottom:0;width:268px;background:var(--card);border-right:1px solid var(--bdr);z-index:201;transition:left .27s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}.sb.open{left:0}
+.sbh{background:var(--nv);padding:1rem 1.1rem;border-bottom:2px solid var(--gold);flex-shrink:0}
+.sb-logo{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.sbbrand{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--gold2);line-height:1}
+.sbrole{font-size:.63rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em}
+.sbuser{display:flex;align-items:center;gap:.5rem;margin-top:.55rem;background:rgba(255,255,255,.07);border-radius:8px;padding:.4rem .5rem}
+.sbnm{font-size:.82rem;color:#fff;font-weight:600}.sbph{font-size:.65rem;color:rgba(255,255,255,.35)}
+.sbnav{flex:1;overflow-y:auto;padding:.3rem 0}
+.nsec{font-size:.6rem;color:var(--tx4);text-transform:uppercase;letter-spacing:.1em;padding:.6rem 1rem .15rem}
+.ni{display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;cursor:pointer;font-size:.84rem;color:var(--tx2);transition:all .15s;position:relative}
+.ni:hover{background:#F0F5FF;color:var(--nv)}.ni.active{background:#EBF1FF;color:var(--nv);font-weight:600}
+.ni.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);border-radius:0 2px 2px 0}
+.nico{font-size:.95rem;width:20px;text-align:center;flex-shrink:0}
+.nbadge{margin-left:auto;background:var(--red);color:#fff;font-size:.57rem;font-weight:700;padding:.05rem .3rem;border-radius:99px}
+.nbadge.live{animation:lp 2s infinite}@keyframes lp{0%,100%{opacity:1}50%{opacity:.5}}
+.sbft{padding:.7rem 1rem;border-top:1px solid var(--bdr);flex-shrink:0}
+.lout{display:flex;align-items:center;gap:.5rem;cursor:pointer;color:var(--tx3);font-size:.82rem;padding:.3rem 0}
+.lout:hover{color:var(--red)}
+.pa{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:.75rem}
+.ph{display:flex;align-items:flex-start;gap:.5rem}
+.phi{font-size:1.3rem;margin-top:.1rem;flex-shrink:0}
+.pht{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--nv);letter-spacing:.03em;line-height:1}
+.phs{font-size:.71rem;color:var(--tx3);margin-top:.07rem}.mr{font-style:italic;color:var(--tx4)}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:.9rem;box-shadow:var(--sh)}
+.card.anv{border-top:3px solid var(--nv)}.card.ared{border-top:3px solid var(--red)}.card.agold{border-top:3px solid var(--gold)}.card.agr{border-top:3px solid var(--gr)}
+.ctitle{font-size:.68rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.65rem;display:flex;align-items:center;gap:.3rem;font-weight:600}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem}
+.sc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:.8rem .85rem;position:relative;overflow:hidden;box-shadow:var(--sh)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sc.or::before{background:linear-gradient(to right,var(--gold),var(--gold2))}.sc.gr::before{background:linear-gradient(to right,var(--gr),#16A34A)}.sc.bl::before{background:linear-gradient(to right,var(--bl),var(--bl2))}.sc.re::before{background:linear-gradient(to right,var(--red),#EF4444)}.sc.nv::before{background:linear-gradient(to right,var(--nv),var(--nv2))}
+.slbl{font-size:.66rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.sval{font-family:'Rajdhani',sans-serif;font-size:1.7rem;font-weight:700;color:var(--nv);line-height:1.1;margin-top:.04rem}
+.ssub{font-size:.65rem;color:var(--tx3);margin-top:.07rem}.sico{position:absolute;right:.65rem;top:.65rem;font-size:1.2rem;opacity:.1}
+.fl{margin-bottom:.72rem}.fl label{display:block;font-size:.68rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem;font-weight:600}
+.fi,.fs{width:100%;background:#F8FAFC;border:1px solid var(--bdr);border-radius:8px;padding:.6rem .75rem;color:var(--tx);font-family:'Noto Sans',sans-serif;font-size:.87rem;outline:none;transition:all .2s;-webkit-appearance:none}
+.fi:focus,.fs:focus{border-color:var(--bl);background:#fff;box-shadow:0 0 0 3px rgba(0,87,168,.08)}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.btn{width:100%;padding:.7rem;border:none;border-radius:9px;font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .2s;margin-top:.3rem}
+.btn:active{transform:scale(.98)}
+.btn.nv{background:linear-gradient(135deg,var(--nv),var(--bl));color:#fff}
+.btn.red{background:linear-gradient(135deg,var(--red),var(--red2));color:#fff}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--nv)}
+.btn.gr{background:linear-gradient(135deg,var(--gr),#16A34A);color:#fff}
+.btn.sec{background:#fff;border:1px solid var(--bdr);color:var(--nv)}
+.bsm{padding:.28rem .65rem;font-size:.73rem;border-radius:6px;border:none;cursor:pointer;font-family:'Noto Sans',sans-serif;font-weight:600;transition:all .2s}
+.bsm.bl{background:#EFF6FF;color:var(--bl);border:1px solid #BFDBFE}.bsm.gr{background:#F0FDF4;color:var(--gr);border:1px solid #BBF7D0}.bsm.re{background:#FEF2F2;color:var(--red);border:1px solid #FECACA}.bsm.or{background:#FFFBEB;color:var(--or);border:1px solid #FDE68A}.bsm.nv{background:#EEF2FF;color:var(--nv);border:1px solid #C7D2FE}
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--bdr)}
+table{width:100%;border-collapse:collapse;font-size:.79rem}thead tr{background:var(--nv)}
+th{padding:.52rem .78rem;text-align:left;font-size:.63rem;color:rgba(255,255,255,.82);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;font-weight:600}
+td{padding:.52rem .78rem;border-bottom:1px solid var(--bdr);vertical-align:middle;color:var(--tx2)}
+tr:last-child td{border-bottom:none}tr:nth-child(even) td{background:#F8FAFC}tr:hover td{background:#F0F5FF}
+.tb{font-weight:600;color:var(--tx)}.tg{color:var(--gr);font-weight:600}.to{color:var(--or);font-weight:600}.tr2{color:var(--red);font-weight:600}.tbl{color:var(--bl)}
+.bdg{display:inline-flex;align-items:center;gap:.15rem;padding:.1rem .42rem;border-radius:4px;font-size:.63rem;font-weight:700}
+.bdg.gr{background:#DCFCE7;color:#15803D}.bdg.or{background:#FEF3C7;color:#92400E}.bdg.re{background:#FEE2E2;color:#991B1B}.bdg.bl{background:#DBEAFE;color:#1E40AF}.bdg.nv{background:#E0E7FF;color:#3730A3}.bdg.mu{background:#F1F5F9;color:#64748B}
+.tabs{display:flex;gap:.15rem;background:#E2E8F4;border-radius:10px;padding:.18rem}
+.tab{flex:1;text-align:center;padding:.43rem .2rem;border-radius:7px;font-size:.72rem;cursor:pointer;color:var(--tx3);transition:all .2s;font-weight:500;white-space:nowrap}
+.tab.active{background:var(--nv);color:#fff;font-weight:700}
+.alt{border-radius:9px;padding:.62rem .85rem;font-size:.78rem;display:flex;align-items:flex-start;gap:.42rem;line-height:1.5}
+.alt.or{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E}.alt.gr{background:#F0FDF4;border:1px solid #BBF7D0;color:#15803D}.alt.re{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B}.alt.bl{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF}.alt.nv{background:#EEF2FF;border:1px solid #C7D2FE;color:#3730A3}
+.dlv{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:.8rem;margin-bottom:.5rem;position:relative;box-shadow:var(--sh);border-left:4px solid transparent}
+.dlv.sched{border-left-color:#3B82F6}.dlv.intrip{border-left-color:#F59E0B}.dlv.done-otp{border-left-color:#22C55E;opacity:.75}.dlv.done-emer{border-left-color:#F97316;opacity:.75}.dlv.nothome{border-left-color:#EF4444}
+.dlv-sr{position:absolute;top:.55rem;right:.75rem;font-family:'Rajdhani',sans-serif;font-size:.88rem;font-weight:700;color:var(--tx4)}
+.dlv-nm{font-weight:700;color:var(--tx);font-size:.87rem;margin-bottom:.1rem}.dlv-cn{font-size:.68rem;color:var(--tx3);font-family:monospace}
+.dlv-meta{display:flex;gap:.45rem;flex-wrap:wrap;margin:.28rem 0}.dlv-area{font-size:.68rem;color:var(--tx4);background:#F1F5F9;border-radius:4px;padding:.06rem .35rem}
+.cbtn{display:inline-flex;align-items:center;gap:.2rem;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;padding:.18rem .48rem;font-size:.72rem;color:var(--gr);cursor:pointer;text-decoration:none;font-weight:600}
+.lbtn2{display:inline-flex;align-items:center;gap:.2rem;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:.18rem .48rem;font-size:.72rem;color:var(--bl);cursor:pointer;font-weight:600}
+.otp-row{display:flex;gap:.4rem;margin-top:.4rem;align-items:center}
+.otp-inp{flex:1;background:#F8FAFC;border:1px solid var(--bdr);border-radius:6px;padding:.38rem .6rem;color:var(--tx);font-family:monospace;font-size:.93rem;font-weight:700;letter-spacing:.15em;outline:none;text-align:center;transition:all .2s}
+.otp-inp:focus{border-color:var(--gold)}.otp-inp.filled{border-color:var(--gr);background:#F0FDF4}
+.mapbox{height:185px;background:linear-gradient(135deg,#1B3A6B,#243F74);border:1px solid var(--bdr);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;position:relative;overflow:hidden}
+.mapgrid{position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(0deg,transparent,transparent 25px,rgba(255,255,255,1) 25px,rgba(255,255,255,1) 26px),repeating-linear-gradient(90deg,transparent,transparent 25px,rgba(255,255,255,1) 25px,rgba(255,255,255,1) 26px)}
+.mdot{position:absolute;width:10px;height:10px;border-radius:50%}.mdot::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid;animation:mp 2s ease-in-out infinite}
+@keyframes mp{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(2.2);opacity:0}}
+.mdot.gold{background:var(--gold)}.mdot.gold::after{border-color:var(--gold)}.mdot.green{background:var(--gr2)}.mdot.green::after{border-color:var(--gr2)}.mdot.red{background:var(--red)}.mdot.red::after{border-color:var(--red)}.mdot.blue{background:#60A5FA}.mdot.blue::after{border-color:#60A5FA}
+.gsec{background:#F8FAFC;border:1px solid var(--bdr);border-radius:9px;padding:.7rem;margin-bottom:.52rem}
+.gsec-title{font-size:.72rem;font-weight:700;color:var(--nv);margin-bottom:.42rem;display:flex;justify-content:space-between;align-items:center}
+.gcalc{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.32rem}
+.gc-inp{width:60px;background:#fff;border:1px solid var(--bdr);border-radius:6px;padding:.4rem .35rem;text-align:center;font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--nv);outline:none}
+.gc-op{font-family:'Rajdhani',sans-serif;font-size:1.1rem;color:var(--tx3);font-weight:600}
+.gc-res{background:var(--nv);color:var(--gold2);padding:.3rem .65rem;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem}
+.di{background:#F8FAFC;border:1px solid var(--bdr);border-radius:7px;padding:.4rem;text-align:center}
+.di-note{font-size:.6rem;color:var(--tx3);margin-bottom:.15rem;font-weight:600}
+.di-inp{width:100%;background:#fff;border:none;border-bottom:2px solid var(--bdr);color:var(--nv);text-align:center;font-size:.9rem;font-family:'Rajdhani',sans-serif;font-weight:700;padding:.07rem;outline:none}
+.di-sub{font-size:.6rem;color:var(--tx4);margin-top:.1rem}
+.dtot{background:var(--nv);border-radius:9px;padding:.7rem 1rem;display:flex;justify-content:space-between;align-items:center;margin-top:.45rem}
+.dt-lbl{font-size:.72rem;color:rgba(255,255,255,.55)}.dt-val{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--gold2)}
+.dmatch{font-size:.7rem;font-weight:600;margin-left:.45rem}.dmatch.ok{color:#86EFAC}.dmatch.err{color:#FCA5A5}
+.dmc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:.5rem}
+.dmc-hd{display:flex;align-items:center;gap:.7rem;padding:.8rem;cursor:pointer}.dmc-hd:hover{background:#F8FAFC}
+.dmav{width:36px;height:36px;border-radius:8px;background:var(--nv);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold2);flex-shrink:0}
+.dmi{flex:1;min-width:0}.dmn{font-weight:700;color:var(--tx);font-size:.87rem}.dmd{font-size:.68rem;color:var(--tx3);margin-top:.04rem}
+.dm-stats{display:flex;gap:.7rem;margin-top:.2rem;flex-wrap:wrap}.dms{font-size:.68rem;color:var(--tx3)}.dms b{color:var(--nv);font-weight:700}
+.dmc-exp{display:none;border-top:1px solid var(--bdr);padding:.8rem;background:#FAFBFD}.dmc-exp.open{display:block}
+.trip-tab{padding:.26rem .65rem;border-radius:6px;font-size:.71rem;cursor:pointer;background:#F1F5F9;color:var(--tx3);border:1px solid var(--bdr);font-weight:500}
+.trip-tab.active{background:var(--nv);color:#fff;border-color:var(--nv)}
+.upload-area{border:2px dashed var(--bdr2);border-radius:var(--r);padding:1.2rem;text-align:center;cursor:pointer;background:#F8FAFC}
+.upload-area input[type=file]{display:none}
+.sleg{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.45rem}
+.sl-i{display:flex;align-items:center;gap:.2rem;font-size:.68rem;color:var(--tx2);background:#fff;border:1px solid var(--bdr);border-radius:6px;padding:.15rem .45rem}
+.sl-d{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.notice{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:.7rem;margin-bottom:.35rem;box-shadow:var(--sh)}
+.notice-from{font-size:.67rem;color:var(--tx3);margin-bottom:.15rem;display:flex;justify-content:space-between}.notice-tx{font-size:.83rem;color:var(--tx);line-height:1.45}
+.bnav{height:56px;background:var(--nv);border-top:2px solid var(--gold);display:flex;flex-shrink:0}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08rem;cursor:pointer;color:rgba(255,255,255,.36);transition:color .2s;font-size:.52rem;text-transform:uppercase;letter-spacing:.04em}
+.bni.active{color:var(--gold2)}.bnico{font-size:1.1rem}
+.toast{position:fixed;bottom:64px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--nv);border-radius:9px;padding:.52rem .9rem;font-size:.79rem;color:#fff;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast.s{background:#15803D}.toast.e{background:#991B1B}
+@media print{.topbar,.sb,.bnav,.sov,.toast,.mbtn,.btn,.bsm,.tabs{display:none!important}body,.screen{background:#fff!important;overflow:visible!important}.pa{overflow:visible!important}.card{box-shadow:none!important}thead tr{background:var(--nv)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media(min-width:768px){.sg{grid-template-columns:repeat(4,1fr)}.dgrid{grid-template-columns:repeat(7,1fr)}.pa{padding:1.1rem 1.6rem;max-width:1080px;margin:0 auto;width:100%}.bnav{display:none}.sb{left:0!important;position:relative;height:100%;flex-shrink:0}.sov{display:none!important}#scr-app{flex-direction:row}.amain{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}.mbtn{display:none}.toast{bottom:18px}}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:99px}
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="scr-login" class="screen active">
+<div class="lbox">
+  <div class="lhdr">
+    <div class="ltexts"><h1>SHOURYA BHARATGAS SERVICES</h1><p>BPCL LPG Distributor &bull; Jaysingpur</p></div>
+    <div class="ldist">Dist Code: 187618 &bull; Gat No. 96, Kolhapur Road, Jaysingpur 416101</div>
+  </div>
+  <div class="lbody">
+    <div id="lerr" class="lerr">Wrong username or password</div>
+    <div class="lf"><label>Username</label><input type="text" id="lu" placeholder="username" autocomplete="username"></div>
+    <div class="lf"><label>Password</label><input type="password" id="lp" placeholder="password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" onclick="doLogin()">SIGN IN</button>
+    <div class="dhint">
+      <p>Tap to fill &amp; login</p>
+      <div class="du" onclick="fill('vishal')"><span>&#128081; Vishal Patil<span class="durl"> Owner</span></span><span>vishal</span></div>
+      <div class="du" onclick="fill('mrinmayi')"><span>&#128081; Dr. Mrinmayi Patil<span class="durl"> Owner</span></span><span>mrinmayi</span></div>
+      <div class="du" onclick="fill('manager')"><span>&#127962; Rajesh Awale<span class="durl"> Manager</span></span><span>manager</span></div>
+      <div class="du" onclick="fill('bhore')"><span>&#128656; Vishwas Bhore<span class="durl"> Delivery</span></span><span>bhore</span></div>
+      <div class="du" onclick="fill('mahesh')"><span>&#128656; Mahesh Patil<span class="durl"> Delivery</span></span><span>mahesh</span></div>
+      <div class="du" onclick="fill('haroon')"><span>&#128656; Haroon Fakir<span class="durl"> Delivery</span></span><span>haroon</span></div>
+      <div class="du" onclick="fill('magdum')"><span>&#128656; Vishal Magdum<span class="durl"> Delivery</span></span><span>magdum</span></div>
+      <div class="du" onclick="fill('shirol')"><span>&#127968; Vikrant Kamble<span class="durl"> Shirol BDA</span></span><span>shirol</span></div>
+      <div class="du" onclick="fill('mrsawale')"><span>&#127968; Mrs. Awale<span class="durl"> Chipri Beghar BDA</span></span><span>mrsawale</span></div>
+    </div>
+  </div>
+</div></div>
+<!-- APP -->
+<div id="scr-app" class="screen">
+  <div class="sov" id="sov" onclick="closeSB()"></div>
+  <div class="sb" id="sb">
+    <div class="sbh">
+      <div class="sb-logo"><div><div class="sbbrand">SHOURYA BHARATGAS</div><div class="sbrole" id="sbrole">-</div></div></div>
+      <div class="sbuser"><div class="tav" id="sbav">?</div><div><div class="sbnm" id="sbnm">-</div><div class="sbph" id="sbph">-</div></div></div>
+    </div>
+    <nav class="sbnav" id="sbnav"></nav>
+    <div class="sbft"><div class="lout" onclick="doLogout()">Sign Out</div></div>
+  </div>
+  <div class="amain">
+    <div class="topbar">
+      <button class="mbtn" onclick="openSB()">&#9776;</button>
+      <div class="tbrand"><span class="tbrand-text">SHOURYA <span>BHARATGAS</span></span></div>
+      <div class="tright">
+        <div style="text-align:right"><div class="tname" id="tbnm">-</div><div class="tdate" id="tbdt">-</div></div>
+        <div class="tav" id="tbav">?</div>
+      </div>
+    </div>
+    <div class="pa" id="pa"></div>
+    <div class="bnav" id="bnav"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* SHOURYA BHARATGAS ERP v3 */
+
+const USERS={
+  vishal:{name:'Vishal Patil',role:'owner',av:'VP',mobile:'7887456789'},
+  mrinmayi:{name:'Dr. Mrinmayi Patil',role:'owner',av:'MP',mobile:'8080802880'},
+  manager:{name:'Rajesh Awale',role:'manager',av:'RA',mobile:'8007183197'},
+  bhore:{name:'Vishwas Bhore',role:'delivery',av:'VB',mobile:'7643982982',vehicle:'Tata 407',cap:55},
+  mahesh:{name:'Mahesh Patil',role:'delivery',av:'MP2',mobile:'8830669611',vehicle:'Mahindra Supro',cap:35},
+  haroon:{name:'Haroon Fakir',role:'delivery',av:'HF',mobile:'9970660901',vehicle:'Bajaj RE',cap:20},
+  magdum:{name:'Vishal Magdum',role:'delivery',av:'VM',mobile:'9096853954',vehicle:'Piaggio Ape',cap:20},
+  sandeep:{name:'Sandeep',role:'godown',av:'SD',mobile:'8788076864'},
+  sager:{name:'Sager',role:'godown',av:'SG',mobile:'8605444617'},
+  ajinath:{name:'Ajinath',role:'godown',av:'AJ',mobile:'8669164977'},
+  kondigre:{name:'Sarika Waghmode',role:'bda',av:'SW',mobile:'9561242972',area:'Kondigre'},
+  nim1:{name:'Kumar Thomake',role:'bda',av:'KT',mobile:'9673824646',area:'Nimshirgav'},
+  nim2:{name:'Lakhane',role:'bda',av:'LK',mobile:'7588262265',area:'Nimshirgav'},
+  danoli:{name:'Manoj',role:'bda',av:'MN',mobile:'9970731436',area:'Danoli'},
+  kothali:{name:'Yadav',role:'bda',av:'YD',mobile:'9405744020',area:'Kothali'},
+  kavatesar:{name:'Sudhakar Patil',role:'bda',av:'SDP',mobile:'9822180498',area:'Kavatesar'},
+  shirol:{name:'Vikrant Kamble',role:'bda',av:'VK',mobile:'7028502299',area:'Shirol'},
+  mrsawale:{name:'Mrs. Awale',role:'bda',av:'AW',mobile:'8007183197',area:'Chipri Beghar'},
+};
+
+const D={
+  date:new Date().toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}),
+  cylPrice:856,
+  godown:{filled:187,empty:43,defective_filled:4,defective_empty:2,openFilled:230,openEmpty:510},
+  office:{openCash:5000,stock14f:5,stock14e:8,stock5f:4,stock5e:5,bluebook:{stock:100,sold:12},surakshapiipe:{stock:50,sold:8}},
+  vehicles:[
+    {uid:'bhore',name:'Vishwas Bhore',model:'Tata 407',filled:65,sold:12,empty:12,status:'On Route',cash:9264,gpay:856,qr:856,paytm:856,loc:'Near Shirol',urban:8,rural:4,pairDays:0},
+    {uid:'mahesh',name:'Mahesh Patil',model:'Mahindra Supro',filled:35,sold:0,empty:0,status:'At Godown',cash:0,gpay:0,qr:0,paytm:0,loc:'Godown',urban:0,rural:0,pairDays:0},
+    {uid:'haroon',name:'Haroon Fakir',model:'Bajaj RE',filled:20,sold:5,empty:5,status:'On Route',cash:3424,gpay:856,qr:0,paytm:0,loc:'Uchgaon',urban:3,rural:2,pairDays:0},
+    {uid:'magdum',name:'Vishal Magdum',model:'Piaggio Ape',filled:40,sold:8,empty:8,status:'On Route',cash:5992,gpay:856,qr:856,paytm:0,loc:'Kothali',urban:5,rural:3,pairDays:0},
+  ],
+  bda:[
+    {uid:'kondigre',name:'Sarika Waghmode',area:'Kondigre',filled:7,empty:3,sold:5,cash:4280},
+    {uid:'nim1',name:'Kumar Thomake',area:'Nimshirgav',filled:6,empty:2,sold:4,cash:3424},
+    {uid:'nim2',name:'Lakhane',area:'Nimshirgav',filled:5,empty:1,sold:3,cash:2568},
+    {uid:'danoli',name:'Manoj',area:'Danoli',filled:7,empty:4,sold:6,cash:5136},
+    {uid:'kothali',name:'Yadav',area:'Kothali',filled:4,empty:2,sold:3,cash:2568},
+    {uid:'kavatesar',name:'Sudhakar Patil',area:'Kavatesar',filled:6,empty:3,sold:4,cash:3424},
+    {uid:'shirol',name:'Vikrant Kamble',area:'Shirol',filled:7,empty:3,sold:5,cash:4280},
+    {uid:'mrsawale',name:'Mrs. Awale',area:'Chipri Beghar',filled:5,empty:2,sold:3,cash:2568},
+  ],
+  sales:[
+    {time:'9:12',by:'Office',qty:5,mode:'Cash',amt:4280,urban:5,rural:0},
+    {time:'10:30',by:'Vishwas Bhore',qty:12,mode:'GPay',amt:10272,urban:8,rural:4},
+  ],
+  deliveryList:[],custLoc:{},
+  notices:[
+    {from:'Vishal Patil',role:'Owner',time:'8:30',tx:'OTP mandatory - BPCL inspection'},
+    {from:'Rajesh Awale',role:'Manager',time:'9:15',tx:'Bhore - collect 10 empty on return'},
+  ],
+  advances:{bhore:{balance:20000,monthlyRepay:5000},mahesh:{balance:0,monthlyRepay:0},haroon:{balance:5000,monthlyRepay:2000},magdum:{balance:8000,monthlyRepay:3000}},
+  monthlyWages:{
+    bhore:{urbanCyl:980,ruralCyl:320,pairDays:4,monthlyRepay:5000,cashDiff:2800},
+    mahesh:{urbanCyl:820,ruralCyl:180,pairDays:0,monthlyRepay:0,cashDiff:0},
+    haroon:{urbanCyl:650,ruralCyl:200,pairDays:2,monthlyRepay:2000,cashDiff:0},
+    magdum:{urbanCyl:700,ruralCyl:280,pairDays:3,monthlyRepay:3000,cashDiff:1500},
+  },
+  gst:{inputCredit:0},
+  bpclRef:{date:'22-Jan-2026',
+    p5350:{refills:88,openBook:375,currBook:93,cancelBook:17,closeBook:363,closeFull:120,closeEmpty:510,bdaFilled:26},
+    p5370:{refills:15,openBook:27,currBook:19,cancelBook:0,closeBook:31,closeFull:14,closeEmpty:186},
+    p5400:{closeFull:65,closeEmpty:8}},
+};
+
+const NAV={
+  owner:[{s:'Overview'},{id:'dash',i:'📊',l:'Dashboard'},{id:'track',i:'📍',l:'Track',b:'LIVE'},{id:'notices',i:'💬',l:'Notices'},{s:'Daily Work'},{id:'delivery',i:'🚚',l:'Delivery'},{id:'godown',i:'📦',l:'Godown'},{id:'trips',i:'🛵',l:'Trips'},{id:'office',i:'🏪',l:'Office'},{s:'Reports'},{id:'dayend',i:'📋',l:'Day End'},{id:'bpclchk',i:'✅',l:'BPCL'},{s:'Accounts'},{id:'gst',i:'📑',l:'GST'},{id:'payroll',i:'💰',l:'Payroll'},{s:'Management'},{id:'staff',i:'👥',l:'Staff'},{id:'settings',i:'⚙️',l:'Settings'}],
+  manager:[{s:'Today'},{id:'dash',i:'📊',l:'Dashboard'},{id:'track',i:'📍',l:'Track',b:'LIVE'},{id:'notices',i:'💬',l:'Notices'},{s:'Ops'},{id:'delivery',i:'🚚',l:'Delivery'},{id:'godown',i:'📦',l:'Stock'},{id:'trips',i:'🛵',l:'Trips'},{id:'office',i:'🏪',l:'Office'},{s:'Reports'},{id:'dayend',i:'📋',l:'Day End'},{id:'bpclchk',i:'✅',l:'BPCL'},{s:'Admin'},{id:'payroll',i:'💰',l:'Payroll'},{id:'staff',i:'👥',l:'Staff'}],
+  delivery:[{s:'My Work'},{id:'mydel',i:'🚚',l:'आजची डिलिव्हरी'},{id:'mygodown',i:'📦',l:'गोडाऊन स्टॉक'},{id:'mystock',i:'🔄',l:'स्टॉक हस्तांतरण'},{id:'mycash',i:'💵',l:'रक्कम विवरण'},{id:'notices',i:'💬',l:'Notices'}],
+  godown:[{s:'Godown'},{id:'mygodown',i:'📦',l:'Stock'},{id:'notices',i:'💬',l:'Notices'}],
+  bda:[{s:'BDA'},{id:'bdastk',i:'📦',l:'Stock'},{id:'bdasal',i:'💰',l:'Sales'},{id:'bdacash',i:'💵',l:'Cash'},{id:'notices',i:'💬',l:'Notices'}],
+};
+
+const BNAV={
+  owner:[{id:'dash',i:'📊',l:'Home'},{id:'delivery',i:'🚚',l:'Delivery'},{id:'track',i:'📍',l:'Track'},{id:'dayend',i:'📋',l:'Report'}],
+  manager:[{id:'dash',i:'📊',l:'Home'},{id:'delivery',i:'🚚',l:'Delivery'},{id:'office',i:'🏪',l:'Office'},{id:'dayend',i:'📋',l:'Report'}],
+  delivery:[{id:'mydel',i:'🚚',l:'Delivery'},{id:'mygodown',i:'📦',l:'Godown'},{id:'mystock',i:'🔄',l:'Stock'},{id:'mycash',i:'💵',l:'Cash'}],
+  godown:[{id:'mygodown',i:'📦',l:'Stock'},{id:'notices',i:'💬',l:'Notices'}],
+  bda:[{id:'bdastk',i:'📦',l:'Stock'},{id:'bdasal',i:'💰',l:'Sales'},{id:'bdacash',i:'💵',l:'Cash'}],
+};
+
+let S={user:null,role:null,page:null};
+
+function fill(u){document.getElementById('lu').value=u;document.getElementById('lp').value='1234';}
+function doLogin(){
+  const u=document.getElementById('lu').value.trim().toLowerCase();
+  if(!USERS[u]||document.getElementById('lp').value!=='1234'){document.getElementById('lerr').style.display='block';return;}
+  document.getElementById('lerr').style.display='none';
+  S.user=USERS[u];S.role=S.user.role;
+  document.getElementById('tbnm').textContent=S.user.name;
+  document.getElementById('sbnm').textContent=S.user.name;
+  document.getElementById('tbdt').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('sbph').textContent=S.user.mobile||'';
+  document.getElementById('tbav').textContent=S.user.av;
+  document.getElementById('sbav').textContent=S.user.av;
+  document.getElementById('sbrole').textContent={owner:'Owner',manager:'Manager',delivery:'Delivery Man',godown:'Godown',bda:'BDA - '+(S.user.area||'')}[S.role]||S.role;
+  buildNav();buildBNav();
+  document.getElementById('scr-login').classList.remove('active');
+  document.getElementById('scr-app').classList.add('active');
+  navigate(NAV[S.role].find(n=>n.id).id);
+  showToast('Welcome '+S.user.name,'s');
+}
+function doLogout(){S={};document.getElementById('scr-app').classList.remove('active');document.getElementById('scr-login').classList.add('active');document.getElementById('lp').value='';closeSB();}
+function buildNav(){const nav=document.getElementById('sbnav');nav.innerHTML='';(NAV[S.role]||[]).forEach(item=>{if(item.s){nav.innerHTML+=`<div class="nsec">${item.s}</div>`;return;}nav.innerHTML+=`<div class="ni" id="ni-${item.id}" onclick="navigate('${item.id}');closeSB()"><span class="nico">${item.i}</span><span>${item.l}</span>${item.b?`<span class="nbadge live">${item.b}</span>`:''}</div>`;});}
+function buildBNav(){const bn=document.getElementById('bnav');bn.innerHTML='';(BNAV[S.role]||[]).forEach(item=>{bn.innerHTML+=`<div class="bni" id="bn-${item.id}" onclick="navigate('${item.id}')"><span class="bnico">${item.i}</span><span>${item.l}</span></div>`;});}
+function setActive(id){document.querySelectorAll('.ni,.bni').forEach(el=>el.classList.remove('active'));[document.getElementById('ni-'+id),document.getElementById('bn-'+id)].forEach(el=>{if(el)el.classList.add('active');});}
+function openSB(){document.getElementById('sb').classList.add('open');document.getElementById('sov').classList.add('open');}
+function closeSB(){document.getElementById('sb').classList.remove('open');document.getElementById('sov').classList.remove('open');}
+
+const PAGES={dash:pgDash,track:pgTrack,notices:pgNotices,delivery:pgDelivery,godown:pgGodown,trips:pgTrips,office:pgOffice,dayend:pgDayend,bpclchk:pgBpclChk,gst:pgGst,payroll:pgPayroll,staff:pgStaff,settings:pgSettings,mydel:pgMyDel,mygodown:pgMyGodown,mystock:pgMyStock,mycash:pgMyCash,bdastk:pgBdaStk,bdasal:pgBdaSal,bdacash:pgBdaCash};
+function navigate(id){S.page=id;setActive(id);const pa=document.getElementById('pa');pa.scrollTop=0;pa.innerHTML=PAGES[id]?PAGES[id]():`<div class="ph"><span class="phi">🚧</span><div><div class="pht">Coming Soon</div></div></div>`;}
+function st(tid,idx,fn){document.querySelectorAll('#'+tid+' .tab').forEach((t,i)=>t.classList.toggle('active',i===idx));const b=document.getElementById(tid.replace('-tabs','-body'));if(b&&fn)b.innerHTML=fn();}
+
+let _tt;
+function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800);}
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const today=()=>new Date().toISOString().split('T')[0];
+const totSales=()=>D.sales.reduce((s,r)=>s+r.qty,0);
+const totAmt=()=>D.sales.reduce((s,r)=>s+r.amt,0);
+
+function pgDash(){const sold=totSales(),amt=totAmt();return`<div class="ph"><span class="phi">📊</span><div><div class="pht">Dashboard</div><div class="phs">${D.date}</div></div></div><div class="sg"><div class="sc or"><div class="slbl">Sold Today</div><div class="sval">${sold}</div><div class="ssub">${inr(amt)}</div></div><div class="sc gr"><div class="slbl">Collection</div><div class="sval">${inr(amt)}</div></div><div class="sc bl"><div class="slbl">Godown</div><div class="sval">${D.godown.filled}</div></div><div class="sc nv"><div class="slbl">BDA Sales</div><div class="sval">${D.bda.reduce((a,b)=>a+b.sold,0)}</div></div></div><div class="card anv"><div class="ctitle">Delivery Men</div>${D.vehicles.map((v,i)=>`<div class="dmc"><div class="dmc-hd" onclick="toggleDM(${i})"><div class="dmav">${v.name.slice(0,2).toUpperCase()}</div><div class="dmi"><div class="dmn">${v.name}</div><div class="dmd">${v.model}</div><div class="dm-stats"><span class="dms">Load <b>${v.filled}</b></span><span class="dms">Sold <b>${v.sold}</b></span><span class="dms">Cash <b>${inr(v.cash)}</b></span></div></div><span class="bdg ${v.status==='On Route'?'gr':'or'}">${v.status}</span></div><div class="dmc-exp" id="dmx-${i}"><div class="alt bl">Trip details - Phase 2</div></div></div>`).join('')}</div><div class="card"><div class="ctitle">BDA</div><div class="tw"><table><thead><tr><th>Area</th><th>Sold</th><th>Cash</th></tr></thead><tbody>${D.bda.map(b=>`<tr><td class="tb">${b.area}</td><td>${b.sold}</td><td class="tg">${inr(b.cash)}</td></tr>`).join('')}</tbody></table></div></div>`;}
+function toggleDM(i){document.getElementById('dmx-'+i)?.classList.toggle('open');}
+
+function pgTrack(){return`<div class="ph"><span class="phi">📍</span><div><div class="pht">Live Tracking</div></div></div><div class="mapbox"><div class="mapgrid"></div><div class="mdot gold" style="top:30%;left:35%"></div><div class="mdot green" style="top:56%;left:63%"></div><div style="font-size:.8rem;color:rgba(255,255,255,.6);z-index:1">GPS - Phase 2</div></div><div class="card"><div class="ctitle">Positions</div>${D.vehicles.map(v=>`<div style="display:flex;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--bdr)"><div class="dmav" style="width:32px;height:32px">${v.name.slice(0,2).toUpperCase()}</div><div style="flex:1"><div style="font-weight:700;font-size:.82rem">${v.name}</div><div style="font-size:.67rem;color:var(--tx3)">${v.loc}</div></div></div>`).join('')}</div>`;}
+
+function pgNotices(){return`<div class="ph"><span class="phi">💬</span><div><div class="pht">Notices</div></div></div><div class="card agold"><div class="ctitle">New</div><div class="fl"><label>Message</label><input class="fi" id="ntx"></div><button class="btn nv" onclick="postNotice()">Post</button></div>${D.notices.slice().reverse().map(n=>`<div class="notice"><div class="notice-from"><span><b>${n.from}</b> <span style="font-size:.6rem">(${n.role})</span></span><span>${n.time}</span></div><div class="notice-tx">${n.tx}</div></div>`).join('')}`;}
+function postNotice(){const tx=document.getElementById('ntx')?.value?.trim();if(!tx){showToast('Type message','e');return;}D.notices.push({from:S.user?.name||'',role:S.role||'',time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),tx});showToast('Posted','s');navigate('notices');}
+
+function pgDelivery(){return`<div class="ph"><span class="phi">🚚</span><div><div class="pht">Delivery</div></div></div><div class="tabs" id="del-tabs"><div class="tab active" onclick="st('del-tabs',0,delUpload)">Upload CSV</div><div class="tab" onclick="st('del-tabs',1,delAssign)">Assign</div><div class="tab" onclick="st('del-tabs',2,delOtp)">OTP</div></div><div id="del-body">${delUpload()}</div>`;}
+function delUpload(){return`<div class="card"><div class="ctitle">Upload BPCL CSV</div><label class="upload-area" for="csvf"><input type="file" id="csvf" accept=".csv" onchange="loadCSV(this)"><div style="font-size:2rem">📋</div><div style="font-size:.85rem;font-weight:600">Upload CashMemoGeneratedList.csv</div></label>${D.deliveryList.length>0?`<div class="alt gr" style="margin-top:.6rem">✅ ${D.deliveryList.length} loaded</div>`:''}</div>`;}
+function delAssign(){return`<div class="card"><div class="ctitle">Routes</div>${D.deliveryList.length>0?[...new Set(D.deliveryList.map(d=>d.op))].map(op=>`<div style="border:1px solid var(--bdr);border-radius:10px;padding:.6rem;margin-bottom:.5rem"><div style="font-weight:700">${op}</div><div style="font-size:.7rem;color:var(--tx3)">${D.deliveryList.filter(d=>d.op===op).length} deliveries</div></div>`).join(''):`<div class="alt or">Upload CSV first</div>`}</div>`;}
+function delOtp(){return`<div class="card"><div class="ctitle">OTP Sheet</div>${D.deliveryList.length>0?`<button class="btn gold" onclick="window.print()">Print</button><div class="tw" style="margin-top:.5rem"><table><thead><tr><th>Sr</th><th>Memo</th><th>Consumer</th><th>Name</th><th>OTP</th></tr></thead><tbody>${D.deliveryList.slice(0,20).map((d,i)=>`<tr><td>${d.sl}</td><td>${d.cashMemo}</td><td>${d.consNo}</td><td>${d.name}</td><td>${d.otp||'<input style="width:70px;padding:.2rem;text-align:center" type="number" placeholder="------" oninput="if(this.value.length>=6)D.deliveryList['+i+'].otp=this.value.slice(0,6)">'}</td></tr>`).join('')}</tbody></table></div>`:`<div class="alt or">Upload CSV first</div>`}</div>`;}
+
+function pgGodown(){return`<div class="ph"><span class="phi">📦</span><div><div class="pht">Godown</div></div></div><div class="sg"><div class="sc gr"><div class="slbl">Filled</div><div class="sval">${D.godown.filled}</div></div><div class="sc or"><div class="slbl">Empty</div><div class="sval">${D.godown.empty}</div></div><div class="sc re"><div class="slbl">Defective</div><div class="sval">${D.godown.defective_filled}</div></div></div><div class="tabs" id="gdn-tabs"><div class="tab active" onclick="st('gdn-tabs',0,gdnOpen)">Count</div><div class="tab" onclick="st('gdn-tabs',1,gdnTransfer)">Transfer</div><div class="tab" onclick="st('gdn-tabs',2,gdnBpcl)">BPCL</div></div><div id="gdn-body">${gdnOpen()}</div>`;}
+function gdnOpen(){return`<div class="card"><div class="ctitle">Morning Count</div><div class="gsec"><div class="gsec-title"><span>भरलेले — उभी × आडवी + अधिक</span><span class="gc-res" id="gf-tot">--</span></div><div class="gcalc"><input class="gc-inp" type="number" id="gf-v" placeholder="10" oninput="calcGF()"><span class="gc-op">×</span><input class="gc-inp" type="number" id="gf-h" placeholder="12" oninput="calcGF()"><span class="gc-op">+</span><input class="gc-inp" type="number" id="gf-e" placeholder="0" oninput="calcGF()"><span class="gc-op">=</span><span class="gc-res" id="gf-show">--</span></div></div>${['ge1','ge2','ge3'].map(k=>`<div class="gsec"><div class="gsec-title"><span>रिकामे</span><span class="gc-res" id="${k}-tot">--</span></div><div class="gcalc"><input class="gc-inp" type="number" id="${k}-v" oninput="calcGE()"><span class="gc-op">×</span><input class="gc-inp" type="number" id="${k}-h" oninput="calcGE()"><span class="gc-op">+</span><input class="gc-inp" type="number" id="${k}-d" oninput="calcGE()"><span class="gc-op">×2+</span><input class="gc-inp" type="number" id="${k}-s" oninput="calcGE()"></div></div>`).join('')}<button class="btn nv" onclick="showToast('Saved','s')">Save</button></div>`;}
+function calcGF(){const v=+document.getElementById('gf-v')?.value||0,h=+document.getElementById('gf-h')?.value||0,e=+document.getElementById('gf-e')?.value||0;const t=v*h+e;document.getElementById('gf-tot').textContent=t;document.getElementById('gf-show').textContent=t;}
+function calcGE(){let tot=0;['ge1','ge2','ge3'].forEach(k=>{const v=+document.getElementById(k+'-v')?.value||0,h=+document.getElementById(k+'-h')?.value||0,d=+document.getElementById(k+'-d')?.value||0,s=+document.getElementById(k+'-s')?.value||0;const t=(v*h+d)*2+s;document.getElementById(k+'-tot').textContent=t;tot+=t;});}
+function gdnTransfer(){return`<div class="card"><div class="ctitle">Transfer</div><div class="fr2"><div class="fl"><label>From</label><select class="fs"><option>Godown</option></select></div><div class="fl"><label>To</label><select class="fs"><option>Vehicle</option></select></div></div><div class="fr2"><div class="fl"><label>Filled</label><input class="fi" type="number"></div><div class="fl"><label>Empty</label><input class="fi" type="number"></div></div><button class="btn nv" onclick="showToast('Recorded','s')">Record</button></div>`;}
+function gdnBpcl(){return`<div class="card agold"><div class="ctitle">BPCL Receipt</div><div class="fl"><label>DO No</label><input class="fi"></div><div class="fr2"><div class="fl"><label>Filled</label><input class="fi" type="number"></div><div class="fl"><label>Empty</label><input class="fi" type="number"></div></div><button class="btn nv" onclick="showToast('Saved','s')">Save</button></div>`;}
+
+function pgTrips(){return`<div class="ph"><span class="phi">🛵</span><div><div class="pht">Trips</div></div></div><div class="card"><div class="ctitle">Today</div>${D.vehicles.map(v=>`<div style="padding:.4rem 0;border-bottom:1px solid var(--bdr)"><div style="font-weight:700">${v.name}</div><div style="font-size:.7rem;color:var(--tx3)">Sold ${v.sold} · Cash ${inr(v.cash)}</div></div>`).join('')}</div>`;}
+
+function pgOffice(){return`<div class="ph"><span class="phi">🏪</span><div><div class="pht">Office</div></div></div><div class="sg"><div class="sc or"><div class="slbl">14.2 Filled</div><div class="sval">${D.office.stock14f}</div></div><div class="sc bl"><div class="slbl">14.2 Empty</div><div class="sval">${D.office.stock14e}</div></div><div class="sc gr"><div class="slbl">5 kg Filled</div><div class="sval">${D.office.stock5f}</div></div><div class="sc nv"><div class="slbl">5 kg Empty</div><div class="sval">${D.office.stock5e}</div></div></div><div class="tabs" id="off-tabs"><div class="tab active" onclick="st('off-tabs',0,offSales)">Sales</div><div class="tab" onclick="st('off-tabs',1,offSV)">SV</div><div class="tab" onclick="st('off-tabs',2,offCash)">Cash</div></div><div id="off-body">${offSales()}</div>`;}
+function offSales(){return`<div class="card"><div class="ctitle">Record Sale</div><div class="fr2"><div class="fl"><label>Qty</label><input class="fi" type="number" id="oq"></div><div class="fl"><label>Mode</label><select class="fs" id="om"><option>Cash</option><option>QR</option></select></div></div><button class="btn nv" onclick="recOfficeSale()">Record</button></div>`;}
+function offSV(){return`<div class="card agold"><div class="ctitle">SV</div><div class="fl"><label>Suraksha Pipe</label><input class="fi" type="number"></div><div class="fl"><label>Blue Book</label><input class="fi" type="number"></div><button class="btn nv" onclick="showToast('Saved','s')">Save</button></div>`;}
+function offCash(){const dn=[{k:'n500',v:500},{k:'n200',v:200},{k:'n100',v:100},{k:'n50',v:50},{k:'n20',v:20},{k:'n10',v:10},{k:'coins',v:1}];return`<div class="card agold"><div class="ctitle">Denom</div><div class="dgrid">${dn.map(d=>`<div class="di"><div class="di-note">₹${d.v==1?'Coins':d.v}</div><input class="di-inp" type="number" id="od-${d.k}" oninput="calcOffDenom()"><div class="di-sub" id="os-${d.k}">₹0</div></div>`).join('')}</div><div class="dtot"><div class="dt-lbl">Total</div><div class="dt-val" id="off-dtot">₹0</div></div></div>`;}
+function calcOffDenom(){const dn=[{k:'n500',v:500},{k:'n200',v:200},{k:'n100',v:100},{k:'n50',v:50},{k:'n20',v:20},{k:'n10',v:10},{k:'coins',v:1}];let tot=0;dn.forEach(d=>{const q=+(document.getElementById('od-'+d.k)?.value||0);const s=q*d.v;tot+=s;const el=document.getElementById('os-'+d.k);if(el)el.textContent=inr(s);});const el=document.getElementById('off-dtot');if(el)el.textContent=inr(tot);}
+function recOfficeSale(){const qty=+document.getElementById('oq')?.value||0;if(!qty){showToast('Enter qty','e');return;}const mode=document.getElementById('om')?.value||'Cash';const amt=qty*D.cylPrice;D.sales.push({time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),by:'Office',qty,mode,amt,urban:qty,rural:0});showToast(qty+' cyl — '+inr(amt),'s');navigate('office');}
+
+function pgDayend(){const sold=totSales(),amt=totAmt();return`<div class="ph"><span class="phi">📋</span><div><div class="pht">Day End</div></div></div><div class="card"><div class="ctitle">Summary</div><div class="tw"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td>Sold</td><td class="tb">${sold} nos</td></tr><tr><td>Sales</td><td class="tg tb">${inr(amt)}</td></tr></tbody></table></div></div><button class="btn nv" onclick="window.print()">Print</button>`;}
+
+function pgBpclChk(){const r=D.bpclRef;const chk=(a,b)=>a===b?`<span class="bdg gr">✅</span>`:`<span class="bdg re">❌ ${a-b}</span>`;return`<div class="ph"><span class="phi">✅</span><div><div class="pht">BPCL Verification</div></div></div><div class="alt bl">Code 5350 + 5370 = SAME product (14.2 kg)</div><div class="card"><div class="ctitle">Verification</div><div class="tw"><table><thead><tr><th>Field</th><th>ERP</th><th>BPCL</th><th>Status</th></tr></thead><tbody><tr><td>Refills</td><td>${totSales()}</td><td>${r.p5350.refills}</td><td>${chk(totSales(),r.p5350.refills)}</td></tr><tr><td>Closing Full</td><td>${D.godown.filled}</td><td>${r.p5350.closeFull}</td><td>${chk(D.godown.filled,r.p5350.closeFull)}</td></tr><tr><td>Closing Empty</td><td>${D.godown.empty}</td><td>${r.p5350.closeEmpty}</td><td>${chk(D.godown.empty,r.p5350.closeEmpty)}</td></tr></tbody></table></div></div>`;}
+
+function pgGst(){return`<div class="ph"><span class="phi">📑</span><div><div class="pht">GST</div></div></div><div class="card"><div class="ctitle">Monthly</div><div class="tw"><table><thead><tr><th>Item</th><th>Amount</th></tr></thead><tbody><tr><td>Sales</td><td class="tg">${inr(totAmt()*26)}</td></tr><tr><td>GST 5%</td><td class="tr2">${inr(Math.round(totAmt()*26*5/105))}</td></tr></tbody></table></div></div>`;}
+
+function pgPayroll(){return`<div class="ph"><span class="phi">💰</span><div><div class="pht">Payroll</div></div></div><div class="tabs" id="pay-tabs"><div class="tab active" onclick="st('pay-tabs',0,payDM)">Delivery Men</div><div class="tab" onclick="st('pay-tabs',1,payFixed)">Fixed Staff</div></div><div id="pay-body">${payDM()}</div>`;}
+function payDM(){const dm=['bhore','mahesh','haroon','magdum'];const nm={bhore:'Vishwas Bhore',mahesh:'Mahesh Patil',haroon:'Haroon Fakir',magdum:'Vishal Magdum'};return dm.map(k=>{const w=D.monthlyWages[k];const gross=(w.urbanCyl*8)+(w.ruralCyl*7)+(w.pairDays*200);const net=gross-w.monthlyRepay-w.cashDiff;return`<div class="card anv" style="margin-bottom:.5rem"><div class="ctitle">${nm[k]} <span class="bdg ${net>=0?'gr':'re'}" style="margin-left:auto">Net ${inr(net)}</span></div><div class="tw"><table><tbody><tr><td>Urban ${w.urbanCyl} × ₹8</td><td class="tg">${inr(w.urbanCyl*8)}</td></tr><tr><td>Rural ${w.ruralCyl} × ₹7</td><td class="tg">${inr(w.ruralCyl*7)}</td></tr><tr><td>Pair Days ${w.pairDays} × ₹200</td><td class="tg">${inr(w.pairDays*200)}</td></tr><tr style="background:#EEF2FF"><td><b>Gross</b></td><td><b class="tg">${inr(gross)}</b></td></tr><tr><td>Advance Repay</td><td class="tr2">−${inr(w.monthlyRepay)}</td></tr><tr><td>Cash Shortage</td><td class="tr2">−${inr(w.cashDiff)}</td></tr><tr style="background:#EEF2FF"><td><b>NET PAY</b></td><td><b class="${net>=0?'tg':'tr2'}">${inr(net)}</b></td></tr></tbody></table></div></div>`;}).join('');}
+function payFixed(){return`<div class="card"><div class="ctitle">Fixed Staff</div><div class="tw"><table><tbody><tr><td class="tb">Rajesh Awale</td><td>Manager</td><td class="tg">₹15,000</td></tr><tr><td class="tb">Ajinath</td><td>Driver</td><td class="tg">₹18,000</td></tr></tbody></table></div></div>`;}
+
+function pgStaff(){return`<div class="ph"><span class="phi">👥</span><div><div class="pht">Staff</div></div></div><div class="card"><div class="ctitle">Delivery Men</div>${D.vehicles.map(v=>`<div style="display:flex;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--bdr)"><div class="dmav" style="width:32px;height:32px">${v.name.slice(0,2).toUpperCase()}</div><div style="flex:1"><div style="font-weight:700;font-size:.82rem">${v.name}</div><div style="font-size:.67rem;color:var(--tx3)">${USERS[v.uid]?.mobile||'-'}</div></div></div>`).join('')}</div><div class="card"><div class="ctitle">BDA</div>${D.bda.map(b=>`<div style="display:flex;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--bdr)"><div style="flex:1"><div style="font-weight:700;font-size:.82rem">${b.name}</div><div style="font-size:.67rem;color:var(--tx3)">${b.area} · ${USERS[b.uid]?.mobile||''}</div></div></div>`).join('')}</div>`;}
+
+function pgSettings(){return`
+<div class="ph"><span class="phi">⚙️</span><div><div class="pht">Settings</div><div class="phs">ERP configuration · <span class="mr">सेटिंग</span></div></div></div>
+<div class="card anv">
+  <div class="ctitle">💲 Cylinder Price (BPCL Sets This)</div>
+  <div class="alt or" style="margin-bottom:.65rem"><span>⚠️</span><span>Price is set by BPCL and changes periodically. Update here whenever BPCL announces new price.</span></div>
+  <div class="fr2">
+    <div class="fl"><label>Current 14.2 kg Price (₹)</label><input class="fi" type="number" id="set-price" value="${D.cylPrice}"></div>
+    <div class="fl"><label>Effective From</label><input class="fi" type="date" value="${today()}"></div>
+  </div>
+  <button class="btn nv" onclick="D.cylPrice=+(document.getElementById('set-price').value)||856;showToast('Price updated to ₹'+D.cylPrice+' ✅','s')">Update Price</button>
+</div>
+<div class="card">
+  <div class="ctitle">🏢 Business Information</div>
+  <div style="font-size:.82rem;color:var(--tx2);line-height:2">
+    🏢 <b>Shourya Bharatgas Services</b><br>
+    📍 Office: Gat No. 96, Kolhapur Road, Jaysingpur – 416101<br>
+    🏭 Godown: Gat No. 15, Kondigre – 416146<br>
+    🔖 BPCL Distributor Code: <b>187618</b><br>
+    👑 Partners: Vishal Patil (50%) + Dr. Mrinmayi Patil (50%)<br>
+    📞 Vishal: 7887456789 · Mrinmayi: 8080802880<br>
+    🌐 BPCL eConnect: lpgonline.bpcl.in
+  </div>
+</div>
+<div class="card">
+  <div class="ctitle">🔐 Change Password</div>
+  <div class="fr2">
+    <div class="fl"><label>Current Password</label><input class="fi" type="password" placeholder="Current"></div>
+    <div class="fl"><label>New Password</label><input class="fi" type="password" placeholder="New"></div>
+  </div>
+  <button class="btn sec" onclick="showToast('Password change — server required (Phase 2)','')">Change Password</button>
+</div>
+<div class="card">
+  <div class="ctitle">🌐 Server Setup Guide</div>
+  <div class="alt bl" style="margin-bottom:.55rem"><span>💡</span><span>Your 32GB RAM PC can run this ERP as a server accessible from anywhere (mobile data works too).</span></div>
+  <div style="font-size:.8rem;color:var(--tx2);line-height:1.9">
+    <b>Phase 2 — Internet Server Options:</b><br>
+    1. <b>Your PC as Server:</b> Install Node.js → Run server → Set up port forwarding on router → All mobiles access via internet IP. Cost: ₹0/month (internet bill only)<br>
+    2. <b>Cheap Cloud:</b> Hostinger VPS India ≈ ₹299/month · All data online · Auto backup<br>
+    3. <b>Your Existing FastAPI:</b> 127.0.0.1:8000 already running → Connect this HTML to it<br><br>
+    <b>Chat Solution (Phase 2):</b> WhatsApp-style real-time chat with photo sharing — needs server. Current notice board works offline.
+  </div>
+</div>`;}
+
+/* ════════════════════════════════════════════
+   MY DELIVERIES — Delivery Man (Uber Style)
+════════════════════════════════════════════ */
+function pgMyDel(){
+  const myList=D.deliveryList.length>0
+    ? D.deliveryList.filter(d=>{
+        const nm=S.user?.name?.split(' ').slice(-1)[0]?.toLowerCase()||'';
+        return d.op?.toLowerCase().includes(nm)||d.op?.toLowerCase().includes(S.user?.av?.slice(0,2).toLowerCase()||'x');
+      })
+    : demoDlvList();
+  const done=myList.filter(d=>d.done).length;
+  const withOtp=myList.filter(d=>d.done&&d.otp).length;
+  const emer=myList.filter(d=>d.done&&!d.otp).length;
+  const absent=myList.filter(d=>d.notHome).length;
+  return`
+<div class="ph"><span class="phi">🚚</span><div>
+  <div class="pht">आजची डिलिव्हरी</div>
+  <div class="phs">Today's Delivery · ${myList.length} total · ${myList.length-done} pending</div>
+</div></div>
+<div class="sleg">
+  <div class="sl-i"><span class="sl-d" style="background:#3B82F6"></span>🔵 Scheduled</div>
+  <div class="sl-i"><span class="sl-d" style="background:#F59E0B"></span>🟡 In Trip</div>
+  <div class="sl-i"><span class="sl-d" style="background:#22C55E"></span>🟢 OTP Done</div>
+  <div class="sl-i"><span class="sl-d" style="background:#F97316"></span>🟠 Emergency</div>
+  <div class="sl-i"><span class="sl-d" style="background:#EF4444"></span>🔴 Not Home</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.42rem;margin-bottom:.35rem">
+  <div style="background:#DCFCE7;border:1px solid #BBF7D0;border-radius:8px;padding:.55rem;text-align:center"><div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:#15803D">${withOtp}</div><div style="font-size:.6rem;color:#15803D">With OTP</div></div>
+  <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:.55rem;text-align:center"><div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--or)">${emer}</div><div style="font-size:.6rem;color:var(--or)">Emergency</div></div>
+  <div style="background:#FEE2E2;border:1px solid #FECACA;border-radius:8px;padding:.55rem;text-align:center"><div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--red)">${absent}</div><div style="font-size:.6rem;color:var(--red)">Not Home</div></div>
+  <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;padding:.55rem;text-align:center"><div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--nv)">${myList.length-done}</div><div style="font-size:.6rem;color:var(--nv)">Pending</div></div>
+</div>
+${myList.length===0?`<div class="card" style="text-align:center;padding:1.8rem">
+  <div style="font-size:2.2rem;margin-bottom:.4rem">📋</div>
+  <div style="font-weight:600;color:var(--tx)">डिलिव्हरी यादी नाही</div>
+  <div style="font-size:.77rem;color:var(--tx3);margin-top:.25rem">Office has not uploaded today's list yet</div>
+</div>`:''}
+${myList.map((d,i)=>{
+  const saved=D.custLoc[d.consNo];
+  let cls='sched';
+  if(d.done&&d.otp)cls='done-otp';
+  else if(d.done&&!d.otp)cls='done-emer';
+  else if(d.notHome)cls='nothome';
+  else if(d.resched)cls='intrip';
+  return`<div class="dlv ${cls}" id="dlv-${i}">
+    <div class="dlv-sr">#${d.sl}</div>
+    <div class="dlv-nm">${d.name}</div>
+    <div class="dlv-cn">Consumer: ${d.consNo} · Memo: ${d.cashMemo||'—'}</div>
+    <div class="dlv-meta">
+      <span class="dlv-area">📍 ${d.area}</span>
+      ${d.resched?'<span class="bdg or">⚠ Rescheduled</span>':''}
+      ${d.done&&d.otp?'<span class="bdg gr">✅ Delivered+OTP</span>':''}
+      ${d.done&&!d.otp?'<span class="bdg or">🟠 Emergency</span>':''}
+      ${d.notHome?'<span class="bdg re">🔴 Not Home</span>':''}
+    </div>
+    <div style="display:flex;gap:.38rem;align-items:center;flex-wrap:wrap;margin-top:.3rem">
+      ${d.mobile&&d.mobile!=='0'&&d.mobile!=='9999999999'?`<a class="cbtn" href="tel:${d.mobile}">📞 ${d.mobile}</a>`:'<span style="font-size:.7rem;color:var(--tx3)">No mobile</span>'}
+      ${saved
+        ?`<a href="https://maps.google.com/?q=${saved.lat},${saved.lng}" target="_blank" class="lbtn2">🗺 Open Map</a>`
+        :(!d.done?`<button class="lbtn2" onclick="saveGPS(${i},'${d.consNo}','${d.name}','${d.area}')">📍 Save Location</button>`:'')
+      }
+      ${saved&&!d.done?`<button class="bsm or" onclick="updateGPS(${i},'${d.consNo}','${d.name}','${d.area}')" style="font-size:.67rem">📍 Update</button>`:''}
+    </div>
+    ${saved?`<div style="font-size:.68rem;color:var(--or);background:#FFFBEB;border-radius:4px;padding:.12rem .38rem;margin-top:.28rem;display:inline-block">📌 ${saved.landmark||saved.area} · ${saved.savedAt}</div>`:''}
+    ${!d.done?`<div class="otp-row">
+      <input class="otp-inp ${d.otp&&d.otp.length===6?'filled':''}" type="number"
+        placeholder="ग्राहकाचा OTP" id="otp-${i}" value="${d.otp||''}"
+        oninput="captureOtp(${i},this.value)">
+      <button class="bsm gr" onclick="markDone(${i},true)">✅ OTP</button>
+      <button class="bsm or" onclick="markDone(${i},false)" style="white-space:nowrap;font-size:.68rem">🟠 No OTP</button>
+      <button class="bsm re" onclick="markAbsent(${i})">🔴</button>
+    </div>`:`<div style="font-size:.7rem;color:var(--gr);margin-top:.28rem;font-weight:600">✅ ${d.done&&d.otp?'Delivered with OTP':'Emergency Delivery'} at ${d.doneAt||'—'}</div>`}
+  </div>`;}).join('')}
+${myList.length>0?`<div class="card" style="margin-top:.25rem">
+  <div class="ctitle">📤 Submit to Office / कार्यालयाला पाठवा</div>
+  <div style="font-size:.8rem;color:var(--tx3);margin-bottom:.55rem">OTPs collected: <b>${myList.filter(d=>d.otp&&d.otp.length===6).length}</b> of ${myList.length}</div>
+  <button class="btn gr" onclick="showToast('OTPs submitted to office ✅ Print sheet ready','s')">📤 Submit All OTPs</button>
+</div>`:''}`;
+}
+function demoDlvList(){
+  return[
+    {sl:1,name:'NADAF YASIN RASUL',       consNo:'33446625',cashMemo:'49859',area:'DANOLI',          mobile:'9890610425',op:'VISHWAS BHORE',resched:false,otp:'',done:false,notHome:false},
+    {sl:2,name:'DATTAWADE TRISHALA',      consNo:'37769443',cashMemo:'49888',area:'KADAGE MALA',     mobile:'9158517050',op:'VISHWAS BHORE',resched:false,otp:'',done:false,notHome:false},
+    {sl:3,name:'PRAMOD A HULWAN',         consNo:'37777965',cashMemo:'50002',area:'SHIVSHAKTI COLONY',mobile:'8669033059',op:'VISHWAS BHORE',resched:false,otp:'',done:false,notHome:false},
+    {sl:4,name:'MRS KUSUM P MULE',        consNo:'40967467',cashMemo:'49693',area:'GALLI NO. 1',     mobile:'9075618585',op:'VISHWAS BHORE',resched:true, otp:'',done:false,notHome:false},
+    {sl:5,name:'BARDIYA PAVAN VIJAYCHAND',consNo:'40968093',cashMemo:'49691',area:'SHAHUNAGAR',      mobile:'9403108104',op:'VISHWAS BHORE',resched:true, otp:'',done:false,notHome:false},
+    {sl:6,name:'KAMBLE SUNITA VIJAY',     consNo:'38001234',cashMemo:'49712',area:'DANOLI',          mobile:'9876543210',op:'VISHWAS BHORE',resched:false,otp:'',done:false,notHome:false},
+    {sl:7,name:'PATIL RAMESH BAPU',       consNo:'38005678',cashMemo:'49730',area:'SHIROL',          mobile:'9765432109',op:'VISHWAS BHORE',resched:false,otp:'',done:false,notHome:false},
+  ];
+}
+function captureOtp(idx,val){
+  if(D.deliveryList[idx])D.deliveryList[idx].otp=val;
+  const inp=document.getElementById('otp-'+idx);
+  if(inp&&val.length>=6)inp.classList.add('filled');
+}
+function markDone(idx,hasOtp){
+  const list=D.deliveryList.length>0?D.deliveryList:demoDlvList();
+  if(!list[idx])return;
+  const otp=document.getElementById('otp-'+idx)?.value||'';
+  if(hasOtp&&otp.length<6){showToast('OTP 6 digits required / 6 अंकी OTP टाका','e');return;}
+  if(D.deliveryList[idx]){
+    D.deliveryList[idx].done=true;
+    D.deliveryList[idx].doneAt=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    if(!hasOtp)D.deliveryList[idx].otp='';
+  }
+  showToast(hasOtp?'✅ Delivered with OTP saved':'🟠 Emergency delivery recorded — no OTP','s');
+  navigate('mydel');
+}
+function markAbsent(idx){
+  if(D.deliveryList[idx])D.deliveryList[idx].notHome=true;
+  showToast('🔴 Marked as Not Home — customer can call for delivery','');
+  navigate('mydel');
+}
+function saveGPS(idx,consNo,name,area){
+  if(!navigator.geolocation){showToast('GPS not available on this device','e');return;}
+  showToast('GPS शोधत आहे... Getting location...','');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const landmark=prompt('📌 Enter landmark / खुण टाका (Optional — e.g. Near Shivaji Statue):','');
+    D.custLoc[consNo]={lat:pos.coords.latitude,lng:pos.coords.longitude,name,area,
+      landmark:landmark?.trim()||'',savedAt:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})};
+    showToast('📍 Location saved for '+name+' ✅','s');
+    navigate('mydel');
+  },()=>showToast('GPS error — allow location access','e'));
+}
+function updateGPS(idx,consNo,name,area){
+  if(!navigator.geolocation){showToast('GPS not available','e');return;}
+  const conf=confirm('Update location for '+name+'?\nOnly update if customer moved or previous location wrong.');
+  if(!conf)return;
+  showToast('GPS शोधत आहे...','');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const landmark=prompt('📌 New landmark:',D.custLoc[consNo]?.landmark||'');
+    D.custLoc[consNo]={lat:pos.coords.latitude,lng:pos.coords.longitude,name,area,
+      landmark:landmark?.trim()||'',savedAt:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})};
+    showToast('📍 Location UPDATED for '+name+' ✅','s');
+    navigate('mydel');
+  },()=>showToast('GPS error','e'));
+}
+
+/* ════════════════════════════════════════════
+   MY GODOWN — Delivery Man Tab (Marathi Grid)
+════════════════════════════════════════════ */
+function pgMyGodown(){
+  return`
+<div class="ph"><span class="phi">📦</span><div>
+  <div class="pht">गोडाऊन स्टॉक</div>
+  <div class="phs">सकाळची मोजणी · Godown · ${S.user?.name||'—'}</div>
+</div></div>
+<div class="alt or"><span>⚠️</span><span>पहिल्या येणाऱ्याने मोजणी करावी. मागील दिवसाच्या BPCL स्टॉकशी जुळवा. / First arrival enters count — must match previous BPCL closing.</span></div>
+<div class="card anv">
+  <div class="ctitle">14.2 kg भरलेले (Filled)</div>
+  <div style="font-size:.75rem;color:var(--tx3);margin-bottom:.42rem;font-style:italic">उभी ओळ × आडवी ओळ + अधिक ओळ = एकूण संख्या</div>
+  <div class="gcalc">
+    <div style="text-align:center"><div style="font-size:.62rem;color:var(--tx3);margin-bottom:.15rem">उभी ओळ</div><input class="gc-inp" type="number" id="mf-v" placeholder="10" oninput="myCalcF()"></div>
+    <span class="gc-op">×</span>
+    <div style="text-align:center"><div style="font-size:.62rem;color:var(--tx3);margin-bottom:.15rem">आडवी ओळ</div><input class="gc-inp" type="number" id="mf-h" placeholder="12" oninput="myCalcF()"></div>
+    <span class="gc-op">+</span>
+    <div style="text-align:center"><div style="font-size:.62rem;color:var(--tx3);margin-bottom:.15rem">अधिक ओळ</div><input class="gc-inp" type="number" id="mf-e" placeholder="8" oninput="myCalcF()"></div>
+    <span class="gc-op">=</span>
+    <div style="text-align:center"><div style="font-size:.62rem;color:var(--tx3);margin-bottom:.15rem">एकूण</div><div class="gc-res" id="mf-tot">—</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="ctitle">14.2 kg रिकामे (Empty) — 3 विभाग</div>
+  <div style="font-size:.73rem;color:var(--tx3);margin-bottom:.5rem;font-style:italic">प्रत्येक विभाग: (दुहेरी उभी × दुहेरी आडवी + दुहेरी अधिक) × 2 + एकेरी अधिक = एकूण</div>
+  ${[
+    {label:'फुडून उजवीकडे (Front Right)', pv:'me1-v',ph:'me1-h',pd:'me1-d',ps:'me1-s',pt:'me1-tot'},
+    {label:'दरवाज्याच्या उजवीकडे (Door Right)',pv:'me2-v',ph:'me2-h',pd:'me2-d',ps:'me2-s',pt:'me2-tot'},
+    {label:'दरवाज्याच्या डावीकडे (Door Left)', pv:'me3-v',ph:'me3-h',pd:'me3-d',ps:'me3-s',pt:'me3-tot'},
+  ].map(s=>`
+  <div class="gsec">
+    <div class="gsec-title"><span>${s.label}</span><span class="gc-res" id="${s.pt}">—</span></div>
+    <div class="gcalc">
+      <span style="font-size:.65rem;color:var(--tx3)">दुहेरी:</span>
+      <input class="gc-inp" type="number" id="${s.pv}" placeholder="6" oninput="myCalcE()">
+      <span class="gc-op">×</span>
+      <input class="gc-inp" type="number" id="${s.ph}" placeholder="5" oninput="myCalcE()">
+      <span class="gc-op">+</span>
+      <input class="gc-inp" type="number" id="${s.pd}" placeholder="3" oninput="myCalcE()">
+      <span class="gc-op">×2</span>
+      <span class="gc-op">+</span>
+      <input class="gc-inp" type="number" id="${s.ps}" placeholder="4" oninput="myCalcE()">
+    </div>
+  </div>`).join('')}
+  <div style="display:flex;gap:.55rem;padding:.62rem;background:#EEF2FF;border-radius:9px;margin-top:.35rem">
+    <div style="flex:1;text-align:center"><div style="font-size:.67rem;color:var(--tx3)">एकूण भरलेले</div><div style="font-family:'Rajdhani',sans-serif;font-size:1.55rem;font-weight:700;color:var(--nv)" id="my-tf">—</div></div>
+    <div style="flex:1;text-align:center"><div style="font-size:.67rem;color:var(--tx3)">एकूण रिकामे</div><div style="font-family:'Rajdhani',sans-serif;font-size:1.55rem;font-weight:700;color:var(--or)" id="my-te">—</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="fl"><label>शेरा / Remark</label><input class="fi" placeholder="काही वेगळे असल्यास लिहा... Any mismatch or notes"></div>
+  <button class="btn nv" onclick="showToast('गोडाऊन स्टॉक जतन झाला ✅ Office notified','s')">✅ स्टॉक जतन करा (Save Stock)</button>
+</div>`;
+}
+function myCalcF(){
+  const v=+document.getElementById('mf-v')?.value||0,h=+document.getElementById('mf-h')?.value||0,e=+document.getElementById('mf-e')?.value||0;
+  const t=v*h+e;
+  document.getElementById('mf-tot').textContent=t;
+  document.getElementById('my-tf').textContent=t;
+}
+function myCalcE(){
+  function sec(pv,ph,pd,ps,pt){
+    const v=+document.getElementById(pv)?.value||0,h=+document.getElementById(ph)?.value||0,d=+document.getElementById(pd)?.value||0,s=+document.getElementById(ps)?.value||0;
+    const t=(v*h+d)*2+s;
+    document.getElementById(pt).textContent=t;return t;
+  }
+  const tot=sec('me1-v','me1-h','me1-d','me1-s','me1-tot')+sec('me2-v','me2-h','me2-d','me2-s','me2-tot')+sec('me3-v','me3-h','me3-d','me3-s','me3-tot');
+  document.getElementById('my-te').textContent=tot;
+}
+
+/* ════════════════════════════════════════════
+   MY STOCK TRANSFER — Delivery Man
+════════════════════════════════════════════ */
+function pgMyStock(){
+  return`
+<div class="ph"><span class="phi">🔄</span><div>
+  <div class="pht">स्टॉक हस्तांतरण</div>
+  <div class="phs">Cylinder transfer · ${S.user?.name||'—'} · <span class="mr">सिलेंडर हस्तांतरण</span></div>
+</div></div>
+<div class="card anv">
+  <div class="ctitle">🏭 गोडाऊन / ऑफिस हस्तांतरण (Godown / Office Transfer)</div>
+  <div class="alt bl" style="margin-bottom:.65rem"><span>ℹ️</span><span>ऑफिसला सिलेंडर देणे = मजुरी नाही. BDA ला देणे = ग्रामीण दर. / Office transfer = no wages. BDA transfer = rural rate.</span></div>
+  <div class="fr2">
+    <div class="fl"><label>भरलेले दिले (Filled Given)</label><input class="fi" type="number" id="tr-of" placeholder="0"></div>
+    <div class="fl"><label>रिकामे घेतले (Empty Taken)</label><input class="fi" type="number" id="tr-oe" placeholder="0"></div>
+  </div>
+  <button class="btn nv" onclick="showToast('ऑफिस हस्तांतरण नोंदवले ✅','s')">ऑफिस हस्तांतरण नोंदवा</button>
+</div>
+<div class="card">
+  <div class="ctitle">🏘 BDA हस्तांतरण (BDA Stock Transfer)</div>
+  ${D.bda.map((b,i)=>`
+  <div style="border:1px solid var(--bdr);border-radius:9px;padding:.65rem;margin-bottom:.5rem">
+    <div style="font-weight:700;font-size:.87rem;color:var(--nv);margin-bottom:.38rem">🏘 ${b.area} — ${b.name}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+      <div class="fl"><label>भरलेले दिले (Filled Given)</label><input class="fi" type="number" placeholder="0" oninput="if(+this.value>7)this.style.borderColor='var(--red)'"></div>
+      <div class="fl"><label>रिकामे घेतले (Empty Taken)</label><input class="fi" type="number" placeholder="0"></div>
+    </div>
+    <div class="fr2">
+      <div class="fl"><label>रोख मिळाले (Cash from BDA)</label><input class="fi" type="number" placeholder="0"></div>
+      <div class="fl"><label>ऑनलाईन (Online from BDA)</label><input class="fi" type="number" placeholder="0"></div>
+    </div>
+    <div class="alt or" style="margin-bottom:.35rem"><span>⚠️</span><span>BPCL नियम: BDA मध्ये जास्तीत जास्त 7 भरलेले सिलेंडर / BPCL limit: max 7 filled per BDA</span></div>
+    <button class="btn gr" onclick="showToast('${b.area} BDA हस्तांतरण नोंदवले ✅','s')">✅ ${b.area} Save</button>
+  </div>`).join('')}
+</div>
+<div class="card">
+  <div class="ctitle">🏭 संध्याकाळचा गोडाऊन स्टॉक / Evening Godown Deposit</div>
+  <div class="fr2">
+    <div class="fl"><label>एकूण रिकामे जमा (Total Empty at Godown)</label><input class="fi" type="number" id="ev-emp" placeholder="0"></div>
+    <div class="fl"><label>भरलेले शिल्लक (Filled Remaining)</label><input class="fi" type="number" id="ev-fil" placeholder="0"></div>
+  </div>
+  <button class="btn nv" onclick="showToast('संध्याकाळचा स्टॉक जतन झाला ✅','s')">संध्याकाळचा स्टॉक जतन करा</button>
+</div>`;
+}
+
+/* ════════════════════════════════════════════
+   MY CASH — Delivery Man (रक्कम विवरण)
+════════════════════════════════════════════ */
+function pgMyCash(){
+  const denom=[{k:'n500',v:500,l:'₹500'},{k:'n200',v:200,l:'₹200'},{k:'n100',v:100,l:'₹100'},{k:'n50',v:50,l:'₹50'},{k:'n20',v:20,l:'₹20'},{k:'n10',v:10,l:'₹10'},{k:'coins',v:1,l:'Coins'}];
+  return`
+<div class="ph"><span class="phi">💵</span><div>
+  <div class="pht">रक्कम विवरण</div>
+  <div class="phs">Payment summary · Cash count · ${S.user?.name||'—'}</div>
+</div></div>
+<div class="card anv">
+  <div class="ctitle">💰 ग्राहकांकडून मिळालेली रक्कम (Collections)</div>
+  <div class="fr2">
+    <div class="fl"><label>रोख (Cash) — qty</label><input class="fi" type="number" id="mc-cash-q" placeholder="0" oninput="calcMyCash()"></div>
+    <div class="fl"><label>QR Code — qty</label><input class="fi" type="number" id="mc-qr-q" placeholder="0" oninput="calcMyCash()"></div>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>GPay — qty</label><input class="fi" type="number" id="mc-gp-q" placeholder="0" oninput="calcMyCash()"></div>
+    <div class="fl"><label>Paytm — qty</label><input class="fi" type="number" id="mc-pt-q" placeholder="0" oninput="calcMyCash()"></div>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>Advance / आगाऊ — qty</label><input class="fi" type="number" id="mc-adv-q" placeholder="0" oninput="calcMyCash()"></div>
+    <div class="fl"><label>Partial (Cash+Digital) — qty</label><input class="fi" type="number" id="mc-par-q" placeholder="0" oninput="calcMyCash()"></div>
+  </div>
+  <div id="mc-partial-row" class="alt or" style="display:none;margin-bottom:.5rem">
+    <span>💡</span><span>Partial — cash part only: <input type="number" id="mc-par-cash" placeholder="cash amount" style="width:110px;background:transparent;border:none;border-bottom:1px solid var(--or);outline:none;font-size:.82rem;font-weight:700;color:var(--or)" oninput="calcMyCash()"> + digital part: <input type="number" id="mc-par-digi" placeholder="digital" style="width:90px;background:transparent;border:none;border-bottom:1px solid var(--or);outline:none;font-size:.82rem;font-weight:700;color:var(--or)"></span>
+  </div>
+  <div style="background:#EEF2FF;border-radius:9px;padding:.65rem .8rem;margin-top:.35rem">
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.18rem 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--tx3)">Total Cylinders Sold</span><b id="mc-tot-cyl">0</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.18rem 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--tx3)">Expected Total @ ₹${D.cylPrice}</span><b id="mc-tot-exp">₹0</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.18rem 0"><span style="color:var(--gr)">Cash to Collect (रोख)</span><b class="tg" id="mc-cash-exp">₹0</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.18rem 0"><span style="color:var(--bl)">Digital Total</span><b class="tbl" id="mc-digi-exp">₹0</b></div>
+  </div>
+</div>
+<div class="card agold">
+  <div class="ctitle">📋 नोटांची मोजणी (Cash Denomination Count)</div>
+  <div style="font-size:.73rem;color:var(--tx3);margin-bottom:.45rem;font-style:italic">फक्त रोख रक्कम मोजा — ऑनलाईन वजा करा / Count only cash notes — digital already excluded</div>
+  <div class="dgrid">
+    ${denom.map(d=>`<div class="di">
+      <div class="di-note">${d.l}</div>
+      <input class="di-inp" type="number" id="md-${d.k}" min="0" placeholder="0" oninput="calcMyDenom()">
+      <div class="di-sub" id="mds-${d.k}">₹0</div>
+    </div>`).join('')}
+  </div>
+  <div class="dtot">
+    <div><div class="dt-lbl">एकूण रोख / Total Cash</div><div class="dt-lbl mr">नोटांची बेरीज</div></div>
+    <div>
+      <div class="dt-val" id="my-dtot">₹0</div>
+      <div id="my-dmatch" class="dmatch"></div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="ctitle">🏦 रक्कम जमा (Cash Handover / Deposit)</div>
+  <div class="fl"><label>कोणाला दिले (Given To)</label>
+    <select class="fs"><option>Office / Rajesh Awale</option><option>Vishal Patil (Owner)</option><option>Dr. Mrinmayi Patil (Owner)</option><option>Pundalik Patil (Baba)</option></select>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" id="mc-dep" placeholder="0"></div>
+    <div class="fl"><label>Time</label><input class="fi" type="time" value="${new Date().toTimeString().slice(0,5)}"></div>
+  </div>
+  <button class="btn gr" onclick="showToast('Cash handover recorded ✅ Office notified','s')">💰 रक्कम जमा नोंदवा</button>
+</div>`;
+}
+function calcMyCash(){
+  const cq=+document.getElementById('mc-cash-q')?.value||0;
+  const qrq=+document.getElementById('mc-qr-q')?.value||0;
+  const gpq=+document.getElementById('mc-gp-q')?.value||0;
+  const ptq=+document.getElementById('mc-pt-q')?.value||0;
+  const adq=+document.getElementById('mc-adv-q')?.value||0;
+  const parq=+document.getElementById('mc-par-q')?.value||0;
+  const tot=cq+qrq+gpq+ptq+adq+parq;
+  const exp=tot*D.cylPrice;
+  const cashExp=cq*D.cylPrice+(+document.getElementById('mc-par-cash')?.value||0);
+  const digiExp=(qrq+gpq+ptq)*D.cylPrice+(+document.getElementById('mc-par-digi')?.value||0);
+  const pr=document.getElementById('mc-partial-row');
+  if(pr)pr.style.display=parq>0?'flex':'none';
+  ['mc-tot-cyl','mc-tot-exp','mc-cash-exp','mc-digi-exp'].forEach((id,i)=>{
+    const el=document.getElementById(id);if(el)el.textContent=[tot,inr(exp),inr(cashExp),inr(digiExp)][i];
+  });
+}
+function calcMyDenom(){
+  const denom=[{k:'n500',v:500},{k:'n200',v:200},{k:'n100',v:100},{k:'n50',v:50},{k:'n20',v:20},{k:'n10',v:10},{k:'coins',v:1}];
+  let total=0;
+  denom.forEach(d=>{
+    const qty=+(document.getElementById('md-'+d.k)?.value||0);
+    const sub=qty*d.v;total+=sub;
+    const sel=document.getElementById('mds-'+d.k);if(sel)sel.textContent=inr(sub);
+  });
+  const el=document.getElementById('my-dtot');if(el)el.textContent=inr(total);
+  // compare with cash expected
+  const cq=+document.getElementById('mc-cash-q')?.value||0;
+  const cashExp=cq*D.cylPrice+(+document.getElementById('mc-par-cash')?.value||0);
+  const match=document.getElementById('my-dmatch');
+  if(match&&cashExp>0){
+    const diff=total-cashExp;
+    match.textContent=diff===0?'✅ Match!':diff>0?`Extra: ${inr(diff)}`:`Short: ${inr(-diff)}`;
+    match.className='dmatch '+(diff===0?'ok':'err');
+  }
+}
+
+/* ════════════════════════════════════════════
+   BDA PAGES
+════════════════════════════════════════════ */
+function pgBdaStk(){
+  const b=D.bda.find(x=>x.uid===Object.keys(USERS).find(k=>USERS[k]===S.user))||D.bda[6];
+  return`
+<div class="ph"><span class="phi">📦</span><div>
+  <div class="pht">माझे स्टॉक</div>
+  <div class="phs">${b?.area||'BDA'} · Stock Management · <span class="mr">स्टॉक</span></div>
+</div></div>
+<div class="sg">
+  <div class="sc gr"><div class="slbl">Filled / भरलेले</div><div class="sval">${b?.filled||0}</div><div class="ssub">Max 7 (BPCL)</div></div>
+  <div class="sc or"><div class="slbl">Empty / रिकामे</div><div class="sval">${b?.empty||0}</div></div>
+</div>
+${(b?.filled||0)>=7?'<div class="alt re"><span>⚠️</span><span>BPCL limit reached — max 7 filled cylinders. Do not take more until stock reduces.</span></div>':''}
+<div class="card anv">
+  <div class="ctitle">📦 Stock Count / स्टॉक मोजणी</div>
+  <div class="fr2">
+    <div class="fl"><label>भरलेले (Filled) — actual count</label><input class="fi" type="number" placeholder="${b?.filled||0}"></div>
+    <div class="fl"><label>रिकामे (Empty) — actual count</label><input class="fi" type="number" placeholder="${b?.empty||0}"></div>
+  </div>
+  <button class="btn nv" onclick="showToast('BDA स्टॉक जतन झाला ✅','s')">Save Stock</button>
+</div>
+<div class="card">
+  <div class="ctitle">🔄 Stock Received from Delivery Man</div>
+  <div class="fr2">
+    <div class="fl"><label>Delivery Man</label><select class="fs"><option>Vishwas Bhore</option><option>Mahesh Patil</option><option>Haroon Fakir</option><option>Vishal Magdum</option></select></div>
+    <div class="fl"><label>Date / तारीख</label><input class="fi" type="date" value="${today()}"></div>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>Filled Received</label><input class="fi" type="number" placeholder="0"></div>
+    <div class="fl"><label>Empty Given to DM</label><input class="fi" type="number" placeholder="0"></div>
+  </div>
+  <button class="btn gr" onclick="showToast('Stock transfer recorded ✅','s')">Save Transfer</button>
+</div>`;
+}
+function pgBdaSal(){
+  return`
+<div class="ph"><span class="phi">💰</span><div>
+  <div class="pht">विक्री / Sales</div>
+  <div class="phs">Customer sales · OTP capture · Spot booking · <span class="mr">ग्राहकांना विक्री</span></div>
+</div></div>
+<div class="tabs" id="bsa-tabs">
+  <div class="tab active" onclick="st('bsa-tabs',0,bsalReg)">Regular Sale</div>
+  <div class="tab" onclick="st('bsa-tabs',1,bsalSpot)">Spot Booking</div>
+  <div class="tab" onclick="st('bsa-tabs',2,bsalOtp)">OTP Capture</div>
+</div>
+<div id="bsa-body">${bsalReg()}</div>`;
+}
+function bsalReg(){return`
+<div class="card agr">
+  <div class="ctitle">➕ New Sale / नवीन विक्री</div>
+  <div class="fr2">
+    <div class="fl"><label>Consumer No / ग्राहक क्रमांक</label><input class="fi" type="number" placeholder="Consumer number"></div>
+    <div class="fl"><label>Consumer Name</label><input class="fi" placeholder="Name"></div>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>Cylinders / सिलेंडर</label><input class="fi" type="number" placeholder="1"></div>
+    <div class="fl"><label>Payment Mode / पद्धत</label>
+      <select class="fs"><option>Cash / रोख</option><option>QR Code / UPI</option><option>GPay</option><option>Paytm</option><option>Advance / आगाऊ</option><option>Partial</option></select>
+    </div>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="${D.cylPrice}"></div>
+    <div class="fl"><label>OTP (if available)</label><input class="fi" type="number" placeholder="6-digit OTP"></div>
+  </div>
+  <button class="btn nv" onclick="showToast('BDA Sale recorded ✅ Stock updated','s')">Record Sale / विक्री नोंदवा</button>
+</div>`;}
+function bsalSpot(){return`
+<div class="card agold">
+  <div class="ctitle">📍 Spot Booking — Walk-in Customer / तात्पुरती नोंदणी</div>
+  <div class="alt nv" style="margin-bottom:.65rem"><span>ℹ️</span><span>Customer walks in without booking. BDA delivers from stock. Recorded separately — shows in office as BDA spot sale.</span></div>
+  <div class="fr2">
+    <div class="fl"><label>Customer Name</label><input class="fi" placeholder="Name"></div>
+    <div class="fl"><label>Mobile</label><input class="fi" type="tel" placeholder="Mobile"></div>
+  </div>
+  <div class="fr2">
+    <div class="fl"><label>Cylinders</label><input class="fi" type="number" placeholder="1"></div>
+    <div class="fl"><label>Amount (₹)</label><input class="fi" type="number" placeholder="${D.cylPrice}"></div>
+  </div>
+  <div class="fl"><label>Address / पत्ता</label><input class="fi" placeholder="Address for future delivery"></div>
+  <div class="alt or"><span>⚠️</span><span>Spot sale uses BDA stock. Marked as 🟠 Emergency (no BPCL OTP available for spot bookings).</span></div>
+  <button class="btn gold" onclick="showToast('Spot booking recorded ✅ Marked Emergency','s')">Record Spot Sale</button>
+</div>`;}
+function bsalOtp(){return`
+<div class="card">
+  <div class="ctitle">🔢 OTP Capture from Customers</div>
+  <div class="alt bl" style="margin-bottom:.65rem"><span>ℹ️</span><span>Collect OTP from customer (from BPCL SMS). Save here. Office will use for BPCL app entry.</span></div>
+  <div class="fr2">
+    <div class="fl"><label>Consumer Number</label><input class="fi" type="number" id="bda-otp-cn" placeholder="Consumer no"></div>
+    <div class="fl"><label>Customer Name</label><input class="fi" id="bda-otp-nm" placeholder="Name"></div>
+  </div>
+  <div class="fl"><label>OTP (6 digits)</label>
+    <input class="fi" type="number" id="bda-otp-val" placeholder="Enter 6-digit OTP" maxlength="6"
+      style="font-family:monospace;font-size:1.1rem;font-weight:700;letter-spacing:.15em;text-align:center"></div>
+  <button class="btn nv" onclick="showToast('OTP saved ✅ Synced with office','s')">Save OTP</button>
+</div>`;}
+function pgBdaCash(){
+  const denom=[{k:'n500',v:500,l:'₹500'},{k:'n200',v:200,l:'₹200'},{k:'n100',v:100,l:'₹100'},{k:'n50',v:50,l:'₹50'},{k:'n20',v:20,l:'₹20'},{k:'n10',v:10,l:'₹10'},{k:'coins',v:1,l:'Coins'}];
+  return`
+<div class="ph"><span class="phi">💵</span><div>
+  <div class="pht">कॅश हस्तांतरण</div>
+  <div class="phs">Cash handover to delivery man · <span class="mr">रोख जमा</span></div>
+</div></div>
+<div class="card agold">
+  <div class="ctitle">📋 नोटांची मोजणी (Denomination Count)</div>
+  <div class="dgrid">
+    ${denom.map(d=>`<div class="di">
+      <div class="di-note">${d.l}</div>
+      <input class="di-inp" type="number" id="bd-${d.k}" min="0" placeholder="0" oninput="calcBdaDenom()">
+      <div class="di-sub" id="bds-${d.k}">₹0</div>
+    </div>`).join('')}
+  </div>
+  <div class="dtot"><div><div class="dt-lbl">BDA Cash Total</div></div><div class="dt-val" id="bda-dtot">₹0</div></div>
+</div>
+<div class="card">
+  <div class="ctitle">🚐 Cash Given To / कोणाला दिले</div>
+  <div class="fl"><label>Delivery Man</label><select class="fs"><option>Vishwas Bhore</option><option>Mahesh Patil</option><option>Haroon Fakir</option><option>Vishal Magdum</option></select></div>
+  <div class="fr2">
+    <div class="fl"><label>Cash Amount (₹)</label><input class="fi" type="number" placeholder="0"></div>
+    <div class="fl"><label>Online (if any) (₹)</label><input class="fi" type="number" placeholder="0"></div>
+  </div>
+  <div class="fl"><label>Time / वेळ</label><input class="fi" type="time" value="${new Date().toTimeString().slice(0,5)}"></div>
+  <button class="btn gr" onclick="showToast('BDA cash handover recorded ✅','s')">💰 Handover Record / रोख जमा नोंद</button>
+</div>`;
+}
+function calcBdaDenom(){
+  const denom=[{k:'n500',v:500},{k:'n200',v:200},{k:'n100',v:100},{k:'n50',v:50},{k:'n20',v:20},{k:'n10',v:10},{k:'coins',v:1}];
+  let total=0;
+  denom.forEach(d=>{const qty=+(document.getElementById('bd-'+d.k)?.value||0);const sub=qty*d.v;total+=sub;const s=document.getElementById('bds-'+d.k);if(s)s.textContent=inr(sub);});
+  const el=document.getElementById('bda-dtot');if(el)el.textContent=inr(total);
+}
+
+/* ════════════════════════════════════════════
+   CSV PARSER
+════════════════════════════════════════════ */
+function loadCSV(input){
+  if(!input.files||!input.files[0])return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n');
+    let hdrIdx=-1;
+    for(let i=0;i<lines.length;i++){if(lines[i].includes('SLNo')||lines[i].includes('ConsumerNumber')){hdrIdx=i;break;}}
+    if(hdrIdx<0){showToast('CSV format not recognised — use BPCL CashMemoGeneratedList.csv','e');return;}
+    const newItems=[];
+    for(let i=hdrIdx+1;i<lines.length;i++){
+      const row=parseCSVLine(lines[i]);
+      if(row.length<10||!row[0].trim())continue;
+      const consNo=row[9]?.trim();
+      // Never add already delivered
+      if(D.deliveryList.find(x=>x.consNo===consNo&&x.done))continue;
+      // Append only new records
+      if(D.deliveryList.find(x=>x.consNo===consNo))continue;
+      newItems.push({
+        sl:row[0]?.trim(),area:row[1]?.trim(),op:row[3]?.trim(),cashMemo:row[7]?.trim(),
+        consNo,name:row[10]?.trim(),addr:row[11]?.trim(),mobile:row[14]?.trim()||'0',
+        resched:row.length>15&&row[15]?.toLowerCase().includes('rescheduled'),
+        otp:'',done:false,notHome:false
+      });
+    }
+    D.deliveryList=[...D.deliveryList,...newItems];
+    showToast(`✅ ${newItems.length} new deliveries added · ${D.deliveryList.length} total`,'s');
+    navigate('delivery');
+  };
+  reader.readAsText(input.files[0]);
+}
+function parseCSVLine(line){
+  const result=[];let cur='';let inQ=false;
+  for(let i=0;i<line.length;i++){
+    if(line[i]==='"'){inQ=!inQ;}
+    else if(line[i]===','&&!inQ){result.push(cur.trim());cur='';}
+    else cur+=line[i];
+  }
+  result.push(cur.trim());return result;
+}
+
+/* ════════════════════════════════════════════
+   MISSING ELEMENT SAFETY
+════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  // Ensure sbdt element exists (we use it in login)
+  if(!document.getElementById('sbdt')){
+    const el=document.createElement('div');el.id='sbdt';el.style.display='none';
+    document.body.appendChild(el);
+  }
+});
+// Fallback for sbdt
+window.addEventListener('load',()=>{if(!document.getElementById('sbdt')){const el=document.createElement('div');el.id='sbdt';el.style.display='none';document.body.appendChild(el);}});
+</script>
+</body>
+</html>
