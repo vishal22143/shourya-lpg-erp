@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+erp.db
+*.db
+static/chat_photos/
+ni.csv
+ListOfBlockedConsumers.csv
+CashMemoGeneratedList.csv
+.env
