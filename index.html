@@ -354,6 +354,7 @@ function installPWA(){
       <button class="tbtn" onclick="openM('MN_NOTICE')">📢 Notice</button>
       <button class="tbtn" onclick="openM('MN_CSV')" style="background:rgba(0,198,255,.1);border-color:var(--accent);color:var(--accent)">📤 CSV</button>
       <button class="tbtn" onclick="openM('MN_SPOT')" style="background:rgba(255,107,0,.1);border-color:var(--orange);color:var(--orange)">⚡ Spot</button>
+      <span id="_CSYNC" style="font-size:11px;color:var(--td);cursor:pointer" onclick="var cb=localStorage.getItem('shrya_cloud_bin');if(cb){toast('Syncing...','i');saveData();}else{toast('Set up Cloud in Settings','w');}">☁️</span>
       <button id="PWA_INSTALL" class="tbtn" onclick="installPWA()" style="background:rgba(0,230,118,.1);border-color:var(--green);color:var(--green)">📲 App</button>
       <button class="tbtn" style="position:relative" onclick="toggleChat()">💬 Chat <span id="CHAT_DOT" style="position:absolute;top:3px;right:6px;width:6px;height:6px;background:var(--red);border-radius:50%;display:none"></span></button>
       <div class="tusr"><div id="SYNC_DOT" onclick="showDiag()" title="Click for diagnostic" style="cursor:pointer" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;margin-right:4px" title="Sync"></div><div class="tudot"></div><div class="tuname" id="TB_USER">—</div></div>
@@ -871,12 +872,93 @@ function saveData() {
   } catch(e) { console.warn('Save failed:', e); }
   // Push to central server (non-blocking)
   if(typeof pushToServer==='function') setTimeout(pushToServer,100);
-  var _cb=localStorage.getItem('shrya_cloud_bin');if(_cb){try{var _d=JSON.parse(JSON.stringify(D));delete _d.consumerMaster;delete _d.blockedConsumers;_d._t=Date.now();_d._by=D.userName||'?';fetch('https://api.npoint.io/'+_cb,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(_d)}).catch(function(){});}catch(e){}}
+  var _cb=localStorage.getItem('shrya_cloud_bin');
+  if(_cb){
+    try{
+      var _d={};
+      _d.deliveries=D.deliveries||[];
+      _d.stock=D.stock||{};
+      _d.cashLedger=D.cashLedger||[];
+      _d.expenses=D.expenses||[];
+      _d.otpStore=D.otpStore||[];
+      _d.notices=D.notices||[];
+      _d.staff=D.staff||[];
+      _d.bda=D.bda||[];
+      _d.trips=D.trips||[];
+      _d.officeSales=D.officeSales||[];
+      _d.urgentSales=D.urgentSales||[];
+      _d.soaLedger=D.soaLedger||[];
+      _d.wages=D.wages||[];
+      _d.stockLog=D.stockLog||[];
+      _d.bpclReceipts=D.bpclReceipts||[];
+      _d.customerPins=D.customerPins||{};
+      _d.settings=D.settings||{};
+      _d.erpDay=D.erpDay;
+      _d.cylPrice=D.cylPrice;
+      _d._t=Date.now();
+      _d._by=D.userName||'?';
+      var _body=JSON.stringify(_d);
+      console.log('Cloud push: '+(_body.length/1024).toFixed(1)+'KB');
+      fetch('https://api.npoint.io/'+_cb,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:_body
+      }).then(function(r){
+        if(!r.ok) console.error('Cloud push failed: HTTP '+r.status);
+        else console.log('Cloud push OK');
+        return r.text();
+      }).then(function(t){
+        try{var j=JSON.parse(t);if(j&&j.deliveries)console.log('Cloud confirmed: '+j.deliveries.length+' deliveries');}catch(e){}
+      }).catch(function(e){console.error('Cloud push error:',e);});
+    }catch(e){console.error('Cloud push exception:',e);}
+  }
 }
 
 let D = loadData();
 // Auto-save every 30 seconds
 setInterval(saveData, 30000);
+
+// v24: Auto-pull from cloud every 60s (keeps all devices in sync)
+setInterval(function(){
+  var cb=localStorage.getItem('shrya_cloud_bin');
+  if(!cb) return;
+  fetch('https://api.npoint.io/'+cb)
+    .then(function(r){return r.json();})
+    .then(function(j){
+      if(!j||!j.deliveries) return;
+      // Only update if cloud has newer data
+      if(j._t && j._t > (D._lastCloudPull||0)){
+        var cr=D.role,cu=D.userId,cn=D.userName,cp=D._curPage;
+        var cdi=D.currentDeliveryId,cbi=D.currentBDAId;
+        // Merge cloud data
+        if(j.deliveries.length>0 || D.deliveries.length===0) D.deliveries=j.deliveries;
+        D.stock=j.stock||D.stock;
+        D.cashLedger=j.cashLedger||D.cashLedger;
+        D.expenses=j.expenses||D.expenses;
+        D.otpStore=j.otpStore||D.otpStore;
+        D.notices=j.notices||D.notices;
+        D.staff=j.staff||D.staff;
+        D.bda=j.bda||D.bda;
+        D.trips=j.trips||D.trips;
+        D.officeSales=j.officeSales||D.officeSales;
+        D.soaLedger=j.soaLedger||D.soaLedger;
+        D.wages=j.wages||D.wages;
+        D.stockLog=j.stockLog||D.stockLog;
+        D.bpclReceipts=j.bpclReceipts||D.bpclReceipts;
+        D.customerPins=j.customerPins||D.customerPins;
+        D.erpDay=j.erpDay||D.erpDay;
+        // Restore session
+        D.role=cr;D.userId=cu;D.userName=cn;
+        if(cdi)D.currentDeliveryId=cdi;
+        if(cbi)D.currentBDAId=cbi;
+        D._lastCloudPull=j._t;
+        try{localStorage.setItem(STORE_KEY,JSON.stringify(D));}catch(e){}
+        // Refresh current page
+        if(cp && typeof setPage==='function') setPage(cp);
+        console.log('Cloud pull: '+D.deliveries.length+' deliveries synced');
+      }
+    }).catch(function(){});
+}, 60000);
 
 // ── DELIVERY MODE SELECTION ──
 function selDelivMode(el, mode){
@@ -1124,6 +1206,7 @@ function _doInitialLoad(firstPage){
   var _cu=_cb?'https://api.npoint.io/'+_cb:'';
   var syncUrl=_cu||(_syncURL?_syncURL+'/api/load':'');
   if(!syncUrl) return;
+  D._lastCloudPull=0; // force pull on startup
   
   _syncDot('#f0a500','Syncing...');
   fetch(syncUrl)
