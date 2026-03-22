@@ -354,7 +354,7 @@ function installPWA(){
       <button class="tbtn" onclick="openM('MN_NOTICE')">📢 Notice</button>
       <button class="tbtn" onclick="openM('MN_CSV')" style="background:rgba(0,198,255,.1);border-color:var(--accent);color:var(--accent)">📤 CSV</button>
       <button class="tbtn" onclick="openM('MN_SPOT')" style="background:rgba(255,107,0,.1);border-color:var(--orange);color:var(--orange)">⚡ Spot</button>
-      <span id="_CSYNC" style="font-size:11px;color:var(--td);cursor:pointer" onclick="var cb=localStorage.getItem('shrya_cloud_bin');if(cb){toast('Syncing...','i');saveData();}else{toast('Set up Cloud in Settings','w');}">☁️</span>
+      <span id="_CSYNC" style="font-size:11px;color:var(--td);cursor:pointer" onclick="var cb='019d1590-b0f3-7a94-814c-151664714664';if(cb){toast('Syncing...','i');saveData();}else{toast('Set up Cloud in Settings','w');}">☁️</span>
       <button id="PWA_INSTALL" class="tbtn" onclick="installPWA()" style="background:rgba(0,230,118,.1);border-color:var(--green);color:var(--green)">📲 App</button>
       <button class="tbtn" style="position:relative" onclick="toggleChat()">💬 Chat <span id="CHAT_DOT" style="position:absolute;top:3px;right:6px;width:6px;height:6px;background:var(--red);border-radius:50%;display:none"></span></button>
       <div class="tusr"><div id="SYNC_DOT" onclick="showDiag()" title="Click for diagnostic" style="cursor:pointer" style="width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;margin-right:4px" title="Sync"></div><div class="tudot"></div><div class="tuname" id="TB_USER">—</div></div>
@@ -872,7 +872,7 @@ function saveData() {
   } catch(e) { console.warn('Save failed:', e); }
   // Push to central server (non-blocking)
   if(typeof pushToServer==='function') setTimeout(pushToServer,100);
-  var _cb=localStorage.getItem('shrya_cloud_bin');
+  var _cb='019d1590-b0f3-7a94-814c-151664714664'; // v24.2: hardcoded — all devices auto-sync
   if(_cb){
     try{
       var _d={deliveries:D.deliveries||[],stock:D.stock||{},cashLedger:D.cashLedger||[],
@@ -900,8 +900,8 @@ setInterval(saveData, 30000);
 
 // v24: Auto-pull from cloud every 60s (keeps all devices in sync)
 setInterval(function(){
-  var cb=localStorage.getItem('shrya_cloud_bin');
-  if(!cb) return;
+  var cb='019d1590-b0f3-7a94-814c-151664714664';
+  if(!cb) return; // always has value now
   fetch('https://jsonblob.com/api/jsonBlob/'+cb,{headers:{'Accept':'application/json'}})
     .then(function(r){return r.json();})
     .then(function(j){
@@ -1182,7 +1182,7 @@ function _doInitialLoad(firstPage){
   // v24: SHOW PAGE IMMEDIATELY
   setPage(firstPage);
   
-  var _cb=localStorage.getItem('shrya_cloud_bin');
+  var _cb='019d1590-b0f3-7a94-814c-151664714664'; // v24.2: hardcoded — all devices auto-sync
   var _cu=_cb?'https://jsonblob.com/api/jsonBlob/'+_cb:'';
   var syncUrl=_cu||(_syncURL?_syncURL+'/api/load':'');
   if(!syncUrl) return;
@@ -2891,7 +2891,7 @@ PAGES.staff=function(){
 
 // ─── SETTINGS ───
 PAGES.settings=function(){
-  var _cbi=localStorage.getItem('shrya_cloud_bin')||'';
+  var _cbi='019d1590-b0f3-7a94-814c-151664714664'||'';
   var _cs=_cbi?'\u2601\uFE0F Connected: '+_cbi:'\u274C Not configured';
   var _ch='<div class="card mb12" style="border-top:3px solid var(--green)"><div class="ctitle mb8">\u2601\uFE0F Cloud Sync</div>'
     +'<div class="al '+(_cbi?'als':'alw')+' mb10">'+_cs+'</div>'
