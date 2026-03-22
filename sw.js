@@ -1,22 +1,24 @@
-// Shourya ERP v24 — Service Worker (PWA offline caching)
-var CACHE = 'shourya-erp-v24';
-var ASSETS = ['/', '/manifest.json'];
+// Shourya ERP v24.1 — Service Worker (cache busted)
+var CACHE = 'shourya-erp-v241';
 
 self.addEventListener('install', function(e) {
+  // Force activate immediately (don't wait for old SW)
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE).then(function(cache) {
-      return cache.addAll(ASSETS);
+      return cache.addAll(['/', '/index.html']);
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', function(e) {
+  // Delete ALL old caches
   e.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
-        names.filter(function(n) { return n !== CACHE; })
-             .map(function(n) { return caches.delete(n); })
+        names.map(function(n) {
+          if (n !== CACHE) { console.log('Deleting old cache:', n); return caches.delete(n); }
+        })
       );
     })
   );
@@ -26,39 +28,39 @@ self.addEventListener('activate', function(e) {
 self.addEventListener('fetch', function(e) {
   var url = new URL(e.request.url);
   
-  // API calls — always network first, never cache
-  if (url.pathname.startsWith('/api/')) {
+  // API calls — always network, never cache
+  if (url.pathname.startsWith('/api/') || url.hostname === 'api.npoint.io') {
+    e.respondWith(fetch(e.request).catch(function() {
+      return new Response('{"offline":true}', {headers: {'Content-Type': 'application/json'}});
+    }));
+    return;
+  }
+  
+  // HTML — network first, fallback to cache (ensures updates are picked up)
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/') {
     e.respondWith(
-      fetch(e.request).catch(function() {
-        return new Response(JSON.stringify({ok: false, offline: true}), {
-          headers: {'Content-Type': 'application/json'}
-        });
+      fetch(e.request).then(function(resp) {
+        if (resp.status === 200) {
+          var clone = resp.clone();
+          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
+        }
+        return resp;
+      }).catch(function() {
+        return caches.match(e.request).then(function(c) { return c || new Response('Offline', {status: 503}); });
       })
     );
     return;
   }
   
-  // HTML/JS/CSS — cache first, fallback to network (PWA offline)
+  // Everything else — cache first
   e.respondWith(
     caches.match(e.request).then(function(cached) {
-      if (cached) {
-        // Return cache immediately, update in background
-        fetch(e.request).then(function(resp) {
-          if (resp.status === 200) {
-            caches.open(CACHE).then(function(cache) { cache.put(e.request, resp); });
-          }
-        }).catch(function() {});
-        return cached;
-      }
-      // Not in cache — fetch and cache
-      return fetch(e.request).then(function(resp) {
+      return cached || fetch(e.request).then(function(resp) {
         if (resp.status === 200) {
           var clone = resp.clone();
-          caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
+          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
         }
         return resp;
-      }).catch(function() {
-        return new Response('Offline', {status: 503});
       });
     })
   );
