@@ -875,42 +875,22 @@ function saveData() {
   var _cb=localStorage.getItem('shrya_cloud_bin');
   if(_cb){
     try{
-      var _d={};
-      _d.deliveries=D.deliveries||[];
-      _d.stock=D.stock||{};
-      _d.cashLedger=D.cashLedger||[];
-      _d.expenses=D.expenses||[];
-      _d.otpStore=D.otpStore||[];
-      _d.notices=D.notices||[];
-      _d.staff=D.staff||[];
-      _d.bda=D.bda||[];
-      _d.trips=D.trips||[];
-      _d.officeSales=D.officeSales||[];
-      _d.urgentSales=D.urgentSales||[];
-      _d.soaLedger=D.soaLedger||[];
-      _d.wages=D.wages||[];
-      _d.stockLog=D.stockLog||[];
-      _d.bpclReceipts=D.bpclReceipts||[];
-      _d.customerPins=D.customerPins||{};
-      _d.settings=D.settings||{};
-      _d.erpDay=D.erpDay;
-      _d.cylPrice=D.cylPrice;
-      _d._t=Date.now();
-      _d._by=D.userName||'?';
-      var _body=JSON.stringify(_d);
-      console.log('Cloud push: '+(_body.length/1024).toFixed(1)+'KB');
-      fetch('https://api.npoint.io/'+_cb,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:_body
+      var _d={deliveries:D.deliveries||[],stock:D.stock||{},cashLedger:D.cashLedger||[],
+        expenses:D.expenses||[],otpStore:D.otpStore||[],notices:D.notices||[],
+        staff:D.staff||[],bda:D.bda||[],trips:D.trips||[],officeSales:D.officeSales||[],
+        urgentSales:D.urgentSales||[],soaLedger:D.soaLedger||[],wages:D.wages||[],
+        stockLog:D.stockLog||[],bpclReceipts:D.bpclReceipts||[],
+        customerPins:D.customerPins||{},settings:D.settings||{},
+        erpDay:D.erpDay,cylPrice:D.cylPrice,_t:Date.now(),_by:D.userName||'?'};
+      fetch('https://jsonblob.com/api/jsonBlob/'+_cb,{
+        method:'PUT',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(_d)
       }).then(function(r){
-        if(!r.ok) console.error('Cloud push failed: HTTP '+r.status);
-        else console.log('Cloud push OK');
-        return r.text();
-      }).then(function(t){
-        try{var j=JSON.parse(t);if(j&&j.deliveries)console.log('Cloud confirmed: '+j.deliveries.length+' deliveries');}catch(e){}
-      }).catch(function(e){console.error('Cloud push error:',e);});
-    }catch(e){console.error('Cloud push exception:',e);}
+        if(r.ok){console.log('Cloud OK');var el=document.getElementById('_CSYNC');if(el)el.textContent='☁️✓';}
+        else{console.error('Cloud fail:'+r.status);var el=document.getElementById('_CSYNC');if(el)el.textContent='☁️✗';}
+      }).catch(function(e){console.error('Cloud err:',e);});
+    }catch(e){console.error('Cloud ex:',e);}
   }
 }
 
@@ -922,7 +902,7 @@ setInterval(saveData, 30000);
 setInterval(function(){
   var cb=localStorage.getItem('shrya_cloud_bin');
   if(!cb) return;
-  fetch('https://api.npoint.io/'+cb)
+  fetch('https://jsonblob.com/api/jsonBlob/'+cb,{headers:{'Accept':'application/json'}})
     .then(function(r){return r.json();})
     .then(function(j){
       if(!j||!j.deliveries) return;
@@ -1203,7 +1183,7 @@ function _doInitialLoad(firstPage){
   setPage(firstPage);
   
   var _cb=localStorage.getItem('shrya_cloud_bin');
-  var _cu=_cb?'https://api.npoint.io/'+_cb:'';
+  var _cu=_cb?'https://jsonblob.com/api/jsonBlob/'+_cb:'';
   var syncUrl=_cu||(_syncURL?_syncURL+'/api/load':'');
   if(!syncUrl) return;
   D._lastCloudPull=0; // force pull on startup
@@ -2916,8 +2896,8 @@ PAGES.settings=function(){
   var _ch='<div class="card mb12" style="border-top:3px solid var(--green)"><div class="ctitle mb8">\u2601\uFE0F Cloud Sync</div>'
     +'<div class="al '+(_cbi?'als':'alw')+' mb10">'+_cs+'</div>'
     +(_cbi?'<div style="display:flex;gap:8px"><button class="btn bgr" onclick="pushToServer();toast(\'Pushing...\',\'s\')">\u2601\uFE0F Push</button><button class="btn bg2" onclick="localStorage.removeItem(\'shrya_cloud_bin\');setPage(\'settings\')">Disconnect</button></div>'
-    :'<div class="al ali mb8">Go to <a href=\'https://www.npoint.io\' target=\'_blank\' style=\'color:var(--green)\'>npoint.io</a> \u2192 Create Bin \u2192 Paste {} \u2192 Save \u2192 Copy ID</div>'
-    +'<div class="fr"><div class="fg"><div class="fl">npoint Bin ID</div><input id="CLOUD_BIN" placeholder="paste ID here" value="'+_cbi+'"></div></div>'
+    :'<div class="al ali mb8">Go to <a href=\'https://www.jsonblob.com\' target=\'_blank\' style=\'color:var(--green)\'>jsonblob.com</a> \u2192 Create Bin \u2192 Paste {} \u2192 Save \u2192 Copy ID</div>'
+    +'<div class="fr"><div class="fg"><div class="fl">jsonblob ID</div><input id="CLOUD_BIN" placeholder="paste ID here" value="'+_cbi+'"></div></div>'
     +'<button class="btn bgr" onclick="var id=(document.getElementById(\'CLOUD_BIN\')||{}).value||\'\';if(id.length>4){localStorage.setItem(\'shrya_cloud_bin\',id.trim());toast(\'\u2601\uFE0F Connected!\',\'s\');setTimeout(function(){setPage(\'settings\')},500);}else{toast(\'Enter valid ID\',\'w\');}">Connect Cloud</button>')
     +'</div>';
   
@@ -6901,3 +6881,4 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </script>
 </body>
 </html>
+ 
